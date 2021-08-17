@@ -10,6 +10,7 @@ import CocoaAsyncSocket
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var myIPLabel: UILabel!
     @IBOutlet weak var portTextField: UITextField!
     @IBOutlet weak var sendPortTextField: UITextField!
     @IBOutlet weak var sendHostTextField: UITextField!
@@ -17,15 +18,21 @@ class ViewController: UIViewController {
     @IBOutlet weak var sendTextField: UITextField!
     @IBOutlet weak var receiveTextView: UITextView!
     
-    private var socket: GCDAsyncUdpSocket!
+    private var receiveSocket: GCDAsyncUdpSocket!
+    private var sendSocket: GCDAsyncUdpSocket!
 
     deinit {
-        socket.close()
+        receiveSocket.close()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        socket = GCDAsyncUdpSocket(delegate: self, delegateQueue: DispatchQueue(label: "server_queue"), socketQueue: nil)
+        receiveSocket = GCDAsyncUdpSocket(delegate: self, delegateQueue: DispatchQueue(label: "reveive_queue"), socketQueue: nil)
+        sendSocket = GCDAsyncUdpSocket(delegate: self, delegateQueue: DispatchQueue(label: "send_queue"), socketQueue: nil)
+        let tap = UITapGestureRecognizer(target: self, action: #selector(onClickEmpty(_:)))
+        view.addGestureRecognizer(tap)
+        let ips = getWiFiAddress() ?? "unknow"
+        myIPLabel.text = ips
     }
 
     @IBAction func createServer(_ sender: Any) {
@@ -37,14 +44,13 @@ class ViewController: UIViewController {
                 return
             }
             
-            try socket.bind(toPort: port)
-            try socket.beginReceiving()
+            try receiveSocket.bind(toPort: port)
+            try receiveSocket.beginReceiving()
+            appendText("创建socket成功!")
         } catch let error {
             print(error)
             appendText("创建socket失败：\(error.localizedDescription)")
         }
-        
-        appendText("创建socket成功!")
     }
     
     @IBAction func sendData(_ sender: Any) {
@@ -69,7 +75,11 @@ class ViewController: UIViewController {
             return
         }
         
-        socket.send(data, toHost: host, port: port, withTimeout: 60, tag: 200)
+        sendSocket.send(data, toHost: host, port: port, withTimeout: 60, tag: 200)
+    }
+    
+    @objc private func onClickEmpty(_ gesture: UITapGestureRecognizer) {
+        view.endEditing(true)
     }
     
     private func appendText(_ str: String) {
@@ -77,7 +87,42 @@ class ViewController: UIViewController {
         DispatchQueue.main.async {
             let newStr = self.receiveTextView.text! + str + "\n"
             self.receiveTextView.text = newStr
+            self.receiveTextView.setContentOffset(CGPoint(x: 0, y: max(0, self.receiveTextView.contentSize.height - self.receiveTextView.frame.height)), animated: true)
         }
+    }
+   
+    func getWiFiAddress() -> String? {
+        var address : String?
+
+        // Get list of all interfaces on the local machine:
+        var ifaddr : UnsafeMutablePointer<ifaddrs>?
+        guard getifaddrs(&ifaddr) == 0 else { return nil }
+        guard let firstAddr = ifaddr else { return nil }
+
+        // For each interface ...
+        for ifptr in sequence(first: firstAddr, next: { $0.pointee.ifa_next }) {
+            let interface = ifptr.pointee
+
+            // Check for IPv4 or IPv6 interface:
+            let addrFamily = interface.ifa_addr.pointee.sa_family
+            if addrFamily == UInt8(AF_INET) || addrFamily == UInt8(AF_INET6) {
+
+                // Check interface name:
+                let name = String(cString: interface.ifa_name)
+                if  name == "en0" {
+
+                    // Convert interface address to a human readable string:
+                    var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
+                    getnameinfo(interface.ifa_addr, socklen_t(interface.ifa_addr.pointee.sa_len),
+                                &hostname, socklen_t(hostname.count),
+                                nil, socklen_t(0), NI_NUMERICHOST)
+                    address = String(cString: hostname)
+                }
+            }
+        }
+        freeifaddrs(ifaddr)
+
+        return address
     }
 }
 
