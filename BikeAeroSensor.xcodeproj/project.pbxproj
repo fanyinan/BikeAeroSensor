@@ -25,6 +25,9 @@
 		CF100D8E26CAB55100C7672A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CF100D8D26CAB55100C7672A /* Assets.xcassets */; };
 		CF100D9126CAB55100C7672A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CF100D8F26CAB55100C7672A /* LaunchScreen.storyboard */; };
 		CF100D9B26CAB75800C7672A /* CocoaAsyncSocket in Frameworks */ = {isa = PBXBuildFile; productRef = CF100D9A26CAB75800C7672A /* CocoaAsyncSocket */; };
+		CF100DA026CD453300C7672A /* UDP.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF100D9F26CD453300C7672A /* UDP.swift */; };
+		CF100DA426CD4C2400C7672A /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF100DA226CD4C2400C7672A /* TestViewController.swift */; };
+		CF100DA526CD4C2400C7672A /* TestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CF100DA326CD4C2400C7672A /* TestViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +49,9 @@
 		CF100D8D26CAB55100C7672A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CF100D9026CAB55100C7672A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CF100D9226CAB55100C7672A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CF100D9F26CD453300C7672A /* UDP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UDP.swift; sourceTree = "<group>"; };
+		CF100DA226CD4C2400C7672A /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
+		CF100DA326CD4C2400C7672A /* TestViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TestViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,9 +102,12 @@
 				CC4DC40926CCDDF700031340 /* Extension */,
 				CF100D8426CAB54C00C7672A /* AppDelegate.swift */,
 				CF100D8626CAB54C00C7672A /* SceneDelegate.swift */,
+				CF100DA226CD4C2400C7672A /* TestViewController.swift */,
+				CF100DA326CD4C2400C7672A /* TestViewController.xib */,
 				CF100D8826CAB54C00C7672A /* ViewController.swift */,
 				CC4DC40026CCC61B00031340 /* MainViewController.swift */,
 				CC4DC40426CCCAD200031340 /* ChartView.swift */,
+				CF100D9F26CD453300C7672A /* UDP.swift */,
 				CC4DC3FC26CCB91300031340 /* UDPTestViewController.swift */,
 				CC4DC3FD26CCB91400031340 /* UDPTestViewController.xib */,
 				CF100D8A26CAB54C00C7672A /* Main.storyboard */,
@@ -175,6 +184,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CF100D9126CAB55100C7672A /* LaunchScreen.storyboard in Resources */,
+				CF100DA526CD4C2400C7672A /* TestViewController.xib in Resources */,
 				CF100D8E26CAB55100C7672A /* Assets.xcassets in Resources */,
 				CC4DC3FF26CCB91400031340 /* UDPTestViewController.xib in Resources */,
 				CF100D8C26CAB54C00C7672A /* Main.storyboard in Resources */,
@@ -188,6 +198,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CF100DA426CD4C2400C7672A /* TestViewController.swift in Sources */,
 				CF100D8926CAB54C00C7672A /* ViewController.swift in Sources */,
 				CC4DC41326CCDE0800031340 /* UIView+Common.swift in Sources */,
 				CC4DC41126CCDE0800031340 /* CGRect+Extension.swift in Sources */,
@@ -200,6 +211,7 @@
 				CC4DC41026CCDE0800031340 /* CGPoint+Extension.swift in Sources */,
 				CC4DC40526CCCAD200031340 /* ChartView.swift in Sources */,
 				CC4DC40126CCC61B00031340 /* MainViewController.swift in Sources */,
+				CF100DA026CD453300C7672A /* UDP.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -138,6 +138,13 @@
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ifU-Bv-joq">
+                    <rect key="frame" x="142" y="389" width="123" height="30"/>
+                    <state key="normal" title="开启模拟数据发送"/>
+                    <connections>
+                        <action selector="onSimulate:" destination="-1" eventType="touchUpInside" id="B6i-uu-ALg"/>
+                    </connections>
+                </button>
             </subviews>
             <viewLayoutGuide key="safeArea" id="3nu-8T-kBY"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -160,11 +167,13 @@
                 <constraint firstItem="3nu-8T-kBY" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="noU-6S-k22" secondAttribute="trailing" symbolic="YES" id="Qtz-AS-uek"/>
                 <constraint firstItem="3nu-8T-kBY" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="ZlF-XR-LE2" secondAttribute="trailing" symbolic="YES" id="R9M-Tu-FdR"/>
                 <constraint firstItem="M4l-cR-O20" firstAttribute="leading" secondItem="3nu-8T-kBY" secondAttribute="leading" constant="40" id="Sby-29-K4g"/>
+                <constraint firstItem="ifU-Bv-joq" firstAttribute="centerY" secondItem="6vW-RD-GO2" secondAttribute="centerY" id="YfU-Tl-1MZ"/>
                 <constraint firstItem="QPI-G0-qzO" firstAttribute="centerY" secondItem="eRH-XK-lse" secondAttribute="centerY" id="ZGt-07-f85"/>
                 <constraint firstItem="ijY-6f-ZO2" firstAttribute="top" secondItem="eRH-XK-lse" secondAttribute="bottom" constant="30" id="ZLI-3e-p2Y"/>
                 <constraint firstItem="4Rs-BM-EA6" firstAttribute="centerY" secondItem="O2j-he-25Y" secondAttribute="centerY" id="ZOw-6R-PjD"/>
                 <constraint firstItem="3nu-8T-kBY" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="6vW-RD-GO2" secondAttribute="trailing" symbolic="YES" id="Zt6-Bn-PDd"/>
                 <constraint firstItem="kfH-98-7Vd" firstAttribute="centerY" secondItem="fMW-mo-bxe" secondAttribute="centerY" id="a11-VZ-y4D"/>
+                <constraint firstItem="ifU-Bv-joq" firstAttribute="leading" secondItem="6vW-RD-GO2" secondAttribute="trailing" constant="40" id="aC1-Hu-pj9"/>
                 <constraint firstItem="fMW-mo-bxe" firstAttribute="top" secondItem="qVU-rZ-vpQ" secondAttribute="bottom" constant="30" id="bWb-5P-ht6"/>
                 <constraint firstItem="ZlF-XR-LE2" firstAttribute="top" secondItem="6vW-RD-GO2" secondAttribute="bottom" constant="40" id="ese-Dk-mgV"/>
                 <constraint firstItem="eRH-XK-lse" firstAttribute="leading" secondItem="3nu-8T-kBY" secondAttribute="leading" constant="40" id="gp0-Q2-Hdz"/>

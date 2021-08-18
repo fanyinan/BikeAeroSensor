@@ -15,7 +15,7 @@ struct ChartData {
 
 class ChartView: UIView {
     
-    var datas: [ChartData] = [ChartData(values: [], color: .white), ChartData(values: [], color: .red)]
+    var datas: [ChartData] = []
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -128,26 +128,16 @@ class ChartView: UIView {
             displayLink.isPaused = isPause
         }
     }
-    
-    private var testValues: [[Double]] = [[], []]
-    
+        
     @objc func update() {
         
-        var sets: [LineChartDataSet] = []
-        for (i, data) in datas.enumerated() {
-            
-            if i == 0 {
-                testValues[i].append(Double.random(in: 50..<55))
-            } else if i == 1 {
-                testValues[i].append(Double.random(in: 30..<40))
-            }
+        print("update")
 
-            if testValues[i].count > 60 {
-                testValues[i].removeFirst()
-            }
+        var sets: [LineChartDataSet] = []
+        for data in datas {
             
-            let values = (0..<testValues[i].count).map { j in
-                return ChartDataEntry(x: Double(j), y: testValues[i][j])
+            let values = (0..<data.values.count).map { j in
+                return ChartDataEntry(x: Double(j), y: data.values[j])
             }
 
             let set = LineChartDataSet(entries: values, label: "udp")

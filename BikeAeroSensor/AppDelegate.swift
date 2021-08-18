@@ -25,15 +25,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
 //        App.isToHiddenStatus = window.safeAreaInsets.top <= 20
         
-//        #if DEBUG
-//        let navigationViewController = UINavigationController(rootViewController: TestViewController())
-//        navigationViewController.isNavigationBarHidden = true
-//        navigationViewController.navigationBar.isTranslucent = false
-//        navigationViewController.navigationBar.backgroundColor = .white
-//        window.rootViewController = navigationViewController
-//        #else
+        #if DEBUG
+        let navigationViewController = UINavigationController(rootViewController: TestViewController())
+        navigationViewController.isNavigationBarHidden = true
+        navigationViewController.navigationBar.isTranslucent = false
+        navigationViewController.navigationBar.backgroundColor = .white
+        window.rootViewController = navigationViewController
+        #else
         window.rootViewController = MainViewController()
-//        #endif
+        #endif
         
         self.window = window
     }
