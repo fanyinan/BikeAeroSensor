@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CC4DC3FE26CCB91400031340 /* UDPTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC4DC3FC26CCB91300031340 /* UDPTestViewController.swift */; };
+		CC4DC3FF26CCB91400031340 /* UDPTestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CC4DC3FD26CCB91400031340 /* UDPTestViewController.xib */; };
+		CC4DC40126CCC61B00031340 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC4DC40026CCC61B00031340 /* MainViewController.swift */; };
+		CC4DC40526CCCAD200031340 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC4DC40426CCCAD200031340 /* ChatView.swift */; };
 		CF100D8526CAB54C00C7672A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF100D8426CAB54C00C7672A /* AppDelegate.swift */; };
 		CF100D8726CAB54C00C7672A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF100D8626CAB54C00C7672A /* SceneDelegate.swift */; };
 		CF100D8926CAB54C00C7672A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF100D8826CAB54C00C7672A /* ViewController.swift */; };
@@ -17,6 +21,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CC4DC3FC26CCB91300031340 /* UDPTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UDPTestViewController.swift; sourceTree = "<group>"; };
+		CC4DC3FD26CCB91400031340 /* UDPTestViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UDPTestViewController.xib; sourceTree = "<group>"; };
+		CC4DC40026CCC61B00031340 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		CC4DC40426CCCAD200031340 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		CF100D8126CAB54C00C7672A /* BikeAeroSensor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BikeAeroSensor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF100D8426CAB54C00C7672A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CF100D8626CAB54C00C7672A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -61,6 +69,10 @@
 				CF100D8426CAB54C00C7672A /* AppDelegate.swift */,
 				CF100D8626CAB54C00C7672A /* SceneDelegate.swift */,
 				CF100D8826CAB54C00C7672A /* ViewController.swift */,
+				CC4DC40026CCC61B00031340 /* MainViewController.swift */,
+				CC4DC40426CCCAD200031340 /* ChatView.swift */,
+				CC4DC3FC26CCB91300031340 /* UDPTestViewController.swift */,
+				CC4DC3FD26CCB91400031340 /* UDPTestViewController.xib */,
 				CF100D8A26CAB54C00C7672A /* Main.storyboard */,
 				CF100D8D26CAB55100C7672A /* Assets.xcassets */,
 				CF100D8F26CAB55100C7672A /* LaunchScreen.storyboard */,
@@ -134,6 +146,7 @@
 			files = (
 				CF100D9126CAB55100C7672A /* LaunchScreen.storyboard in Resources */,
 				CF100D8E26CAB55100C7672A /* Assets.xcassets in Resources */,
+				CC4DC3FF26CCB91400031340 /* UDPTestViewController.xib in Resources */,
 				CF100D8C26CAB54C00C7672A /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -147,7 +160,10 @@
 			files = (
 				CF100D8926CAB54C00C7672A /* ViewController.swift in Sources */,
 				CF100D8526CAB54C00C7672A /* AppDelegate.swift in Sources */,
+				CC4DC3FE26CCB91400031340 /* UDPTestViewController.swift in Sources */,
 				CF100D8726CAB54C00C7672A /* SceneDelegate.swift in Sources */,
+				CC4DC40526CCCAD200031340 /* ChatView.swift in Sources */,
+				CC4DC40126CCC61B00031340 /* MainViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
