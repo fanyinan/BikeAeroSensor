@@ -20,6 +20,7 @@ struct ProbeData {
     let sensoryaw: Double
     let bmpTemperature: Double
     let bmpPressure: Double
+    let visualData: [String: Double]
 }
 
 class VisualInfo {
@@ -55,6 +56,8 @@ class MainViewController: UIViewController {
     private let udp = UDP()
     private var legendButtons: [UIButton] = []
     
+    var currentData: ProbeData?
+    
     private var visualDatas: [VisualInfo] = [
         VisualInfo(label: "differentialPressure0", color: #colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1)),
         VisualInfo(label: "differentialPressure1", color: #colorLiteral(red: 0.5568627715, green: 0.3529411852, blue: 0.9686274529, alpha: 1)),
@@ -81,6 +84,13 @@ class MainViewController: UIViewController {
         try! udp.listen(port: 1133)
         
         setupLegend()
+        chartView.updateBlock = { [weak self] () -> [String: Double] in
+            guard let self = self else { return [:] }
+//            let data = self.currentData?.visualData ?? [:]
+//            self.currentData = nil
+            let data: [String: Double] = ["differentialPressure0": Double.random(in: 30..<40)]
+            return data
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -140,33 +150,47 @@ extension MainViewController: UDPDelegate {
         let str = String(data: data, encoding: .utf8)!
         let values = str.split(separator: ",").map({ String($0) })
         
-//        let currentDataIndex = Int(Double(values[0])!)
-//        let wiFiSignalStrength = Int(Double(values[1])!)
-//        let currentDataFrequency = Int(Double(values[2])!)
-//        let batteryVoltage = Double(values[3])!
-        appendValue(Double(values[4])!, for: "differentialPressure0")
-        appendValue(Double(values[5])!, for: "differentialPressure1")
-        appendValue(Double(values[6])!, for: "differentialPressure2")
-        appendValue(Double(values[7])!, for: "differentialPressure3")
-        appendValue(Double(values[8])!, for: "differentialPressure4")
-        appendValue(Double(values[9])!, for: "averageDPTemperature")
-//        let bmpTemperature = Double(values[10])!
-//        let bmpPressure = Double(values[11])!
-//        let pitchAngle = Double(values[12])!
-//        let rollAngle = Double(values[13])!
-//        let yawAngle = Double(values[14])!
-        appendValue(Double(values[15])!, for: "icmAccX")
-        appendValue(Double(values[16])!, for: "icmAccY")
-        appendValue(Double(values[17])!, for: "icmAccZ")
-        appendValue(Double(values[18])!, for: "icmGyrX")
-        appendValue(Double(values[19])!, for: "icmGyrY")
-        appendValue(Double(values[20])!, for: "icmGyrZ")
+        var visualData: [String: Double] = [:]
+        let currentDataIndex = Int(Double(values[0])!)
+        let wiFiSignalStrength = Int(Double(values[1])!)
+        let currentDataFrequency = Int(Double(values[2])!)
+        let batteryVoltage = Double(values[3])!
+//        appendValue(Double(values[4])!, for: "differentialPressure0")
+//        appendValue(Double(values[5])!, for: "differentialPressure1")
+//        appendValue(Double(values[6])!, for: "differentialPressure2")
+//        appendValue(Double(values[7])!, for: "differentialPressure3")
+//        appendValue(Double(values[8])!, for: "differentialPressure4")
+//        appendValue(Double(values[9])!, for: "averageDPTemperature")
+        visualData["differentialPressure0"] = Double(values[4])!
+        visualData["differentialPressure1"] = Double(values[5])!
+        visualData["differentialPressure2"] = Double(values[6])!
+        visualData["differentialPressure3"] = Double(values[7])!
+        visualData["differentialPressure4"] = Double(values[8])!
+        visualData["averageDPTemperature"] = Double(values[9])!
+
+        let bmpTemperature = Double(values[10])!
+        let bmpPressure = Double(values[11])!
+        let pitchAngle = Double(values[12])!
+        let rollAngle = Double(values[13])!
+        let yawAngle = Double(values[14])!
+//        appendValue(Double(values[15])!, for: "icmAccX")
+//        appendValue(Double(values[16])!, for: "icmAccY")
+//        appendValue(Double(values[17])!, for: "icmAccZ")
+//        appendValue(Double(values[18])!, for: "icmGyrX")
+//        appendValue(Double(values[19])!, for: "icmGyrY")
+//        appendValue(Double(values[20])!, for: "icmGyrZ")
         
-//        let probeData = ProbeData(currentDataIndex: currentDataIndex, wiFiSignalStrength: wiFiSignalStrength, currentDataFrequency: currentDataFrequency, batteryVoltage: batteryVoltage, windSpeed: 0, windPitching: 0, windYaw: 0, sensorPitch: pitchAngle, sensorRoll: rollAngle, sensoryaw: yawAngle, bmpTemperature: bmpTemperature, bmpPressure: bmpPressure)
+        visualData["icmAccX"] = Double(values[15])!
+        visualData["icmAccY"] = Double(values[16])!
+        visualData["icmAccZ"] = Double(values[17])!
+        visualData["icmGyrX"] = Double(values[18])!
+        visualData["icmGyrY"] = Double(values[19])!
+        visualData["icmGyrZ"] = Double(values[20])!
         
-        let chartDatas = visualDatas.filter({ !$0.values.isEmpty }).map({ ChartData(values: $0.values, color: $0.color) })
-        chartView.datas = chartDatas
-        print("receive")
+        let probeData = ProbeData(currentDataIndex: currentDataIndex, wiFiSignalStrength: wiFiSignalStrength, currentDataFrequency: currentDataFrequency, batteryVoltage: batteryVoltage, windSpeed: 0, windPitching: 0, windYaw: 0, sensorPitch: pitchAngle, sensorRoll: rollAngle, sensoryaw: yawAngle, bmpTemperature: bmpTemperature, bmpPressure: bmpPressure, visualData: visualData)
+        self.currentData = probeData
+//        let chartDatas = visualDatas.filter({ !$0.values.isEmpty }).map({ ChartData(values: $0.values, color: $0.color) })
+        print("receive", probeData.currentDataIndex)
     }
     
     private func appendValue(_ value: Double, for key: String) {

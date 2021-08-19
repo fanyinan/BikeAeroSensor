@@ -8,14 +8,18 @@
 import UIKit
 import Charts
 
-struct ChartData {
-    let values: [Double]
-    let color: UIColor
+class ChartData {
+    var values: [Double] = []
+    var color: UIColor = .random
 }
 
 class ChartView: UIView {
     
-    var datas: [ChartData] = []
+    private var datas: [String: ChartData] = [:]
+    var lineChartView = LineChartView()
+    let xAxisCount = 20
+    var maxValueCount: Int { xAxisCount + 1 }
+    var updateBlock: (() -> [String: Double])?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -66,8 +70,10 @@ class ChartView: UIView {
 
         lineChartView.rightAxis.enabled = false
         lineChartView.xAxis.gridColor = lineColor
-        lineChartView.xAxis.labelTextColor = .clear
-        lineChartView.xAxis.axisLineColor = .clear
+        lineChartView.xAxis.labelTextColor = lineColor
+        lineChartView.xAxis.axisLineColor = lineColor
+        lineChartView.xAxis.axisMinimum = 0
+        lineChartView.xAxis.axisMaximum = Double(xAxisCount)
     }
     
     required init?(coder: NSCoder) {
@@ -79,17 +85,11 @@ class ChartView: UIView {
         lineChartView.frame = bounds
     }
     
-    var lineChartView = LineChartView()
-
     lazy var displayLink: CADisplayLink = {
         let displayLink = CADisplayLink(target: self, selector: #selector(update))
         displayLink.add(to: RunLoop.main, forMode: .default)
         displayLink.isPaused = true
-        if #available(iOS 10.0, *) {
-            displayLink.preferredFramesPerSecond = 30
-        } else {
-            // Fallback on earlier versions
-        }
+        displayLink.preferredFramesPerSecond = 1
         return displayLink
     }()
 
@@ -133,13 +133,38 @@ class ChartView: UIView {
         
         print("update")
 
-        var sets: [LineChartDataSet] = []
-        for data in datas {
-            
-            let values = (0..<data.values.count).map { j in
-                return ChartDataEntry(x: Double(j), y: data.values[j])
+        for value in datas.values {
+            guard value.values.count > maxValueCount else { continue }
+            value.values.removeFirst()
+        }
+        
+        if let newData = updateBlock?() {
+            for (key, value) in newData {
+                let data: ChartData
+                if let _data = datas[key] {
+                    data = _data
+                } else {
+                    data = ChartData()
+                    datas[key] = data
+                }
+                data.values.append(value)
+//                data.color = value.1
             }
+        }
+        
+        var sets: [LineChartDataSet] = []
+        
+        for data in datas.values {
+            
+//            let values = (0..<data.values.count).map { j in
+//                return ChartDataEntry(x: Double(maxValueCount - data.values.count + j), y: data.values[j])
+//            }
 
+            let values = [
+                ChartDataEntry(x: 0, y: 30),
+                ChartDataEntry(x: 20, y: 30)
+            ]
+            
             let set = LineChartDataSet(entries: values, label: "udp")
             set.drawIconsEnabled = false
             set.drawValuesEnabled = false
@@ -147,7 +172,7 @@ class ChartView: UIView {
     //        set1.line
             setup(set)
             
-            set.colors = [data.color]
+            set.colors = [data.color, data.color]
             sets.append(set)
         }
         
