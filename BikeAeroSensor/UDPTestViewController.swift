@@ -122,7 +122,8 @@ class UDPTestViewController: UIViewController {
             return
         }
         
-        let exampleValues: [Double] = [90,45,4.11,128.58,128.58,128.58,128.58,128.58,33.06,35.12,99.21138,-9.8,16.2,174.2,9.81,9.81,9.81,12.6,12.6,12.6]
+        let exampleValues: [Double] = [90]
+//        let exampleValues: [Double] = [90,45,4.11,128.58,128.58,128.58,128.58,128.58,33.06,35.12,99.21138,-9.8,16.2,174.2,9.81,9.81,9.81,12.6,12.6,12.6]
         
         var simulateDatas = exampleValues.map({ Double.random(in: ($0 - Double.random(in: 0..<5))..<($0 + Double.random(in: 0..<5))) })
         simulateDatas.insert(Double(currentDataIndex), at: 0)

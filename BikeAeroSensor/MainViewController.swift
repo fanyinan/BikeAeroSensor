@@ -9,17 +9,17 @@ import UIKit
 
 struct ProbeData {
     let currentDataIndex: Int
-    let wiFiSignalStrength: Int
-    let currentDataFrequency: Int
-    let batteryVoltage: Double
-    let windSpeed: Double
-    let windPitching: Double
-    let windYaw: Double
-    let sensorPitch: Double
-    let sensorRoll: Double
-    let sensoryaw: Double
-    let bmpTemperature: Double
-    let bmpPressure: Double
+//    let wiFiSignalStrength: Int
+//    let currentDataFrequency: Int
+//    let batteryVoltage: Double
+//    let windSpeed: Double
+//    let windPitching: Double
+//    let windYaw: Double
+//    let sensorPitch: Double
+//    let sensorRoll: Double
+//    let sensoryaw: Double
+//    let bmpTemperature: Double
+//    let bmpPressure: Double
     let visualData: [String: Double]
 }
 
@@ -86,10 +86,12 @@ class MainViewController: UIViewController {
         setupLegend()
         chartView.updateBlock = { [weak self] () -> [String: Double] in
             guard let self = self else { return [:] }
-//            let data = self.currentData?.visualData ?? [:]
-//            self.currentData = nil
-            let data: [String: Double] = ["differentialPressure0": Double.random(in: 30..<40)]
-            return data
+            let data = self.currentData?.visualData ?? [:]
+            let selected = self.visualDatas.filter({ $0.needShow }).map({ $0.label })
+            let dataToShow = data.filter({ selected.contains($0.key) })
+            self.currentData = nil
+//            let data: [String: Double] = ["differentialPressure0": Double.random(in: 30..<40)]
+            return dataToShow
         }
     }
     
@@ -109,7 +111,7 @@ class MainViewController: UIViewController {
             let row = i / colCount
             let col = i % colCount
             
-            button.frame = CGRect(x: space + CGFloat(col) * (width + space), y: chartContainerView.maxY + space + CGFloat(row) * (height + space), width: width, height: height)
+            button.frame = CGRect(x: space + CGFloat(col) * (width + space), y: chartContainerView.frame.maxY + space + CGFloat(row) * (height + space), width: width, height: height)
             
         }
     }
@@ -152,27 +154,27 @@ extension MainViewController: UDPDelegate {
         
         var visualData: [String: Double] = [:]
         let currentDataIndex = Int(Double(values[0])!)
-        let wiFiSignalStrength = Int(Double(values[1])!)
-        let currentDataFrequency = Int(Double(values[2])!)
-        let batteryVoltage = Double(values[3])!
+//        let wiFiSignalStrength = Int(Double(values[1])!)
+//        let currentDataFrequency = Int(Double(values[2])!)
+//        let batteryVoltage = Double(values[3])!
 //        appendValue(Double(values[4])!, for: "differentialPressure0")
 //        appendValue(Double(values[5])!, for: "differentialPressure1")
 //        appendValue(Double(values[6])!, for: "differentialPressure2")
 //        appendValue(Double(values[7])!, for: "differentialPressure3")
 //        appendValue(Double(values[8])!, for: "differentialPressure4")
 //        appendValue(Double(values[9])!, for: "averageDPTemperature")
-        visualData["differentialPressure0"] = Double(values[4])!
-        visualData["differentialPressure1"] = Double(values[5])!
-        visualData["differentialPressure2"] = Double(values[6])!
-        visualData["differentialPressure3"] = Double(values[7])!
-        visualData["differentialPressure4"] = Double(values[8])!
-        visualData["averageDPTemperature"] = Double(values[9])!
+        visualData["differentialPressure0"] = Double(values[1])!
+//        visualData["differentialPressure1"] = Double(values[5])!
+//        visualData["differentialPressure2"] = Double(values[6])!
+//        visualData["differentialPressure3"] = Double(values[7])!
+//        visualData["differentialPressure4"] = Double(values[8])!
+//        visualData["averageDPTemperature"] = Double(values[9])!
 
-        let bmpTemperature = Double(values[10])!
-        let bmpPressure = Double(values[11])!
-        let pitchAngle = Double(values[12])!
-        let rollAngle = Double(values[13])!
-        let yawAngle = Double(values[14])!
+//        let bmpTemperature = Double(values[10])!
+//        let bmpPressure = Double(values[11])!
+//        let pitchAngle = Double(values[12])!
+//        let rollAngle = Double(values[13])!
+//        let yawAngle = Double(values[14])!
 //        appendValue(Double(values[15])!, for: "icmAccX")
 //        appendValue(Double(values[16])!, for: "icmAccY")
 //        appendValue(Double(values[17])!, for: "icmAccZ")
@@ -180,14 +182,15 @@ extension MainViewController: UDPDelegate {
 //        appendValue(Double(values[19])!, for: "icmGyrY")
 //        appendValue(Double(values[20])!, for: "icmGyrZ")
         
-        visualData["icmAccX"] = Double(values[15])!
-        visualData["icmAccY"] = Double(values[16])!
-        visualData["icmAccZ"] = Double(values[17])!
-        visualData["icmGyrX"] = Double(values[18])!
-        visualData["icmGyrY"] = Double(values[19])!
-        visualData["icmGyrZ"] = Double(values[20])!
+//        visualData["icmAccX"] = Double(values[15])!
+//        visualData["icmAccY"] = Double(values[16])!
+//        visualData["icmAccZ"] = Double(values[17])!
+//        visualData["icmGyrX"] = Double(values[18])!
+//        visualData["icmGyrY"] = Double(values[19])!
+//        visualData["icmGyrZ"] = Double(values[20])!
         
-        let probeData = ProbeData(currentDataIndex: currentDataIndex, wiFiSignalStrength: wiFiSignalStrength, currentDataFrequency: currentDataFrequency, batteryVoltage: batteryVoltage, windSpeed: 0, windPitching: 0, windYaw: 0, sensorPitch: pitchAngle, sensorRoll: rollAngle, sensoryaw: yawAngle, bmpTemperature: bmpTemperature, bmpPressure: bmpPressure, visualData: visualData)
+        let probeData = ProbeData(currentDataIndex: currentDataIndex, visualData: visualData)
+//        let probeData = ProbeData(currentDataIndex: currentDataIndex, wiFiSignalStrength: wiFiSignalStrength, currentDataFrequency: currentDataFrequency, batteryVoltage: batteryVoltage, windSpeed: 0, windPitching: 0, windYaw: 0, sensorPitch: pitchAngle, sensorRoll: rollAngle, sensoryaw: yawAngle, bmpTemperature: bmpTemperature, bmpPressure: bmpPressure, visualData: visualData)
         self.currentData = probeData
 //        let chartDatas = visualDatas.filter({ !$0.values.isEmpty }).map({ ChartData(values: $0.values, color: $0.color) })
         print("receive", probeData.currentDataIndex)

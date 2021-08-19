@@ -11,7 +11,6 @@
 		CC4DC3FF26CCB91400031340 /* UDPTestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CC4DC3FD26CCB91400031340 /* UDPTestViewController.xib */; };
 		CC4DC40126CCC61B00031340 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC4DC40026CCC61B00031340 /* MainViewController.swift */; };
 		CC4DC40526CCCAD200031340 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC4DC40426CCCAD200031340 /* ChartView.swift */; };
-		CC4DC40826CCCCBC00031340 /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = CC4DC40726CCCCBC00031340 /* Charts */; };
 		CC4DC41026CCDE0800031340 /* CGPoint+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC4DC40A26CCDE0800031340 /* CGPoint+Extension.swift */; };
 		CC4DC41126CCDE0800031340 /* CGRect+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC4DC40B26CCDE0800031340 /* CGRect+Extension.swift */; };
 		CC4DC41226CCDE0800031340 /* UIView+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC4DC40C26CCDE0800031340 /* UIView+Layout.swift */; };
@@ -28,6 +27,10 @@
 		CF100DA026CD453300C7672A /* UDP.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF100D9F26CD453300C7672A /* UDP.swift */; };
 		CF100DA426CD4C2400C7672A /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF100DA226CD4C2400C7672A /* TestViewController.swift */; };
 		CF100DA526CD4C2400C7672A /* TestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CF100DA326CD4C2400C7672A /* TestViewController.xib */; };
+		CF100DC926CEA7C900C7672A /* ChartColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF100DC626CEA7C900C7672A /* ChartColors.swift */; };
+		CF100DCA26CEA7C900C7672A /* Chart.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF100DC726CEA7C900C7672A /* Chart.swift */; };
+		CF100DCB26CEA7C900C7672A /* ChartSeries.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF100DC826CEA7C900C7672A /* ChartSeries.swift */; };
+		CF100DD826CEBA9000C7672A /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = CF100DD726CEBA9000C7672A /* Algorithms */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +55,9 @@
 		CF100D9F26CD453300C7672A /* UDP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UDP.swift; sourceTree = "<group>"; };
 		CF100DA226CD4C2400C7672A /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 		CF100DA326CD4C2400C7672A /* TestViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TestViewController.xib; sourceTree = "<group>"; };
+		CF100DC626CEA7C900C7672A /* ChartColors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartColors.swift; sourceTree = "<group>"; };
+		CF100DC726CEA7C900C7672A /* Chart.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chart.swift; sourceTree = "<group>"; };
+		CF100DC826CEA7C900C7672A /* ChartSeries.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartSeries.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,8 +65,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CF100DD826CEBA9000C7672A /* Algorithms in Frameworks */,
 				CF100D9B26CAB75800C7672A /* CocoaAsyncSocket in Frameworks */,
-				CC4DC40826CCCCBC00031340 /* Charts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -107,6 +113,7 @@
 				CF100D8826CAB54C00C7672A /* ViewController.swift */,
 				CC4DC40026CCC61B00031340 /* MainViewController.swift */,
 				CC4DC40426CCCAD200031340 /* ChartView.swift */,
+				CF100DC526CEA7B900C7672A /* Chart */,
 				CF100D9F26CD453300C7672A /* UDP.swift */,
 				CC4DC3FC26CCB91300031340 /* UDPTestViewController.swift */,
 				CC4DC3FD26CCB91400031340 /* UDPTestViewController.xib */,
@@ -116,6 +123,16 @@
 				CF100D9226CAB55100C7672A /* Info.plist */,
 			);
 			path = BikeAeroSensor;
+			sourceTree = "<group>";
+		};
+		CF100DC526CEA7B900C7672A /* Chart */ = {
+			isa = PBXGroup;
+			children = (
+				CF100DC726CEA7C900C7672A /* Chart.swift */,
+				CF100DC626CEA7C900C7672A /* ChartColors.swift */,
+				CF100DC826CEA7C900C7672A /* ChartSeries.swift */,
+			);
+			path = Chart;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -136,7 +153,7 @@
 			name = BikeAeroSensor;
 			packageProductDependencies = (
 				CF100D9A26CAB75800C7672A /* CocoaAsyncSocket */,
-				CC4DC40726CCCCBC00031340 /* Charts */,
+				CF100DD726CEBA9000C7672A /* Algorithms */,
 			);
 			productName = BikeAeroSensor;
 			productReference = CF100D8126CAB54C00C7672A /* BikeAeroSensor.app */;
@@ -167,7 +184,7 @@
 			mainGroup = CF100D7826CAB54B00C7672A;
 			packageReferences = (
 				CF100D9926CAB75800C7672A /* XCRemoteSwiftPackageReference "CocoaAsyncSocket" */,
-				CC4DC40626CCCCBC00031340 /* XCRemoteSwiftPackageReference "Charts" */,
+				CF100DD626CEBA9000C7672A /* XCRemoteSwiftPackageReference "swift-algorithms" */,
 			);
 			productRefGroup = CF100D8226CAB54C00C7672A /* Products */;
 			projectDirPath = "";
@@ -206,12 +223,15 @@
 				CF100D8526CAB54C00C7672A /* AppDelegate.swift in Sources */,
 				CC4DC3FE26CCB91400031340 /* UDPTestViewController.swift in Sources */,
 				CF100D8726CAB54C00C7672A /* SceneDelegate.swift in Sources */,
+				CF100DCA26CEA7C900C7672A /* Chart.swift in Sources */,
 				CC4DC41426CCDE0800031340 /* CGSize+Extension.swift in Sources */,
 				CC4DC41226CCDE0800031340 /* UIView+Layout.swift in Sources */,
 				CC4DC41026CCDE0800031340 /* CGPoint+Extension.swift in Sources */,
 				CC4DC40526CCCAD200031340 /* ChartView.swift in Sources */,
+				CF100DCB26CEA7C900C7672A /* ChartSeries.swift in Sources */,
 				CC4DC40126CCC61B00031340 /* MainViewController.swift in Sources */,
 				CF100DA026CD453300C7672A /* UDP.swift in Sources */,
+				CF100DC926CEA7C900C7672A /* ChartColors.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -415,14 +435,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		CC4DC40626CCCCBC00031340 /* XCRemoteSwiftPackageReference "Charts" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/danielgindi/Charts.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.1;
-			};
-		};
 		CF100D9926CAB75800C7672A /* XCRemoteSwiftPackageReference "CocoaAsyncSocket" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/robbiehanson/CocoaAsyncSocket.git";
@@ -431,18 +443,26 @@
 				minimumVersion = 7.6.5;
 			};
 		};
+		CF100DD626CEBA9000C7672A /* XCRemoteSwiftPackageReference "swift-algorithms" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-algorithms.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.2.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		CC4DC40726CCCCBC00031340 /* Charts */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = CC4DC40626CCCCBC00031340 /* XCRemoteSwiftPackageReference "Charts" */;
-			productName = Charts;
-		};
 		CF100D9A26CAB75800C7672A /* CocoaAsyncSocket */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = CF100D9926CAB75800C7672A /* XCRemoteSwiftPackageReference "CocoaAsyncSocket" */;
 			productName = CocoaAsyncSocket;
+		};
+		CF100DD726CEBA9000C7672A /* Algorithms */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CF100DD626CEBA9000C7672A /* XCRemoteSwiftPackageReference "swift-algorithms" */;
+			productName = Algorithms;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

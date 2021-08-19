@@ -82,50 +82,50 @@ extension UIView {
         }
     }
     
-    var minY: CGFloat {
-        
-        get {
-            return frame.minY
-        }
-        
-        set {
-            frame.origin.y = newValue
-        }
-    }
-    
-    var minX: CGFloat {
-        
-        get {
-            return frame.minX
-        }
-        
-        set {
-            frame.origin.x = newValue
-        }
-    }
-    
-    var maxY: CGFloat {
-        
-        get {
-            return frame.maxY
-        }
-        
-        set {
-            frame.origin.y = newValue - frame.height
-        }
-    }
-    
-    var maxX: CGFloat {
-        
-        get {
-            return frame.maxX
-        }
-        
-        set {
-            frame.origin.x = newValue - frame.width
-        }
-    }
-    
+//    var minY: CGFloat {
+//        
+//        get {
+//            return frame.minY
+//        }
+//        
+//        set {
+//            frame.origin.y = newValue
+//        }
+//    }
+//    
+//    var minX: CGFloat {
+//        
+//        get {
+//            return frame.minX
+//        }
+//        
+//        set {
+//            frame.origin.x = newValue
+//        }
+//    }
+//    
+//    var maxY: CGFloat {
+//        
+//        get {
+//            return frame.maxY
+//        }
+//        
+//        set {
+//            frame.origin.y = newValue - frame.height
+//        }
+//    }
+//    
+//    var maxX: CGFloat {
+//        
+//        get {
+//            return frame.maxX
+//        }
+//        
+//        set {
+//            frame.origin.x = newValue - frame.width
+//        }
+//    }
+//    
     var height: CGFloat {
         
         get {
@@ -227,26 +227,26 @@ extension UIView {
         frame = newFrame
     }
     
-    func top(of view: UIView, offset: CGFloat) {
-        maxY = view.minY - offset
-    }
-    
-    func bottom(of view: UIView, offset: CGFloat) {
-        minY = view.maxY + offset
-    }
-    
-    func left(of view: UIView, offset: CGFloat) {
-        maxX = view.minX - offset
-    }
-    
-    func setBottomMargin(_ margin: CGFloat, flexHeight isFlexHeight: Bool = false) {
-        guard let superview = superview else { return }
-        if isFlexHeight {
-            height = superview.height - minY - margin
-        } else {
-            maxY = superview.height - margin
-        }
-    }
+//    func top(of view: UIView, offset: CGFloat) {
+//        maxY = view.minY - offset
+//    }
+//    
+//    func bottom(of view: UIView, offset: CGFloat) {
+//        minY = view.maxY + offset
+//    }
+//    
+//    func left(of view: UIView, offset: CGFloat) {
+//        maxX = view.minX - offset
+//    }
+//    
+//    func setBottomMargin(_ margin: CGFloat, flexHeight isFlexHeight: Bool = false) {
+//        guard let superview = superview else { return }
+//        if isFlexHeight {
+//            height = superview.height - minY - margin
+//        } else {
+//            maxY = superview.height - margin
+//        }
+//    }
     
     func frame(in view: UIView?) -> CGRect {
         return convert(bounds, to: view)
