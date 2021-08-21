@@ -109,7 +109,7 @@ class MainViewController: UIViewController {
         settingButton.backgroundColor = #colorLiteral(red: 0.3471153975, green: 0.5619726777, blue: 0.6928223372, alpha: 1)
         settingButton.addTarget(self, action: #selector(onSetting(_:)), for: .touchUpInside)
         topBarView.addSubview(tareButton)
-        tareButton.setTitle("tare", for: .normal)
+        tareButton.setTitle("Tare", for: .normal)
         tareButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)
         tareButton.setTitleColor(.white, for: .normal)
         tareButton.backgroundColor = #colorLiteral(red: 0.3471153975, green: 0.5619726777, blue: 0.6928223372, alpha: 1)

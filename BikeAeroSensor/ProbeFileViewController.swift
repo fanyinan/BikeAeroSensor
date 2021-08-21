@@ -34,7 +34,6 @@ class ProbeFileViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(cellType: ProbeFileCell.self)
-        tableView.contentInsetAdjustmentBehavior = .never
         tableView.rowHeight = 70
         tableView.separatorColor = .separator
         tableView.separatorInset = .zero
@@ -61,15 +60,25 @@ extension ProbeFileViewController: UITableViewDataSource {
 extension ProbeFileViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let url = fileList[indexPath.row].fileURL
-        let zipURL = Path.temporary + Path(url.lastPathComponent + ".zip")
-        do {
-            try Zip.zipFiles(paths: [url], zipFilePath: zipURL.url, password: nil, progress: nil)
-            let activityVC = UIActivityViewController(activityItems: [zipURL.url], applicationActivities: nil)
-            navigationController?.present(activityVC, animated: true, completion: nil)
-        } catch let error {
-            print(error)
+        let path = fileList[indexPath.row].filePath
+        guard path.exists else {
+            Toast.showRightNow("文件不存在")
+            return
         }
+        
+        let zipURL = Path.temporary + Path(path.lastComponent + ".zip")
+        if !zipURL.exists {
+            do {
+                try Zip.zipFiles(paths: [path.url], zipFilePath: zipURL.url, password: nil, progress: nil)
+            } catch let error {
+                Toast.showRightNow(error.localizedDescription)
+                return
+            }
+        }
+        
+        let activityVC = UIActivityViewController(activityItems: [zipURL.url], applicationActivities: nil)
+        navigationController?.present(activityVC, animated: true, completion: nil)
+        
         
     }
     

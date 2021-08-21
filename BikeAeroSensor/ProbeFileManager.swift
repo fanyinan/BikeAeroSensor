@@ -35,10 +35,13 @@ class ProbeDataFile {
 }
 
 class ProbeFileInfo: Codable {
-    var fileURL: URL
+    var fileName: String
+    var filePath: Path {
+        return ProbeFileManager.shared.folderPath + Path(fileName)
+    }
     
-    init(fileURL: URL) {
-        self.fileURL = fileURL
+    init(fileName: String) {
+        self.fileName = fileName
     }
 }
 
@@ -52,7 +55,11 @@ class ProbeFileManager {
     private(set) var fileInfos: [ProbeFileInfo] = []
     
     private lazy var configFilePath: Path = {
-        return Path.document + Path("config.json")
+        return folderPath + Path("config.json")
+    }()
+    
+    private(set) lazy var folderPath: Path = {
+        return Path.document + Path("recoredData")
     }()
     
     private let fileQueue = DispatchQueue(label: "com.file")
@@ -61,6 +68,7 @@ class ProbeFileManager {
         dateFormatter.dateFormat = "YYYY-MM-dd_HH:mm:ss"
         let emptyDraftInfo: [ProbeFileInfo] = []
         let data = try! JSONEncoder().encode(emptyDraftInfo)
+        folderPath.createFolderIfNeeded()
         configFilePath.createFileIfNeeded(data: data)
     }
     
@@ -72,7 +80,7 @@ class ProbeFileManager {
     func begin()  {
         fileQueue.async {
             let fileName = self.dateFormatter.string(from: Date())
-            let filePath = Path.document + Path(fileName)
+            let filePath = self.folderPath + Path(fileName)
             self.currentFile = ProbeDataFile(path: filePath)
         }
     }
@@ -94,7 +102,7 @@ class ProbeFileManager {
                 completion(false)
                 return
             }
-            self.fileInfos.append(ProbeFileInfo(fileURL: self.currentFile.path.url))
+            self.fileInfos.append(ProbeFileInfo(fileName: self.currentFile.path.lastComponentWithoutExtension))
             let jsonData = try! JSONEncoder().encode(self.fileInfos)
             try! self.configFilePath.write(jsonData)
             self.currentFile = nil

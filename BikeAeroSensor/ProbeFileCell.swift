@@ -40,6 +40,6 @@ class ProbeFileCell: UITableViewCell, Reusable {
     }
     
     func setData(_ fileInfo: ProbeFileInfo) {
-        fileNameLabel.text = fileInfo.fileURL.lastPathComponent
+        fileNameLabel.text = fileInfo.fileName
     }
 }

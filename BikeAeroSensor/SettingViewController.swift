@@ -21,7 +21,7 @@ class SettingViewController: UIViewController {
     private var isSimulateOpen = false
     private var currentDataIndex = 0
     
-    lazy var displayLink: CADisplayLink = {
+    private lazy var displayLink: CADisplayLink = {
         let displayLink = CADisplayLink(target: self, selector: #selector(update))
         displayLink.add(to: RunLoop.main, forMode: .default)
         displayLink.isPaused = true
@@ -50,6 +50,11 @@ class SettingViewController: UIViewController {
         let ips = getWiFiAddress() ?? "unknow"
         myIPLabel.text = ips
         UDPManager.default.addListener(self)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        displayLink.invalidate()
     }
 
     @IBAction func onBind(_ sender: Any) {
