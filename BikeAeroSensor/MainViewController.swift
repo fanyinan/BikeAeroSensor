@@ -45,13 +45,18 @@ class MainViewController: UIViewController {
     private let recordButton = UIButton()
     private let fileButton = UIButton()
     private let settingButton = UIButton()
-
+    private let tareButton = UIButton()
+    
     private var currentData: ProbeData?
     
     private var isBegin = false
     private let toleranceFrameCount = 5
     private var currentDelayCount = 0
     private var backupData: [String: Double]?
+    
+    private var tarePreData: [String: [Double]]?
+    private let tarePreDataCount = 10
+    private var tareData: [String: Double]?
     
     #if DEBUG
     private var delayFrame = 0
@@ -103,6 +108,12 @@ class MainViewController: UIViewController {
         settingButton.setTitleColor(.white, for: .normal)
         settingButton.backgroundColor = #colorLiteral(red: 0.3471153975, green: 0.5619726777, blue: 0.6928223372, alpha: 1)
         settingButton.addTarget(self, action: #selector(onSetting(_:)), for: .touchUpInside)
+        topBarView.addSubview(tareButton)
+        tareButton.setTitle("tare", for: .normal)
+        tareButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+        tareButton.setTitleColor(.white, for: .normal)
+        tareButton.backgroundColor = #colorLiteral(red: 0.3471153975, green: 0.5619726777, blue: 0.6928223372, alpha: 1)
+        tareButton.addTarget(self, action: #selector(onTare(_:)), for: .touchUpInside)
         chartContainerView.addSubview(chartView)
         chartView.dataSource = self
         
@@ -146,6 +157,9 @@ class MainViewController: UIViewController {
         settingButton.size = CGSize(width: 60, height: 26)
         settingButton.frame.minX = 20
         settingButton.centerYInSuperview()
+        tareButton.size = CGSize(width: 60, height: 26)
+        tareButton.frame.minX = settingButton.frame.maxX + 20
+        tareButton.centerYInSuperview()
         chartView.frame = CGRect(x: 0, y: topBarView.frame.maxY, width: view.frame.width, height: chartContainerView.frame.height - topBarView.frame.maxY)
         
         let colCount = 3
@@ -170,7 +184,7 @@ class MainViewController: UIViewController {
             button.setTitle(data.label, for: .normal)
             button.setTitleColor(.white, for: .normal)
             button.setTitleColor(.black, for: .selected)
-            button.isSelected = true
+            button.isSelected = data.needShow
             button.backgroundColor = data.color
             button.titleLabel?.font = UIFont.systemFont(ofSize: 12)
             button.addTarget(self, action: #selector(onClickLegend(_:)), for: .touchUpInside)
@@ -188,7 +202,7 @@ class MainViewController: UIViewController {
     
     @objc private func onRecord(_ button: UIButton) {
         button.isSelected = !button.isSelected
-        recordButton.backgroundColor = button.isSelected ? #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1) : #colorLiteral(red: 0.3471153975, green: 0.5619726777, blue: 0.6928223372, alpha: 1)
+        button.backgroundColor = button.isSelected ? #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1) : #colorLiteral(red: 0.3471153975, green: 0.5619726777, blue: 0.6928223372, alpha: 1)
         if button.isSelected {
             ProbeFileManager.shared.begin()
         } else {
@@ -211,6 +225,17 @@ class MainViewController: UIViewController {
     @objc private func onSetting(_ button: UIButton) {
         let vc = SettingViewController()
         navigationController?.present(vc, animated: true, completion: nil)
+    }
+    
+    @objc private func onTare(_ button: UIButton) {
+        button.isSelected = !button.isSelected
+        button.backgroundColor = button.isSelected ? #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1) : #colorLiteral(red: 0.3471153975, green: 0.5619726777, blue: 0.6928223372, alpha: 1)
+        if button.isSelected {
+            tarePreData = [:]
+        } else {
+            tarePreData = nil
+            tareData = nil
+        }
     }
 }
 
@@ -251,6 +276,15 @@ extension MainViewController: UDPListener {
 //        let probeData = ProbeData(currentDataIndex: currentDataIndex, visualData: visualData)
         let probeData = ProbeData(currentDataIndex: currentDataIndex, wiFiSignalStrength: wiFiSignalStrength, currentDataFrequency: currentDataFrequency, batteryVoltage: batteryVoltage, windSpeed: 0, windPitching: 0, windYaw: 0, sensorPitch: pitchAngle, sensorRoll: rollAngle, sensoryaw: yawAngle, bmpTemperature: bmpTemperature, bmpPressure: bmpPressure, visualData: visualData)
         self.currentData = probeData
+        
+        if let tarePreData = tarePreData, (tarePreData.first?.value.count ?? 0) < tarePreDataCount {
+            for (key, value) in visualData {
+                self.tarePreData![key, default: []].append(value)
+            }
+            if (self.tarePreData!.first?.value.count ?? 0) == tarePreDataCount {
+                self.tareData = Dictionary(uniqueKeysWithValues: self.tarePreData!.map({ ($0, $1.reduce(0, +) / Double(tarePreDataCount)) }))
+            }
+        }
 //        let chartDatas = visualDatas.filter({ !$0.values.isEmpty }).map({ ChartData(values: $0.values, color: $0.color) })
 //        print("receive", probeData.currentDataIndex)
     }
@@ -298,7 +332,10 @@ extension MainViewController: ChartViewDataSource {
         }
         
         let selected = visualDatas.filter({ $0.needShow }).map({ $0.label })
-        let dataToShow = data.filter({ selected.contains($0.key) })
+        var dataToShow = data.filter({ selected.contains($0.key) })
+        if let tareData = tareData {
+            dataToShow = Dictionary(uniqueKeysWithValues: dataToShow.map({ ($0, $1 - (tareData[$0] ?? 0)) }))
+        }
         currentData = nil
         return dataToShow
         //            let data: [String: Double] = ["differentialPressure0": Double.random(in: 30..<40)]

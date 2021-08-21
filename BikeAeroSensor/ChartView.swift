@@ -41,9 +41,11 @@ class ChartView: UIView {
         super.init(frame: frame)
         
         chart.xLabels = (0...xAxisCount).striding(by: 2).map({ Double($0) })
-        chart.yLabels = (0...140).striding(by: 20).map({ Double($0) })
+        chart.yLabels = (-20...140).striding(by: 20).map({ Double($0) })
         chart.xLabelsFormatter = { _, _ in "" }
         chart.labelColor = .white
+        chart.gridColor = #colorLiteral(red: 0.9878740907, green: 1, blue: 1, alpha: 0.1)
+        chart.axesColor = #colorLiteral(red: 0.9878740907, green: 1, blue: 1, alpha: 0.1)
         addSubview(chart)
     }
     
