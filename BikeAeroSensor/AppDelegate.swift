@@ -27,15 +27,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         #if DEBUG
         let navigationViewController = UINavigationController(rootViewController: TestViewController())
-        navigationViewController.isNavigationBarHidden = true
+//        navigationViewController.isNavigationBarHidden = true
         navigationViewController.navigationBar.isTranslucent = false
         navigationViewController.navigationBar.backgroundColor = .white
         window.rootViewController = navigationViewController
         #else
-        window.rootViewController = MainViewController()
+        let navigationViewController = UINavigationController(rootViewController: MainViewController())
+        window.rootViewController = navigationViewController()
         #endif
         
         self.window = window
+        
     }
     
     // MARK: UISceneSession Lifecycle

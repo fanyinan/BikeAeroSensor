@@ -39,9 +39,12 @@ class MainViewController: UIViewController {
 
     private let chartView = ChartView()
     private let chartContainerView = UIView()
-    private let udp = UDP()
     private var legendButtons: [UIButton] = []
-    
+    private let topBarView = UIView()
+    private let recordButton = UIButton()
+    private let fileButton = UIButton()
+
+    private let udp = UDP()
     private var currentData: ProbeData?
     
     private var isBegin = false
@@ -69,14 +72,34 @@ class MainViewController: UIViewController {
         VisualInfo(label: "icmGyrZ", color: #colorLiteral(red: 1, green: 0.5409764051, blue: 0.8473142982, alpha: 1)),
     ]
 
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         view.backgroundColor = .white
         view.addSubview(chartContainerView)
         chartContainerView.backgroundColor = #colorLiteral(red: 0.03921568627, green: 0.4039215686, blue: 0.7019607843, alpha: 1)
+        chartContainerView.addSubview(topBarView)
+        topBarView.addSubview(recordButton)
+        recordButton.setTitle("开始录制", for: .normal)
+        recordButton.setTitle("停止录制", for: .selected)
+        recordButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+        recordButton.setTitleColor(.white, for: .normal)
+        recordButton.backgroundColor = #colorLiteral(red: 0.3471153975, green: 0.5619726777, blue: 0.6928223372, alpha: 1)
+        recordButton.addTarget(self, action: #selector(onRecord(_:)), for: .touchUpInside)
+        topBarView.addSubview(fileButton)
+        fileButton.setTitle("文件", for: .normal)
+        fileButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+        fileButton.setTitleColor(.white, for: .normal)
+        fileButton.backgroundColor = #colorLiteral(red: 0.3471153975, green: 0.5619726777, blue: 0.6928223372, alpha: 1)
+        fileButton.addTarget(self, action: #selector(onFile(_:)), for: .touchUpInside)
         chartContainerView.addSubview(chartView)
+                
+        let appearance = ToastView.appearance()
+        appearance.backgroundColor = .alertBackground
+        appearance.cornerRadius = 4
+        appearance.textColor = .text
+        appearance.font = UIFont.systemFont(ofSize: 14)
+        
         udp.delegate = self
         try! udp.listen(port: 1133)
         
@@ -127,13 +150,36 @@ class MainViewController: UIViewController {
             return dataToShow
             //            let data: [String: Double] = ["differentialPressure0": Double.random(in: 30..<40)]
         }
+        
+        DispatchQueue.global().async {
+            ProbeFileManager.shared.load()
+        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
+        chartView.isPause = false
+    }
+ 
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        chartView.isPause = true
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
+        ToastView.appearance().bottomOffsetPortrait = view.height - view.safeAreaInsets.top - 100
         chartContainerView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 400)
-        chartView.frame = CGRect(x: 12, y: view.safeAreaInsets.top + 12, width: view.frame.width - 24, height: chartContainerView.frame.height - view.safeAreaInsets.top - 12)
+        topBarView.frame = CGRect(x: 0, y: view.safeAreaInsets.top, width: view.width, height: 40)
+        recordButton.size = CGSize(width: 60, height: 26)
+        recordButton.rightMargin = 100
+        recordButton.centerYInSuperview()
+        fileButton.size = CGSize(width: 60, height: 26)
+        fileButton.rightMargin = 20
+        fileButton.centerYInSuperview()
+        chartView.frame = CGRect(x: 12, y: topBarView.frame.maxY, width: view.frame.width - 24, height: chartContainerView.frame.height - chartView.frame.minY)
         
         let colCount = 3
         let space: CGFloat = 8
@@ -148,11 +194,6 @@ class MainViewController: UIViewController {
             button.frame = CGRect(x: space + CGFloat(col) * (width + space), y: chartContainerView.frame.maxY + space + CGFloat(row) * (height + space), width: width, height: height)
             
         }
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        chartView.isPause = false
     }
     
     private func setupLegend() {
@@ -177,12 +218,35 @@ class MainViewController: UIViewController {
         button.isSelected = !button.isSelected
         visualDatas[index].needShow = !visualDatas[index].needShow
     }
+    
+    @objc private func onRecord(_ button: UIButton) {
+        button.isSelected = !button.isSelected
+        recordButton.backgroundColor = button.isSelected ? #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1) : #colorLiteral(red: 0.3471153975, green: 0.5619726777, blue: 0.6928223372, alpha: 1)
+        if button.isSelected {
+            ProbeFileManager.shared.begin()
+        } else {
+            ProbeFileManager.shared.finish { success in
+                DispatchQueue.main.async {
+                    if success {
+                        Toast.showRightNow("文件保存成功")
+                    } else {
+                        Toast.showRightNow("未写入数据，文件未保存")
+                    }
+                }
+            }
+        }
+    }
+    
+    @objc private func onFile(_ button: UIButton) {
+        navigationController?.pushViewController(ProbeFileViewController(), animated: true)
+    }
 }
 
 
 extension MainViewController: UDPDelegate {
 
     func udp(_ udp: UDP, didReceive data: Data, fromHost host: String, port: UInt16) {
+        ProbeFileManager.shared.write(data)
         let str = String(data: data, encoding: .utf8)!
         let values = str.split(separator: ",").map({ String($0) })
         
