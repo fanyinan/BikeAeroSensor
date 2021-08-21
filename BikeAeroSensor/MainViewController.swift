@@ -27,25 +27,11 @@ class VisualInfo {
     let label: String
     let color: UIColor
     var values: [Double] = []
-    var needShow = false {
-        didSet {
-            if !needShow {
-                values.removeAll()
-            }
-        }
-    }
+    var needShow = true
     
     init(label: String, color: UIColor) {
         self.label = label
         self.color = color
-    }
-    
-    func appendValue(_ value: Double) {
-        guard needShow else { return }
-        values.append(value)
-        if values.count > 60 {
-            values.removeFirst()
-        }
     }
 }
 
@@ -56,8 +42,18 @@ class MainViewController: UIViewController {
     private let udp = UDP()
     private var legendButtons: [UIButton] = []
     
-    var currentData: ProbeData?
+    private var currentData: ProbeData?
     
+    private var isBegin = false
+    private let toleranceFrameCount = 5
+    private var currentDelayCount = 0
+    private var backupData: [String: Double]?
+    
+    #if DEBUG
+    private var delayFrame = 0
+    private var delayFrameList = [Int](repeating: 0, count: 20)
+    #endif
+
     private var visualDatas: [VisualInfo] = [
         VisualInfo(label: "differentialPressure0", color: #colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1)),
         VisualInfo(label: "differentialPressure1", color: #colorLiteral(red: 0.5568627715, green: 0.3529411852, blue: 0.9686274529, alpha: 1)),
@@ -72,6 +68,7 @@ class MainViewController: UIViewController {
         VisualInfo(label: "icmGyrY", color: #colorLiteral(red: 0.01680417731, green: 0.1983509958, blue: 1, alpha: 1)),
         VisualInfo(label: "icmGyrZ", color: #colorLiteral(red: 1, green: 0.5409764051, blue: 0.8473142982, alpha: 1)),
     ]
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -86,12 +83,49 @@ class MainViewController: UIViewController {
         setupLegend()
         chartView.updateBlock = { [weak self] () -> [String: Double] in
             guard let self = self else { return [:] }
-            let data = self.currentData?.visualData ?? [:]
+            
+            if !self.isBegin && self.currentData != nil {
+                self.isBegin = true
+            }
+            
+            guard self.isBegin else { return [:] }
+            
+            #if DEBUG
+            if self.currentData == nil {
+                self.delayFrame += 1
+            } else {
+                if self.delayFrame > 0 {
+                    if self.delayFrame - 1 < self.delayFrameList.count {
+                        self.delayFrameList[self.delayFrame - 1] += 1
+                    } else {
+                        self.delayFrameList.append(self.delayFrame)
+                    }
+                    print(self.delayFrameList)
+                    self.delayFrame = 0
+                }
+            }
+            #endif
+            
+            let data: [String: Double]
+            
+            if let currentData = self.currentData {
+                data = currentData.visualData
+                self.backupData = data
+                self.currentDelayCount = 0
+            } else {
+                if self.currentDelayCount < self.toleranceFrameCount {
+                    data = self.backupData!
+                } else {
+                    data = [:]
+                }
+                self.currentDelayCount += 1
+            }
+            
             let selected = self.visualDatas.filter({ $0.needShow }).map({ $0.label })
             let dataToShow = data.filter({ selected.contains($0.key) })
             self.currentData = nil
-//            let data: [String: Double] = ["differentialPressure0": Double.random(in: 30..<40)]
             return dataToShow
+            //            let data: [String: Double] = ["differentialPressure0": Double.random(in: 30..<40)]
         }
     }
     
@@ -193,10 +227,6 @@ extension MainViewController: UDPDelegate {
 //        let probeData = ProbeData(currentDataIndex: currentDataIndex, wiFiSignalStrength: wiFiSignalStrength, currentDataFrequency: currentDataFrequency, batteryVoltage: batteryVoltage, windSpeed: 0, windPitching: 0, windYaw: 0, sensorPitch: pitchAngle, sensorRoll: rollAngle, sensoryaw: yawAngle, bmpTemperature: bmpTemperature, bmpPressure: bmpPressure, visualData: visualData)
         self.currentData = probeData
 //        let chartDatas = visualDatas.filter({ !$0.values.isEmpty }).map({ ChartData(values: $0.values, color: $0.color) })
-        print("receive", probeData.currentDataIndex)
-    }
-    
-    private func appendValue(_ value: Double, for key: String) {
-        visualDatas.filter({ $0.label == key }).first?.appendValue(value)
+//        print("receive", probeData.currentDataIndex)
     }
 }

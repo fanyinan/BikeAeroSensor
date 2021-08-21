@@ -60,8 +60,6 @@ class ChartView: UIView {
     
     @objc func update() {
         
-        print("update")
-
 //        for value in datas.values {
 //            guard value.values.count > maxValueCount else { continue }
 //            value.values.removeFirst()
@@ -123,11 +121,6 @@ class ChartView: UIView {
                 chart.add(series)
                 valueList = nil
             }
-            
-            let values = (0..<data.values.count).map { j in
-                return (x: Double(maxValueCount - data.values.count + j), y: data.values[j])
-            }
-           
         }
     }
 }
