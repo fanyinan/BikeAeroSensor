@@ -21,12 +21,14 @@ class UDPManager: NSObject {
     
     private var subscribers: NSHashTable<UDPListener> = NSHashTable<UDPListener>.weakObjects()
     private(set) var port: UInt16?
+    private(set) var sendHost: String?
+    private(set) var sendPort: UInt16?
 
     override init() {
         super.init()
         udp.delegate = self
         let port = (UserDefaults.standard.value(forKey: "port") as? UInt16) ?? 1133
-        listen(port)
+        bind(port)
 
     }
     
@@ -34,10 +36,10 @@ class UDPManager: NSObject {
         subscribers.add(listener)
     }
 
-    func listen(_ port: UInt16) {
+    func bind(_ port: UInt16) {
         
         do {
-            try udp.listen(port: port)
+            try udp.bind(port: port)
             self.port = port
             Toast.showRightNow("绑定端口成功")
             UserDefaults.standard.setValue(port, forKey: "port")
@@ -56,6 +58,8 @@ class UDPManager: NSObject {
 extension UDPManager: UDPDelegate {
 
     func udp(_ udp: UDP, didReceive data: Data, fromHost host: String, port: UInt16) {
+        sendHost = host
+        sendPort = port
         for subcriber in subscribers.allObjects {
             subcriber.didReceive(data, fromHost: host, port: port)
         }

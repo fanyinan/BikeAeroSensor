@@ -31,7 +31,7 @@ class UDP: NSObject {
         sendSocket = GCDAsyncUdpSocket(delegate: self, delegateQueue: DispatchQueue(label: "send_queue"), socketQueue: nil)
     }
     
-    func listen(port: UInt16) throws {
+    func bind(port: UInt16) throws {
         if !receiveSocket.isClosed() {        
             receiveSocket.close()
         }

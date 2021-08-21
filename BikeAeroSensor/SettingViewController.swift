@@ -39,6 +39,12 @@ class SettingViewController: UIViewController {
         let port = UDPManager.default.port
         portTextField.text = port.flatMap({ "\($0)" }) ?? ""
         
+        let sendHost = UDPManager.default.sendHost
+        sendHostTextField.text = sendHost ?? ""
+        
+        let sendPort = UDPManager.default.sendPort
+        sendPortTextField.text = sendPort.flatMap({ "\($0)" }) ?? ""
+        
         let tap = UITapGestureRecognizer(target: self, action: #selector(onClickEmpty(_:)))
         view.addGestureRecognizer(tap)
         let ips = getWiFiAddress() ?? "unknow"
@@ -53,7 +59,7 @@ class SettingViewController: UIViewController {
             return
         }
         
-        UDPManager.default.listen(port)
+        UDPManager.default.bind(port)
     }
     
     @IBAction func sendData(_ sender: Any) {
