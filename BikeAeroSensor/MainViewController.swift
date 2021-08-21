@@ -9,17 +9,17 @@ import UIKit
 
 struct ProbeData {
     let currentDataIndex: Int
-//    let wiFiSignalStrength: Int
-//    let currentDataFrequency: Int
-//    let batteryVoltage: Double
-//    let windSpeed: Double
-//    let windPitching: Double
-//    let windYaw: Double
-//    let sensorPitch: Double
-//    let sensorRoll: Double
-//    let sensoryaw: Double
-//    let bmpTemperature: Double
-//    let bmpPressure: Double
+    let wiFiSignalStrength: Int
+    let currentDataFrequency: Int
+    let batteryVoltage: Double
+    let windSpeed: Double
+    let windPitching: Double
+    let windYaw: Double
+    let sensorPitch: Double
+    let sensorRoll: Double
+    let sensoryaw: Double
+    let bmpTemperature: Double
+    let bmpPressure: Double
     let visualData: [String: Double]
 }
 
@@ -66,12 +66,16 @@ class MainViewController: UIViewController {
         VisualInfo(label: "averageDPTemperature", color: #colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1)),
         VisualInfo(label: "icmAccX", color: #colorLiteral(red: 0.5810584426, green: 0.1285524964, blue: 0.5745313764, alpha: 1)),
         VisualInfo(label: "icmAccY", color: #colorLiteral(red: 0, green: 0.5628422499, blue: 0.3188166618, alpha: 1)),
-        VisualInfo(label: "icmGyrZ", color: #colorLiteral(red: 1, green: 0.1491314173, blue: 0, alpha: 1)),
+        VisualInfo(label: "icmAccZ", color: #colorLiteral(red: 1, green: 0.1491314173, blue: 0, alpha: 1)),
         VisualInfo(label: "icmGyrX", color: #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)),
         VisualInfo(label: "icmGyrY", color: #colorLiteral(red: 0.01680417731, green: 0.1983509958, blue: 1, alpha: 1)),
         VisualInfo(label: "icmGyrZ", color: #colorLiteral(red: 1, green: 0.5409764051, blue: 0.8473142982, alpha: 1)),
     ]
 
+    lazy var colorDict: [String: UIColor] = {
+        return Dictionary(uniqueKeysWithValues: visualDatas.map{ ($0.label, $0.color) })
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -93,7 +97,8 @@ class MainViewController: UIViewController {
         fileButton.backgroundColor = #colorLiteral(red: 0.3471153975, green: 0.5619726777, blue: 0.6928223372, alpha: 1)
         fileButton.addTarget(self, action: #selector(onFile(_:)), for: .touchUpInside)
         chartContainerView.addSubview(chartView)
-                
+        chartView.dataSource = self
+        
         let appearance = ToastView.appearance()
         appearance.backgroundColor = .alertBackground
         appearance.cornerRadius = 4
@@ -104,52 +109,6 @@ class MainViewController: UIViewController {
         try! udp.listen(port: 1133)
         
         setupLegend()
-        chartView.updateBlock = { [weak self] () -> [String: Double] in
-            guard let self = self else { return [:] }
-            
-            if !self.isBegin && self.currentData != nil {
-                self.isBegin = true
-            }
-            
-            guard self.isBegin else { return [:] }
-            
-            #if DEBUG
-            if self.currentData == nil {
-                self.delayFrame += 1
-            } else {
-                if self.delayFrame > 0 {
-                    if self.delayFrame - 1 < self.delayFrameList.count {
-                        self.delayFrameList[self.delayFrame - 1] += 1
-                    } else {
-                        self.delayFrameList.append(self.delayFrame)
-                    }
-                    print(self.delayFrameList)
-                    self.delayFrame = 0
-                }
-            }
-            #endif
-            
-            let data: [String: Double]
-            
-            if let currentData = self.currentData {
-                data = currentData.visualData
-                self.backupData = data
-                self.currentDelayCount = 0
-            } else {
-                if self.currentDelayCount < self.toleranceFrameCount {
-                    data = self.backupData!
-                } else {
-                    data = [:]
-                }
-                self.currentDelayCount += 1
-            }
-            
-            let selected = self.visualDatas.filter({ $0.needShow }).map({ $0.label })
-            let dataToShow = data.filter({ selected.contains($0.key) })
-            self.currentData = nil
-            return dataToShow
-            //            let data: [String: Double] = ["differentialPressure0": Double.random(in: 30..<40)]
-        }
         
         DispatchQueue.global().async {
             ProbeFileManager.shared.load()
@@ -179,7 +138,7 @@ class MainViewController: UIViewController {
         fileButton.size = CGSize(width: 60, height: 26)
         fileButton.rightMargin = 20
         fileButton.centerYInSuperview()
-        chartView.frame = CGRect(x: 12, y: topBarView.frame.maxY, width: view.frame.width - 24, height: chartContainerView.frame.height - chartView.frame.minY)
+        chartView.frame = CGRect(x: 0, y: topBarView.frame.maxY, width: view.frame.width, height: chartContainerView.frame.height - topBarView.frame.maxY)
         
         let colCount = 3
         let space: CGFloat = 8
@@ -252,45 +211,87 @@ extension MainViewController: UDPDelegate {
         
         var visualData: [String: Double] = [:]
         let currentDataIndex = Int(Double(values[0])!)
-//        let wiFiSignalStrength = Int(Double(values[1])!)
-//        let currentDataFrequency = Int(Double(values[2])!)
-//        let batteryVoltage = Double(values[3])!
-//        appendValue(Double(values[4])!, for: "differentialPressure0")
-//        appendValue(Double(values[5])!, for: "differentialPressure1")
-//        appendValue(Double(values[6])!, for: "differentialPressure2")
-//        appendValue(Double(values[7])!, for: "differentialPressure3")
-//        appendValue(Double(values[8])!, for: "differentialPressure4")
-//        appendValue(Double(values[9])!, for: "averageDPTemperature")
-        visualData["differentialPressure0"] = Double(values[1])!
-//        visualData["differentialPressure1"] = Double(values[5])!
-//        visualData["differentialPressure2"] = Double(values[6])!
-//        visualData["differentialPressure3"] = Double(values[7])!
-//        visualData["differentialPressure4"] = Double(values[8])!
-//        visualData["averageDPTemperature"] = Double(values[9])!
+        let wiFiSignalStrength = Int(Double(values[1])!)
+        let currentDataFrequency = Int(Double(values[2])!)
+        let batteryVoltage = Double(values[3])!
 
-//        let bmpTemperature = Double(values[10])!
-//        let bmpPressure = Double(values[11])!
-//        let pitchAngle = Double(values[12])!
-//        let rollAngle = Double(values[13])!
-//        let yawAngle = Double(values[14])!
-//        appendValue(Double(values[15])!, for: "icmAccX")
-//        appendValue(Double(values[16])!, for: "icmAccY")
-//        appendValue(Double(values[17])!, for: "icmAccZ")
-//        appendValue(Double(values[18])!, for: "icmGyrX")
-//        appendValue(Double(values[19])!, for: "icmGyrY")
-//        appendValue(Double(values[20])!, for: "icmGyrZ")
+        visualData["differentialPressure0"] = Double(values[4])!
+        visualData["differentialPressure1"] = Double(values[5])!
+        visualData["differentialPressure2"] = Double(values[6])!
+        visualData["differentialPressure3"] = Double(values[7])!
+        visualData["differentialPressure4"] = Double(values[8])!
+        visualData["averageDPTemperature"] = Double(values[9])!
+
+        let bmpTemperature = Double(values[10])!
+        let bmpPressure = Double(values[11])!
+        let pitchAngle = Double(values[12])!
+        let rollAngle = Double(values[13])!
+        let yawAngle = Double(values[14])!
         
-//        visualData["icmAccX"] = Double(values[15])!
-//        visualData["icmAccY"] = Double(values[16])!
-//        visualData["icmAccZ"] = Double(values[17])!
-//        visualData["icmGyrX"] = Double(values[18])!
-//        visualData["icmGyrY"] = Double(values[19])!
-//        visualData["icmGyrZ"] = Double(values[20])!
+        visualData["icmAccX"] = Double(values[15])!
+        visualData["icmAccY"] = Double(values[16])!
+        visualData["icmAccZ"] = Double(values[17])!
+        visualData["icmGyrX"] = Double(values[18])!
+        visualData["icmGyrY"] = Double(values[19])!
+        visualData["icmGyrZ"] = Double(values[20])!
         
-        let probeData = ProbeData(currentDataIndex: currentDataIndex, visualData: visualData)
-//        let probeData = ProbeData(currentDataIndex: currentDataIndex, wiFiSignalStrength: wiFiSignalStrength, currentDataFrequency: currentDataFrequency, batteryVoltage: batteryVoltage, windSpeed: 0, windPitching: 0, windYaw: 0, sensorPitch: pitchAngle, sensorRoll: rollAngle, sensoryaw: yawAngle, bmpTemperature: bmpTemperature, bmpPressure: bmpPressure, visualData: visualData)
+//        let probeData = ProbeData(currentDataIndex: currentDataIndex, visualData: visualData)
+        let probeData = ProbeData(currentDataIndex: currentDataIndex, wiFiSignalStrength: wiFiSignalStrength, currentDataFrequency: currentDataFrequency, batteryVoltage: batteryVoltage, windSpeed: 0, windPitching: 0, windYaw: 0, sensorPitch: pitchAngle, sensorRoll: rollAngle, sensoryaw: yawAngle, bmpTemperature: bmpTemperature, bmpPressure: bmpPressure, visualData: visualData)
         self.currentData = probeData
 //        let chartDatas = visualDatas.filter({ !$0.values.isEmpty }).map({ ChartData(values: $0.values, color: $0.color) })
 //        print("receive", probeData.currentDataIndex)
+    }
+}
+
+extension MainViewController: ChartViewDataSource {
+    
+    func chartData(_ chartView: ChartView) -> [String: Double] {
+                
+        if !isBegin && currentData != nil {
+            isBegin = true
+        }
+        
+        guard isBegin else { return [:] }
+        
+        #if DEBUG
+        if currentData == nil {
+            delayFrame += 1
+        } else {
+            if delayFrame > 0 {
+                if delayFrame - 1 < delayFrameList.count {
+                    delayFrameList[delayFrame - 1] += 1
+                } else {
+                    delayFrameList.append(delayFrame)
+                }
+                print(delayFrameList)
+                delayFrame = 0
+            }
+        }
+        #endif
+        
+        let data: [String: Double]
+        
+        if let currentData = currentData {
+            data = currentData.visualData
+            backupData = data
+            currentDelayCount = 0
+        } else {
+            if currentDelayCount < toleranceFrameCount {
+                data = backupData!
+            } else {
+                data = [:]
+            }
+            currentDelayCount += 1
+        }
+        
+        let selected = visualDatas.filter({ $0.needShow }).map({ $0.label })
+        let dataToShow = data.filter({ selected.contains($0.key) })
+        currentData = nil
+        return dataToShow
+        //            let data: [String: Double] = ["differentialPressure0": Double.random(in: 30..<40)]
+    }
+    
+    func lineColor(_ key: String) -> UIColor {
+        return colorDict[key]!
     }
 }

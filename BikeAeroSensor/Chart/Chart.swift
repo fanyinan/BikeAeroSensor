@@ -637,7 +637,7 @@ open class Chart: UIControl {
         }
 
         let scaled = scaleValuesOnYAxis(labels)
-        let padding: CGFloat = -10
+        let padding: CGFloat = 5
         let zero = CGFloat(getZeroValueOnYAxis(zeroLevel: 0))
 
         scaled.enumerated().forEach { (i, value) in

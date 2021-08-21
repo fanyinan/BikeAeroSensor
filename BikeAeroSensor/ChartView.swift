@@ -17,14 +17,20 @@ class ChartData {
     }
 }
 
+protocol ChartViewDataSource: NSObjectProtocol {
+    func chartData(_ chartView: ChartView) -> [String: Double]
+    func lineColor(_ key: String) -> UIColor
+}
+
 class ChartView: UIView {
 
     private let chart = Chart()
     private var datas: [String: ChartData] = [:]
     let xAxisCount = 30
     var maxValueCount: Int { xAxisCount + 1 }
-    var updateBlock: (() -> [String: Double])?
 
+    weak var dataSource: ChartViewDataSource?
+    
     var isPause: Bool = true {
         didSet {
             displayLink.isPaused = isPause
@@ -73,7 +79,7 @@ class ChartView: UIView {
             data.values[data.values.count - 1] = nil
         }
         
-        if let newData = updateBlock?() {
+        if let newData = self.dataSource?.chartData(self) {
             for (key, value) in newData {
                 let data: ChartData
                 if let _data = datas[key] {
@@ -83,6 +89,7 @@ class ChartView: UIView {
                     datas[key] = data
                 }
                 data.values[maxValueCount - 1] = value
+                data.color = self.dataSource!.lineColor(key)
             }
         }
                 
