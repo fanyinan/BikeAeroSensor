@@ -19,15 +19,9 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4rF-by-T9P">
-                    <rect key="frame" x="40" y="84" width="31" height="30"/>
-                    <state key="normal" title="UDP"/>
-                    <connections>
-                        <action selector="onUDPTest:" destination="-1" eventType="touchUpInside" id="x5a-Po-jyg"/>
-                    </connections>
-                </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EEm-EK-2jq">
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EEm-EK-2jq">
                     <rect key="frame" x="101" y="84" width="33" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <state key="normal" title="Main"/>
                     <connections>
                         <action selector="onMainTest:" destination="-1" eventType="touchUpInside" id="yFJ-wN-X8L"/>
@@ -36,13 +30,6 @@
             </subviews>
             <viewLayoutGuide key="safeArea" id="GOp-iL-uko"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-            <constraints>
-                <constraint firstItem="4rF-by-T9P" firstAttribute="leading" secondItem="GOp-iL-uko" secondAttribute="leading" constant="40" id="9cJ-71-ZcL"/>
-                <constraint firstItem="EEm-EK-2jq" firstAttribute="leading" secondItem="4rF-by-T9P" secondAttribute="trailing" constant="30" id="V4O-sF-3qA"/>
-                <constraint firstItem="GOp-iL-uko" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="4rF-by-T9P" secondAttribute="trailing" symbolic="YES" id="bwU-t5-Csz"/>
-                <constraint firstItem="4rF-by-T9P" firstAttribute="top" secondItem="GOp-iL-uko" secondAttribute="top" constant="40" id="cn2-ee-B37"/>
-                <constraint firstItem="EEm-EK-2jq" firstAttribute="centerY" secondItem="4rF-by-T9P" secondAttribute="centerY" id="fIj-Em-vu5"/>
-            </constraints>
             <point key="canvasLocation" x="-229" y="44"/>
         </view>
     </objects>

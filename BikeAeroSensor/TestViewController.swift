@@ -15,10 +15,6 @@ class TestViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
-    @IBAction func onUDPTest(_ sender: UIButton) {
-        self.navigationController?.pushViewController(UDPTestViewController(), animated: true)
-    }
-    
     @IBAction func onMainTest(_ sender: UIButton) {
         self.navigationController?.pushViewController(MainViewController(), animated: true)
     }

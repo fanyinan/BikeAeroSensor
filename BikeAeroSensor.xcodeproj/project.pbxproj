@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		CC4DC3FE26CCB91400031340 /* UDPTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC4DC3FC26CCB91300031340 /* UDPTestViewController.swift */; };
-		CC4DC3FF26CCB91400031340 /* UDPTestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CC4DC3FD26CCB91400031340 /* UDPTestViewController.xib */; };
 		CC4DC40126CCC61B00031340 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC4DC40026CCC61B00031340 /* MainViewController.swift */; };
 		CC4DC40526CCCAD200031340 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC4DC40426CCCAD200031340 /* ChartView.swift */; };
 		CC4DC41026CCDE0800031340 /* CGPoint+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC4DC40A26CCDE0800031340 /* CGPoint+Extension.swift */; };
@@ -45,11 +43,12 @@
 		CF46DE8B26D0FF93005A7CB0 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF46DE8526D0FF93005A7CB0 /* Toast.swift */; };
 		CF46DE8C26D0FF93005A7CB0 /* ToastCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF46DE8626D0FF93005A7CB0 /* ToastCenter.swift */; };
 		CF46DE8F26D0FFAA005A7CB0 /* Toast+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF46DE8E26D0FFAA005A7CB0 /* Toast+Extension.swift */; };
+		CF46DE9326D13012005A7CB0 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF46DE9126D13012005A7CB0 /* SettingViewController.swift */; };
+		CF46DE9426D13012005A7CB0 /* SettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CF46DE9226D13012005A7CB0 /* SettingViewController.xib */; };
+		CF46DE9726D13388005A7CB0 /* UDPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF46DE9626D13388005A7CB0 /* UDPManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		CC4DC3FC26CCB91300031340 /* UDPTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UDPTestViewController.swift; sourceTree = "<group>"; };
-		CC4DC3FD26CCB91400031340 /* UDPTestViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UDPTestViewController.xib; sourceTree = "<group>"; };
 		CC4DC40026CCC61B00031340 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		CC4DC40426CCCAD200031340 /* ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
 		CC4DC40A26CCDE0800031340 /* CGPoint+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+Extension.swift"; sourceTree = "<group>"; };
@@ -85,6 +84,9 @@
 		CF46DE8526D0FF93005A7CB0 /* Toast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		CF46DE8626D0FF93005A7CB0 /* ToastCenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToastCenter.swift; sourceTree = "<group>"; };
 		CF46DE8E26D0FFAA005A7CB0 /* Toast+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Toast+Extension.swift"; sourceTree = "<group>"; };
+		CF46DE9126D13012005A7CB0 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
+		CF46DE9226D13012005A7CB0 /* SettingViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SettingViewController.xib; sourceTree = "<group>"; };
+		CF46DE9626D13388005A7CB0 /* UDPManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UDPManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,12 +149,13 @@
 				CF100DDA26D0C71600C7672A /* ProbeFileManager.swift */,
 				CF100DF226D0DB0800C7672A /* ProbeFileViewController.swift */,
 				CF46DE7326D0DFE0005A7CB0 /* ProbeFileCell.swift */,
+				CF46DE9626D13388005A7CB0 /* UDPManager.swift */,
+				CF46DE9126D13012005A7CB0 /* SettingViewController.swift */,
+				CF46DE9226D13012005A7CB0 /* SettingViewController.xib */,
 				CC4DC40426CCCAD200031340 /* ChartView.swift */,
 				CF46DE7F26D0FF93005A7CB0 /* Toast */,
 				CF100DC526CEA7B900C7672A /* Chart */,
 				CF100D9F26CD453300C7672A /* UDP.swift */,
-				CC4DC3FC26CCB91300031340 /* UDPTestViewController.swift */,
-				CC4DC3FD26CCB91400031340 /* UDPTestViewController.xib */,
 				CF100D8A26CAB54C00C7672A /* Main.storyboard */,
 				CF100D8D26CAB55100C7672A /* Assets.xcassets */,
 				CF100D8F26CAB55100C7672A /* LaunchScreen.storyboard */,
@@ -263,9 +266,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				CF100D9126CAB55100C7672A /* LaunchScreen.storyboard in Resources */,
+				CF46DE9426D13012005A7CB0 /* SettingViewController.xib in Resources */,
 				CF100DA526CD4C2400C7672A /* TestViewController.xib in Resources */,
 				CF100D8E26CAB55100C7672A /* Assets.xcassets in Resources */,
-				CC4DC3FF26CCB91400031340 /* UDPTestViewController.xib in Resources */,
 				CF100D8C26CAB54C00C7672A /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -278,15 +281,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				CF100DA426CD4C2400C7672A /* TestViewController.swift in Sources */,
+				CF46DE9726D13388005A7CB0 /* UDPManager.swift in Sources */,
 				CF100DE226D0CD8F00C7672A /* Path+Extension.swift in Sources */,
 				CF46DE7426D0DFE0005A7CB0 /* ProbeFileCell.swift in Sources */,
 				CF100D8926CAB54C00C7672A /* ViewController.swift in Sources */,
 				CF100DF326D0DB0800C7672A /* ProbeFileViewController.swift in Sources */,
+				CF46DE9326D13012005A7CB0 /* SettingViewController.swift in Sources */,
 				CC4DC41326CCDE0800031340 /* UIView+Common.swift in Sources */,
 				CC4DC41126CCDE0800031340 /* CGRect+Extension.swift in Sources */,
 				CC4DC41526CCDE0800031340 /* UIColor+Extension.swift in Sources */,
 				CF100D8526CAB54C00C7672A /* AppDelegate.swift in Sources */,
-				CC4DC3FE26CCB91400031340 /* UDPTestViewController.swift in Sources */,
 				CF100D8726CAB54C00C7672A /* SceneDelegate.swift in Sources */,
 				CF100DCA26CEA7C900C7672A /* Chart.swift in Sources */,
 				CC4DC41426CCDE0800031340 /* CGSize+Extension.swift in Sources */,

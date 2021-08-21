@@ -1,24 +1,23 @@
 //
-//  UDPTestViewController.swift
+//  SettingViewController.swift
 //  BikeAeroSensor
 //
-//  Created by yinan17 on 2021/8/18.
+//  Created by 范祎楠 on 2021/8/21.
 //
 
 import UIKit
-//import CocoaAsyncSocket
 
-class UDPTestViewController: UIViewController {
+class SettingViewController: UIViewController {
 
     @IBOutlet weak var myIPLabel: UILabel!
     @IBOutlet weak var portTextField: UITextField!
+    
     @IBOutlet weak var sendPortTextField: UITextField!
     @IBOutlet weak var sendHostTextField: UITextField!
 
     @IBOutlet weak var sendTextField: UITextField!
     @IBOutlet weak var receiveTextView: UITextView!
     
-    private let udp = UDP()
     private var isSimulateOpen = false
     private var currentDataIndex = 0
     
@@ -36,28 +35,25 @@ class UDPTestViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        udp.delegate = self
+
+        let port = UDPManager.default.port
+        portTextField.text = port.flatMap({ "\($0)" }) ?? ""
+        
         let tap = UITapGestureRecognizer(target: self, action: #selector(onClickEmpty(_:)))
         view.addGestureRecognizer(tap)
         let ips = getWiFiAddress() ?? "unknow"
         myIPLabel.text = ips
+        UDPManager.default.addListener(self)
     }
 
-    @IBAction func createServer(_ sender: Any) {
-        print(#function)
+    @IBAction func onBind(_ sender: Any) {
         
-        do {
-            guard let port = UInt16(portTextField.text!) else {
-                appendText("创建socket失败：我的端口号错误")
-                return
-            }
-            
-            try udp.listen(port: port)
-            appendText("创建socket成功!")
-        } catch let error {
-            print(error)
-            appendText("创建socket失败：\(error.localizedDescription)")
+        guard let port = UInt16(portTextField.text!) else {
+            Toast.showRightNow("创建socket失败：我的端口号错误")
+            return
         }
+        
+        UDPManager.default.listen(port)
     }
     
     @IBAction func sendData(_ sender: Any) {
@@ -82,7 +78,7 @@ class UDPTestViewController: UIViewController {
             return
         }
         
-        udp.send(data, toHost: host, port: port, tag: 0)
+        UDPManager.default.send(data, toHost: host, port: port, tag: 0)
     }
     
     @IBAction func onSimulate(_ sender: UIButton) {
@@ -130,7 +126,7 @@ class UDPTestViewController: UIViewController {
         currentDataIndex += 1
         let valueStr = simulateDatas.map({ "\($0)" }).joined(separator: ",")
         let data = valueStr.data(using: .utf8)!
-        udp.send(data, toHost: host, port: port, tag: 0)
+        UDPManager.default.send(data, toHost: host, port: port, tag: 0)
     }
     
     private func getWiFiAddress() -> String? {
@@ -168,24 +164,21 @@ class UDPTestViewController: UIViewController {
     }
 }
 
-extension UDPTestViewController: UDPDelegate {
+extension SettingViewController: UDPListener {
 
-    func udp(_ udp: UDP, didReceive data: Data, fromHost host: String, port: UInt16) {
+    func didReceive(_ data: Data, fromHost host: String, port: UInt16) {
         let str = String(data: data, encoding: .utf8)!
         print(#function, str, host, port)
-        
         appendText("接收数据：" + str)
     }
     
-    func udp(_ udp: UDP, didSendDataWithTag tag: Int) {
+    func didSend(_ tag: Int) {
         if displayLink.isPaused {
             appendText("发送数据成功")
         }
     }
     
-    func udp(_ udp: UDP, didNotSendDataWithTag tag: Int, dueToError error: Error?) {
+    func didNotSend(_ tag: Int, dueToError error: Error?) {
         appendText("数据发送失败：\(error?.localizedDescription ?? "未知错误")")
     }
-    
-    
 }

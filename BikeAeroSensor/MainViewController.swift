@@ -27,11 +27,12 @@ class VisualInfo {
     let label: String
     let color: UIColor
     var values: [Double] = []
-    var needShow = true
+    var needShow: Bool
     
-    init(label: String, color: UIColor) {
+    init(label: String, color: UIColor, needShow: Bool = false) {
         self.label = label
         self.color = color
+        self.needShow = needShow
     }
 }
 
@@ -43,8 +44,8 @@ class MainViewController: UIViewController {
     private let topBarView = UIView()
     private let recordButton = UIButton()
     private let fileButton = UIButton()
+    private let settingButton = UIButton()
 
-    private let udp = UDP()
     private var currentData: ProbeData?
     
     private var isBegin = false
@@ -58,9 +59,9 @@ class MainViewController: UIViewController {
     #endif
 
     private var visualDatas: [VisualInfo] = [
-        VisualInfo(label: "differentialPressure0", color: #colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1)),
-        VisualInfo(label: "differentialPressure1", color: #colorLiteral(red: 0.5568627715, green: 0.3529411852, blue: 0.9686274529, alpha: 1)),
-        VisualInfo(label: "differentialPressure2", color: #colorLiteral(red: 0.9098039269, green: 0.4784313738, blue: 0.6431372762, alpha: 1)),
+        VisualInfo(label: "differentialPressure0", color: #colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1), needShow: true),
+        VisualInfo(label: "differentialPressure1", color: #colorLiteral(red: 0.5568627715, green: 0.3529411852, blue: 0.9686274529, alpha: 1), needShow: true),
+        VisualInfo(label: "differentialPressure2", color: #colorLiteral(red: 0.9098039269, green: 0.4784313738, blue: 0.6431372762, alpha: 1), needShow: true),
         VisualInfo(label: "differentialPressure3", color: #colorLiteral(red: 0.9568627477, green: 0.6588235497, blue: 0.5450980663, alpha: 1)),
         VisualInfo(label: "differentialPressure4", color: #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1)),
         VisualInfo(label: "averageDPTemperature", color: #colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1)),
@@ -72,7 +73,7 @@ class MainViewController: UIViewController {
         VisualInfo(label: "icmGyrZ", color: #colorLiteral(red: 1, green: 0.5409764051, blue: 0.8473142982, alpha: 1)),
     ]
 
-    lazy var colorDict: [String: UIColor] = {
+    private lazy var colorDict: [String: UIColor] = {
         return Dictionary(uniqueKeysWithValues: visualDatas.map{ ($0.label, $0.color) })
     }()
     
@@ -96,6 +97,12 @@ class MainViewController: UIViewController {
         fileButton.setTitleColor(.white, for: .normal)
         fileButton.backgroundColor = #colorLiteral(red: 0.3471153975, green: 0.5619726777, blue: 0.6928223372, alpha: 1)
         fileButton.addTarget(self, action: #selector(onFile(_:)), for: .touchUpInside)
+        topBarView.addSubview(settingButton)
+        settingButton.setTitle("设置", for: .normal)
+        settingButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+        settingButton.setTitleColor(.white, for: .normal)
+        settingButton.backgroundColor = #colorLiteral(red: 0.3471153975, green: 0.5619726777, blue: 0.6928223372, alpha: 1)
+        settingButton.addTarget(self, action: #selector(onSetting(_:)), for: .touchUpInside)
         chartContainerView.addSubview(chartView)
         chartView.dataSource = self
         
@@ -105,9 +112,7 @@ class MainViewController: UIViewController {
         appearance.textColor = .text
         appearance.font = UIFont.systemFont(ofSize: 14)
         
-        udp.delegate = self
-        try! udp.listen(port: 1133)
-        
+        UDPManager.default.addListener(self)
         setupLegend()
         
         DispatchQueue.global().async {
@@ -138,6 +143,9 @@ class MainViewController: UIViewController {
         fileButton.size = CGSize(width: 60, height: 26)
         fileButton.rightMargin = 20
         fileButton.centerYInSuperview()
+        settingButton.size = CGSize(width: 60, height: 26)
+        settingButton.frame.minX = 20
+        settingButton.centerYInSuperview()
         chartView.frame = CGRect(x: 0, y: topBarView.frame.maxY, width: view.frame.width, height: chartContainerView.frame.height - topBarView.frame.maxY)
         
         let colCount = 3
@@ -199,12 +207,17 @@ class MainViewController: UIViewController {
     @objc private func onFile(_ button: UIButton) {
         navigationController?.pushViewController(ProbeFileViewController(), animated: true)
     }
+    
+    @objc private func onSetting(_ button: UIButton) {
+        let vc = SettingViewController()
+        navigationController?.present(vc, animated: true, completion: nil)
+    }
 }
 
 
-extension MainViewController: UDPDelegate {
+extension MainViewController: UDPListener {
 
-    func udp(_ udp: UDP, didReceive data: Data, fromHost host: String, port: UInt16) {
+    func didReceive(_ data: Data, fromHost host: String, port: UInt16) {
         ProbeFileManager.shared.write(data)
         let str = String(data: data, encoding: .utf8)!
         let values = str.split(separator: ",").map({ String($0) })

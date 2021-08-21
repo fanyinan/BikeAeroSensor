@@ -32,6 +32,9 @@ class UDP: NSObject {
     }
     
     func listen(port: UInt16) throws {
+        if !receiveSocket.isClosed() {        
+            receiveSocket.close()
+        }
         try receiveSocket.bind(toPort: port)
         try receiveSocket.beginReceiving()
     }
