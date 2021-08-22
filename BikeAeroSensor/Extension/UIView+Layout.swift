@@ -82,50 +82,50 @@ extension UIView {
         }
     }
     
-//    var minY: CGFloat {
-//        
-//        get {
-//            return frame.minY
-//        }
-//        
-//        set {
-//            frame.origin.y = newValue
-//        }
-//    }
-//    
-//    var minX: CGFloat {
-//        
-//        get {
-//            return frame.minX
-//        }
-//        
-//        set {
-//            frame.origin.x = newValue
-//        }
-//    }
-//    
-//    var maxY: CGFloat {
-//        
-//        get {
-//            return frame.maxY
-//        }
-//        
-//        set {
-//            frame.origin.y = newValue - frame.height
-//        }
-//    }
-//    
-//    var maxX: CGFloat {
-//        
-//        get {
-//            return frame.maxX
-//        }
-//        
-//        set {
-//            frame.origin.x = newValue - frame.width
-//        }
-//    }
-//    
+    var minY: CGFloat {
+        
+        get {
+            return frame.minY
+        }
+        
+        set {
+            frame.origin.y = newValue
+        }
+    }
+    
+    var minX: CGFloat {
+        
+        get {
+            return frame.minX
+        }
+        
+        set {
+            frame.origin.x = newValue
+        }
+    }
+    
+    var maxY: CGFloat {
+        
+        get {
+            return frame.maxY
+        }
+        
+        set {
+            frame.origin.y = newValue - frame.height
+        }
+    }
+    
+    var maxX: CGFloat {
+        
+        get {
+            return frame.maxX
+        }
+        
+        set {
+            frame.origin.x = newValue - frame.width
+        }
+    }
+    
     var height: CGFloat {
         
         get {

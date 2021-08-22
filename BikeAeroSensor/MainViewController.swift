@@ -48,11 +48,13 @@ class MainViewController: UIViewController {
     private let tareButton = UIButton()
     private let displayDataView = UIView()
     private var displayDataLabels: [UILabel] = []
+    private let bottomView = UIView()
+    private let slider = Slider()
     
     private var currentData: ProbeData?
     
     private var isBegin = false
-    private let toleranceFrameCount = 5
+    private var toleranceFrameCount = 5
     private var currentDelayCount = 0
     private var backupData: [String: Double]?
     
@@ -123,6 +125,11 @@ class MainViewController: UIViewController {
         view.addSubview(displayDataView)
         view.addSubview(chartView)
         chartView.dataSource = self
+        bottomView.backgroundColor = .white
+        view.addSubview(bottomView)
+        bottomView.addSubview(slider)
+        slider.delegate = self
+        slider.config(minValue: 0, maxValue: 30, initValue: toleranceFrameCount)
         
         let appearance = ToastView.appearance()
         appearance.backgroundColor = .alertBackground
@@ -168,6 +175,10 @@ class MainViewController: UIViewController {
         tareButton.centerYInSuperview()
         displayDataView.frame = CGRect(x: 0, y: topBarView.frame.maxY, width: view.width, height: 80)
         chartView.frame = CGRect(x: 0, y: displayDataView.frame.maxY, width: view.frame.width, height: 300)
+        bottomView.frame = CGRect(x: 0, y: chartView.frame.maxY, width: view.frame.width, height: view.height - chartView.frame.maxY)
+        slider.height = 30
+        slider.bottomMargin = 30 + view.safeAreaInsets.bottom
+        slider.centerXInSuperview(margin: 30)
         
         let colCount = 3
         let space: CGFloat = 8
@@ -179,7 +190,7 @@ class MainViewController: UIViewController {
             let row = i / colCount
             let col = i % colCount
             
-            button.frame = CGRect(x: space + CGFloat(col) * (width + space), y: chartView.frame.maxY + space + CGFloat(row) * (height + space), width: width, height: height)
+            button.frame = CGRect(x: space + CGFloat(col) * (width + space), y: space + CGFloat(row) * (height + space), width: width, height: height)
             
         }
     }
@@ -195,7 +206,7 @@ class MainViewController: UIViewController {
             button.backgroundColor = data.color
             button.titleLabel?.font = UIFont.systemFont(ofSize: 12)
             button.addTarget(self, action: #selector(onClickLegend(_:)), for: .touchUpInside)
-            view.addSubview(button)
+            bottomView.addSubview(button)
             return button
         })
     }
@@ -398,5 +409,24 @@ extension MainViewController: ChartViewDataSource {
     
     func lineColor(_ key: String) -> UIColor {
         return colorDict[key]!
+    }
+}
+
+extension MainViewController: SliderDelegate {
+    
+    func valueChanged(_ slider: Slider, value: Int) {
+        if slider.maxValue == value {
+            toleranceFrameCount = Int.max
+        } else {
+            toleranceFrameCount = value
+        }
+    }
+    
+    func displayText(value: Int) -> String {
+        if value == slider.maxValue {
+            return "Max"
+        } else {
+            return "\(value)"
+        }
     }
 }

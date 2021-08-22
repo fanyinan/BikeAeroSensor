@@ -173,22 +173,22 @@ open class Chart: UIControl {
     /**
     Custom minimum value for the x-axis.
     */
-    open var minX: Double?
+    open var chartMinX: Double?
 
     /**
     Custom minimum value for the y-axis.
     */
-    open var minY: Double?
+    open var chartMinY: Double?
 
     /**
     Custom maximum value for the x-axis.
     */
-    open var maxX: Double?
+    open var chartMaxX: Double?
 
     /**
     Custom maximum value for the y-axis.
     */
-    open var maxY: Double?
+    open var chartMaxY: Double?
 
     /**
     Color for the highlight line.
@@ -366,8 +366,8 @@ open class Chart: UIControl {
     fileprivate func getMinMax() -> (min: ChartPoint, max: ChartPoint) {
         // Start with user-provided values
 
-        var min = (x: minX, y: minY)
-        var max = (x: maxX, y: maxY)
+        var min = (x: chartMinX, y: chartMinY)
+        var max = (x: chartMaxX, y: chartMaxY)
 
         // Check in datasets
 
