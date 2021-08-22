@@ -21,6 +21,7 @@ struct ProbeData {
     let bmpTemperature: Double
     let bmpPressure: Double
     let visualData: [String: Double]
+    var displayData: [(String, Double)]
 }
 
 class VisualInfo {
@@ -29,7 +30,7 @@ class VisualInfo {
     var values: [Double] = []
     var needShow: Bool
     
-    init(label: String, color: UIColor, needShow: Bool = false) {
+    init(label: String, color: UIColor, needShow: Bool = true) {
         self.label = label
         self.color = color
         self.needShow = needShow
@@ -39,13 +40,14 @@ class VisualInfo {
 class MainViewController: UIViewController {
 
     private let chartView = ChartView()
-    private let chartContainerView = UIView()
     private var legendButtons: [UIButton] = []
     private let topBarView = UIView()
     private let recordButton = UIButton()
     private let fileButton = UIButton()
     private let settingButton = UIButton()
     private let tareButton = UIButton()
+    private let displayDataView = UIView()
+    private var displayDataLabels: [UILabel] = []
     
     private var currentData: ProbeData?
     
@@ -64,9 +66,15 @@ class MainViewController: UIViewController {
     #endif
 
     private var visualDatas: [VisualInfo] = [
-        VisualInfo(label: "differentialPressure0", color: #colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1), needShow: true),
-        VisualInfo(label: "differentialPressure1", color: #colorLiteral(red: 0.5568627715, green: 0.3529411852, blue: 0.9686274529, alpha: 1), needShow: true),
-        VisualInfo(label: "differentialPressure2", color: #colorLiteral(red: 0.9098039269, green: 0.4784313738, blue: 0.6431372762, alpha: 1), needShow: true),
+        VisualInfo(label: "currentDataFrequency", color: #colorLiteral(red: 0.2671898305, green: 1, blue: 0.5297580957, alpha: 1)),
+        VisualInfo(label: "bmpTemperature", color: #colorLiteral(red: 0.6042316556, green: 0.09232855588, blue: 0.2760148644, alpha: 1)),
+        VisualInfo(label: "bmpPressure", color: #colorLiteral(red: 0.9821859002, green: 0.489916265, blue: 0.2320583761, alpha: 1)),
+        VisualInfo(label: "pitchAngle", color: #colorLiteral(red: 0.820196569, green: 0.85434407, blue: 0, alpha: 1)),
+        VisualInfo(label: "rollAngle", color: #colorLiteral(red: 0.1820499003, green: 0.5240936279, blue: 0.9926010966, alpha: 1)),
+        VisualInfo(label: "yawAngle", color: #colorLiteral(red: 0.8631967902, green: 0.1063003018, blue: 0.9723851085, alpha: 1)),
+        VisualInfo(label: "differentialPressure0", color: #colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1)),
+        VisualInfo(label: "differentialPressure1", color: #colorLiteral(red: 0.5568627715, green: 0.3529411852, blue: 0.9686274529, alpha: 1)),
+        VisualInfo(label: "differentialPressure2", color: #colorLiteral(red: 0.9098039269, green: 0.4784313738, blue: 0.6431372762, alpha: 1)),
         VisualInfo(label: "differentialPressure3", color: #colorLiteral(red: 0.9568627477, green: 0.6588235497, blue: 0.5450980663, alpha: 1)),
         VisualInfo(label: "differentialPressure4", color: #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1)),
         VisualInfo(label: "averageDPTemperature", color: #colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1)),
@@ -85,10 +93,8 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .white
-        view.addSubview(chartContainerView)
-        chartContainerView.backgroundColor = #colorLiteral(red: 0.03921568627, green: 0.4039215686, blue: 0.7019607843, alpha: 1)
-        chartContainerView.addSubview(topBarView)
+        view.backgroundColor = #colorLiteral(red: 0.03921568627, green: 0.4039215686, blue: 0.7019607843, alpha: 1)
+        view.addSubview(topBarView)
         topBarView.addSubview(recordButton)
         recordButton.setTitle("开始录制", for: .normal)
         recordButton.setTitle("停止录制", for: .selected)
@@ -114,7 +120,8 @@ class MainViewController: UIViewController {
         tareButton.setTitleColor(.white, for: .normal)
         tareButton.backgroundColor = #colorLiteral(red: 0.3471153975, green: 0.5619726777, blue: 0.6928223372, alpha: 1)
         tareButton.addTarget(self, action: #selector(onTare(_:)), for: .touchUpInside)
-        chartContainerView.addSubview(chartView)
+        view.addSubview(displayDataView)
+        view.addSubview(chartView)
         chartView.dataSource = self
         
         let appearance = ToastView.appearance()
@@ -146,7 +153,6 @@ class MainViewController: UIViewController {
         super.viewDidLayoutSubviews()
         
         ToastView.appearance().bottomOffsetPortrait = view.height - view.safeAreaInsets.top - 100
-        chartContainerView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 400)
         topBarView.frame = CGRect(x: 0, y: view.safeAreaInsets.top, width: view.width, height: 40)
         recordButton.size = CGSize(width: 60, height: 26)
         recordButton.rightMargin = 100
@@ -160,7 +166,8 @@ class MainViewController: UIViewController {
         tareButton.size = CGSize(width: 60, height: 26)
         tareButton.frame.minX = settingButton.frame.maxX + 20
         tareButton.centerYInSuperview()
-        chartView.frame = CGRect(x: 0, y: topBarView.frame.maxY, width: view.frame.width, height: chartContainerView.frame.height - topBarView.frame.maxY)
+        displayDataView.frame = CGRect(x: 0, y: topBarView.frame.maxY, width: view.width, height: 80)
+        chartView.frame = CGRect(x: 0, y: displayDataView.frame.maxY, width: view.frame.width, height: 300)
         
         let colCount = 3
         let space: CGFloat = 8
@@ -172,7 +179,7 @@ class MainViewController: UIViewController {
             let row = i / colCount
             let col = i % colCount
             
-            button.frame = CGRect(x: space + CGFloat(col) * (width + space), y: chartContainerView.frame.maxY + space + CGFloat(row) * (height + space), width: width, height: height)
+            button.frame = CGRect(x: space + CGFloat(col) * (width + space), y: chartView.frame.maxY + space + CGFloat(row) * (height + space), width: width, height: height)
             
         }
     }
@@ -191,6 +198,36 @@ class MainViewController: UIViewController {
             view.addSubview(button)
             return button
         })
+    }
+    
+    private func updateDisplayDataView() {
+        guard let displayData = self.currentData?.displayData else { return }
+        
+        let colCount = 3
+        let space: CGFloat = 8
+        let width: CGFloat = (view.width - space * CGFloat(colCount + 1)) / CGFloat(colCount)
+        let height: CGFloat = 30
+        
+        for (i, (title, value)) in displayData.enumerated() {
+            
+            let label: UILabel
+            if i < displayDataLabels.count {
+                label = displayDataLabels[i]
+            } else {
+                label = UILabel()
+                label.textColor = .white
+                label.font = UIFont.systemFont(ofSize: 12)
+                displayDataLabels.append(label)
+                displayDataView.addSubview(label)
+            }
+            
+            label.text = title + ": " + String(format: "%.1f", value)
+            
+            let row = i / colCount
+            let col = i % colCount
+            
+            label.frame = CGRect(x: space + CGFloat(col) * (width + space), y: CGFloat(row) * (height + space), width: width, height: height)
+        }
     }
     
     @objc private func onClickLegend(_ button: UIButton) {
@@ -272,9 +309,23 @@ extension MainViewController: UDPListener {
         visualData["icmGyrX"] = Double(values[18])!
         visualData["icmGyrY"] = Double(values[19])!
         visualData["icmGyrZ"] = Double(values[20])!
-        
+        visualData["currentDataFrequency"] = Double(values[2])!
+        visualData["bmpTemperature"] = Double(values[10])!
+        visualData["bmpPressure"] = Double(values[11])!
+        visualData["pitchAngle"] = Double(values[12])!
+        visualData["rollAngle"] = Double(values[13])!
+        visualData["yawAngle"] = Double(values[14])!
+
+        var displayData: [(String, Double)] = []
+        displayData.append(("pitchAngle", Double(values[12])!))
+        displayData.append(("rollAngle", Double(values[13])!))
+        displayData.append(("yawAngle", Double(values[14])!))
+        displayData.append(("BT", Double(values[10])!))
+        displayData.append(("bmpPressure", Double(values[11])!))
+        displayData.append(("batteryVoltage", Double(values[3])!))
+
 //        let probeData = ProbeData(currentDataIndex: currentDataIndex, visualData: visualData)
-        let probeData = ProbeData(currentDataIndex: currentDataIndex, wiFiSignalStrength: wiFiSignalStrength, currentDataFrequency: currentDataFrequency, batteryVoltage: batteryVoltage, windSpeed: 0, windPitching: 0, windYaw: 0, sensorPitch: pitchAngle, sensorRoll: rollAngle, sensoryaw: yawAngle, bmpTemperature: bmpTemperature, bmpPressure: bmpPressure, visualData: visualData)
+        let probeData = ProbeData(currentDataIndex: currentDataIndex, wiFiSignalStrength: wiFiSignalStrength, currentDataFrequency: currentDataFrequency, batteryVoltage: batteryVoltage, windSpeed: 0, windPitching: 0, windYaw: 0, sensorPitch: pitchAngle, sensorRoll: rollAngle, sensoryaw: yawAngle, bmpTemperature: bmpTemperature, bmpPressure: bmpPressure, visualData: visualData, displayData: displayData)
         self.currentData = probeData
         
         if let tarePreData = tarePreData, (tarePreData.first?.value.count ?? 0) < tarePreDataCount {
@@ -284,6 +335,10 @@ extension MainViewController: UDPListener {
             if (self.tarePreData!.first?.value.count ?? 0) == tarePreDataCount {
                 self.tareData = Dictionary(uniqueKeysWithValues: self.tarePreData!.map({ ($0, $1.reduce(0, +) / Double(tarePreDataCount)) }))
             }
+        }
+        
+        DispatchQueue.main.async {
+            self.updateDisplayDataView()
         }
 //        let chartDatas = visualDatas.filter({ !$0.values.isEmpty }).map({ ChartData(values: $0.values, color: $0.color) })
 //        print("receive", probeData.currentDataIndex)
