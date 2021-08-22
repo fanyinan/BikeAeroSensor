@@ -180,7 +180,7 @@ extension SettingViewController: UDPListener {
     func didReceive(_ data: Data, fromHost host: String, port: UInt16) {
         let str = String(data: data, encoding: .utf8)!
         print(#function, str, host, port)
-        appendText("接收数据：" + str)
+//        appendText("接收数据：" + str)
     }
     
     func didSend(_ tag: Int) {

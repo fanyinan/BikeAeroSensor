@@ -166,7 +166,7 @@ class Slider: UIView {
         addSubview(indicatorMarkView)
         indicatorMarkView.backgroundColor = .theme
         indicatorMarkView.isUserInteractionEnabled = false
-        indicatorMarkView.setBorder(color: .white, width: 3)
+        indicatorMarkView.setBorder(color: #colorLiteral(red: 0.4937463403, green: 0.8553477526, blue: 1, alpha: 1), width: 3)
 
         valueLabel.font = UIFont.boldSystemFont(ofSize: 12)
         valueLabel.textColor = #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1)

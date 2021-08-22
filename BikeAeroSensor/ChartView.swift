@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import Charts
+import Algorithms
 
 class ChartData {
     var values: [Double?]

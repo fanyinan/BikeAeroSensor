@@ -49,6 +49,12 @@ class UDPManager: NSObject {
         }
     }
     
+    func send(_ data: Data) -> Bool {
+        guard let sendHost = sendHost, let sendPort = sendPort else { return false }
+        send(data, toHost: sendHost, port: sendPort, tag: 0)
+        return true
+    }
+    
     func send(_ data: Data, toHost host: String, port: UInt16, tag: Int) {
         udp.send(data, toHost: host, port: port, tag: tag)
     }

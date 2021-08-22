@@ -50,6 +50,8 @@ class MainViewController: UIViewController {
     private var displayDataLabels: [UILabel] = []
     private let bottomView = UIView()
     private let slider = Slider()
+    private let sendButtonContainerView = UIView()
+    private var sendButtons: [UIButton] = []
     
     private var currentData: ProbeData?
     
@@ -61,6 +63,8 @@ class MainViewController: UIViewController {
     private var tarePreData: [String: [Double]]?
     private let tarePreDataCount = 10
     private var tareData: [String: Double]?
+    
+    private let sendDatas: [String] = ["R", "A", "M"]
     
     #if DEBUG
     private var delayFrame = 0
@@ -128,8 +132,23 @@ class MainViewController: UIViewController {
         bottomView.backgroundColor = .white
         view.addSubview(bottomView)
         bottomView.addSubview(slider)
+        
+        bottomView.addSubview(sendButtonContainerView)
+        
+        sendButtons = sendDatas.map({ data -> UIButton in
+            let button = UIButton()
+            button.setTitle(data, for: .normal)
+            button.setTitleColor(.white, for: .normal)
+            button.backgroundColor = #colorLiteral(red: 0.3406233788, green: 0.6707556844, blue: 1, alpha: 1)
+            button.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+            button.addTarget(self, action: #selector(onSend(_:)), for: .touchUpInside)
+            sendButtonContainerView.addSubview(button)
+            return button
+        })
+        
         slider.delegate = self
         slider.config(minValue: 0, maxValue: 30, initValue: toleranceFrameCount)
+        
         
         let appearance = ToastView.appearance()
         appearance.backgroundColor = .alertBackground
@@ -151,6 +170,11 @@ class MainViewController: UIViewController {
         chartView.isPause = false
     }
  
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        UDPManager.default.send("init".data(using: .utf8)!, toHost: "192.168.1.1", port: 3333, tag: 0)
+    }
+    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         chartView.isPause = true
@@ -174,25 +198,54 @@ class MainViewController: UIViewController {
         tareButton.frame.minX = settingButton.frame.maxX + 20
         tareButton.centerYInSuperview()
         displayDataView.frame = CGRect(x: 0, y: topBarView.frame.maxY, width: view.width, height: 80)
-        chartView.frame = CGRect(x: 0, y: displayDataView.frame.maxY, width: view.frame.width, height: 300)
-        bottomView.frame = CGRect(x: 0, y: chartView.frame.maxY, width: view.frame.width, height: view.height - chartView.frame.maxY)
-        slider.height = 30
-        slider.bottomMargin = 30 + view.safeAreaInsets.bottom
+        
+        bottomView.width = view.width
+        
+        var maxButtonY: CGFloat = 0
+        
+        do {
+            let colCount = 3
+            let space: CGFloat = 8
+            let width: CGFloat = (view.width - space * CGFloat(colCount + 1)) / CGFloat(colCount)
+            let height: CGFloat = 30
+            
+            for (i, button) in legendButtons.enumerated() {
+                
+                let row = i / colCount
+                let col = i % colCount
+                
+                button.frame = CGRect(x: space + CGFloat(col) * (width + space), y: space + CGFloat(row) * (height + space), width: width, height: height)
+                maxButtonY = button.frame.maxY
+            }
+        }
+        
+        sendButtonContainerView.frame = CGRect(x: 0, y: maxButtonY + 20, width: view.width, height: 30)
+        
+        do {
+            
+            let colCount = 3
+            let space: CGFloat = 8
+            let width: CGFloat = (sendButtonContainerView.width - space * CGFloat(colCount + 1)) / CGFloat(colCount)
+            
+            for (i, button) in sendButtons.enumerated() {
+                
+                let row = i / colCount
+                let col = i % colCount
+                
+                button.frame = CGRect(x: space + CGFloat(col) * (width + space), y: space + CGFloat(row) * (sendButtonContainerView.height + space), width: width, height: sendButtonContainerView.height)
+                
+            }
+        }
+        
+        slider.height = 60
+        slider.minY = sendButtonContainerView.maxY + 30
         slider.centerXInSuperview(margin: 30)
         
-        let colCount = 3
-        let space: CGFloat = 8
-        let width: CGFloat = (view.width - space * CGFloat(colCount + 1)) / CGFloat(colCount)
-        let height: CGFloat = 30
-        
-        for (i, button) in legendButtons.enumerated() {
-            
-            let row = i / colCount
-            let col = i % colCount
-            
-            button.frame = CGRect(x: space + CGFloat(col) * (width + space), y: space + CGFloat(row) * (height + space), width: width, height: height)
-            
-        }
+        bottomView.height = slider.maxY + view.safeAreaInsets.bottom
+        bottomView.bottomMargin = 0
+
+        chartView.frame = CGRect(x: 0, y: displayDataView.frame.maxY, width: view.frame.width, height: bottomView.minY - displayDataView.frame.maxY)
+
     }
     
     private func setupLegend() {
@@ -215,7 +268,7 @@ class MainViewController: UIViewController {
         guard let displayData = self.currentData?.displayData else { return }
         
         let colCount = 3
-        let space: CGFloat = 8
+        let space: CGFloat = 3
         let width: CGFloat = (view.width - space * CGFloat(colCount + 1)) / CGFloat(colCount)
         let height: CGFloat = 30
         
@@ -283,6 +336,17 @@ class MainViewController: UIViewController {
         } else {
             tarePreData = nil
             tareData = nil
+        }
+    }
+    
+    @objc private func onSend(_ button: UIButton) {
+        let index = sendButtons.firstIndex(of: button)!
+        let data = sendDatas[index].data(using: .utf8)!
+        let result = UDPManager.default.send(data)
+        if result {
+            Toast.showRightNow("发送成功")
+        } else {
+            Toast.showRightNow("发送失败，host或port未空")
         }
     }
 }
