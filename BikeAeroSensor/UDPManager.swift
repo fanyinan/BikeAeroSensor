@@ -5,7 +5,7 @@
 //  Created by 范祎楠 on 2021/8/21.
 //
 
-import Foundation
+import UIKit
 
 @objc protocol UDPListener: NSObjectProtocol {
     func didReceive(_ data: Data, fromHost host: String, port: UInt16)
@@ -29,7 +29,7 @@ class UDPManager: NSObject {
         udp.delegate = self
         let port = (UserDefaults.standard.value(forKey: "port") as? UInt16) ?? 1133
         bind(port)
-
+        NotificationCenter.default.addObserver(self, selector: #selector(onWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
     }
     
     func addListener(_ listener: UDPListener) {
@@ -57,6 +57,11 @@ class UDPManager: NSObject {
     
     func send(_ data: Data, toHost host: String, port: UInt16, tag: Int) {
         udp.send(data, toHost: host, port: port, tag: tag)
+    }
+    
+    @objc private func onWillEnterForeground() {
+        guard let port = port else { return }
+        bind(port)
     }
 }
 
