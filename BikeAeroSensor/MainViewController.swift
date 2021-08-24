@@ -52,6 +52,9 @@ class MainViewController: UIViewController {
     private let slider = Slider()
     private let sendButtonContainerView = UIView()
     private var sendButtons: [UIButton] = []
+    private let legendView = GridView(cellType: LegendCell.self)
+    private let menuView = MenuView.loadFromNib()
+    private let dynamicDataView = GridView(cellType: DynamicDataCell.self)
     
     private var currentData: ProbeData?
     
@@ -73,8 +76,8 @@ class MainViewController: UIViewController {
 
     private var visualDatas: [VisualInfo] = [
         VisualInfo(label: "currentDataFrequency", color: #colorLiteral(red: 0.2671898305, green: 1, blue: 0.5297580957, alpha: 1)),
-        VisualInfo(label: "bmpTemperature", color: #colorLiteral(red: 0.6042316556, green: 0.09232855588, blue: 0.2760148644, alpha: 1)),
-        VisualInfo(label: "bmpPressure", color: #colorLiteral(red: 0.9821859002, green: 0.489916265, blue: 0.2320583761, alpha: 1)),
+        VisualInfo(label: "dpTemp", color: #colorLiteral(red: 0.6042316556, green: 0.09232855588, blue: 0.2760148644, alpha: 1)),
+        VisualInfo(label: "ATM", color: #colorLiteral(red: 0.9821859002, green: 0.489916265, blue: 0.2320583761, alpha: 1)),
         VisualInfo(label: "pitchAngle", color: #colorLiteral(red: 0.820196569, green: 0.85434407, blue: 0, alpha: 1)),
         VisualInfo(label: "rollAngle", color: #colorLiteral(red: 0.1820499003, green: 0.5240936279, blue: 0.9926010966, alpha: 1)),
         VisualInfo(label: "yawAngle", color: #colorLiteral(red: 0.8631967902, green: 0.1063003018, blue: 0.9723851085, alpha: 1)),
@@ -100,33 +103,34 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
 
         view.backgroundColor = #colorLiteral(red: 0.03921568627, green: 0.4039215686, blue: 0.7019607843, alpha: 1)
-        view.addSubview(topBarView)
-        topBarView.addSubview(recordButton)
-        recordButton.setTitle("开始录制", for: .normal)
-        recordButton.setTitle("停止录制", for: .selected)
-        recordButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)
-        recordButton.setTitleColor(.white, for: .normal)
-        recordButton.backgroundColor = #colorLiteral(red: 0.3471153975, green: 0.5619726777, blue: 0.6928223372, alpha: 1)
-        recordButton.addTarget(self, action: #selector(onRecord(_:)), for: .touchUpInside)
-        topBarView.addSubview(fileButton)
-        fileButton.setTitle("文件", for: .normal)
-        fileButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)
-        fileButton.setTitleColor(.white, for: .normal)
-        fileButton.backgroundColor = #colorLiteral(red: 0.3471153975, green: 0.5619726777, blue: 0.6928223372, alpha: 1)
-        fileButton.addTarget(self, action: #selector(onFile(_:)), for: .touchUpInside)
-        topBarView.addSubview(settingButton)
-        settingButton.setTitle("设置", for: .normal)
-        settingButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)
-        settingButton.setTitleColor(.white, for: .normal)
-        settingButton.backgroundColor = #colorLiteral(red: 0.3471153975, green: 0.5619726777, blue: 0.6928223372, alpha: 1)
-        settingButton.addTarget(self, action: #selector(onSetting(_:)), for: .touchUpInside)
-        topBarView.addSubview(tareButton)
-        tareButton.setTitle("Tare", for: .normal)
-        tareButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)
-        tareButton.setTitleColor(.white, for: .normal)
-        tareButton.backgroundColor = #colorLiteral(red: 0.3471153975, green: 0.5619726777, blue: 0.6928223372, alpha: 1)
-        tareButton.addTarget(self, action: #selector(onTare(_:)), for: .touchUpInside)
-        view.addSubview(displayDataView)
+        
+//        view.addSubview(topBarView)
+//        topBarView.addSubview(recordButton)
+//        recordButton.setTitle("开始录制", for: .normal)
+//        recordButton.setTitle("停止录制", for: .selected)
+//        recordButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+//        recordButton.setTitleColor(.white, for: .normal)
+//        recordButton.backgroundColor = #colorLiteral(red: 0.3471153975, green: 0.5619726777, blue: 0.6928223372, alpha: 1)
+//        recordButton.addTarget(self, action: #selector(onRecord(_:)), for: .touchUpInside)
+//        topBarView.addSubview(fileButton)
+//        fileButton.setTitle("文件", for: .normal)
+//        fileButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+//        fileButton.setTitleColor(.white, for: .normal)
+//        fileButton.backgroundColor = #colorLiteral(red: 0.3471153975, green: 0.5619726777, blue: 0.6928223372, alpha: 1)
+//        fileButton.addTarget(self, action: #selector(onFile(_:)), for: .touchUpInside)
+//        topBarView.addSubview(settingButton)
+//        settingButton.setTitle("设置", for: .normal)
+//        settingButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+//        settingButton.setTitleColor(.white, for: .normal)
+//        settingButton.backgroundColor = #colorLiteral(red: 0.3471153975, green: 0.5619726777, blue: 0.6928223372, alpha: 1)
+//        settingButton.addTarget(self, action: #selector(onSetting(_:)), for: .touchUpInside)
+//        topBarView.addSubview(tareButton)
+//        tareButton.setTitle("Tare", for: .normal)
+//        tareButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+//        tareButton.setTitleColor(.white, for: .normal)
+//        tareButton.backgroundColor = #colorLiteral(red: 0.3471153975, green: 0.5619726777, blue: 0.6928223372, alpha: 1)
+//        tareButton.addTarget(self, action: #selector(onTare(_:)), for: .touchUpInside)
+//        view.addSubview(displayDataView)
         view.addSubview(chartView)
         chartView.dataSource = self
         bottomView.backgroundColor = .white
@@ -134,6 +138,7 @@ class MainViewController: UIViewController {
         bottomView.addSubview(slider)
         
         bottomView.addSubview(sendButtonContainerView)
+        sendButtonContainerView.isHidden = true
         
         sendButtons = sendDatas.map({ data -> UIButton in
             let button = UIButton()
@@ -149,6 +154,27 @@ class MainViewController: UIViewController {
         slider.delegate = self
         slider.config(minValue: 0, maxValue: 30, initValue: toleranceFrameCount)
         
+        legendView.row = 2
+        legendView.col = 3
+        legendView.vSpace = kFitHei(13)
+        view.addSubview(legendView)
+        legendView.updateCell = { [unowned self] cell, index in
+            cell.setData(color: self.visualDatas[index].color, text: self.visualDatas[index].label)
+        }
+        
+        view.addSubview(menuView)
+        
+        dynamicDataView.collectionView.clipsToBounds = false
+        dynamicDataView.row = 3
+        dynamicDataView.col = 3
+        dynamicDataView.hSpace = kFitWid(30)
+        dynamicDataView.vSpace = kFitHei(12)
+        dynamicDataView.updateCell = { [unowned self] cell, index in
+//            cell.setData(color: self.visualDatas[index].color, text: self.visualDatas[index].label)
+        }
+        
+        view.addSubview(dynamicDataView)
+        dynamicDataView.backgroundColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
         
         let appearance = ToastView.appearance()
         appearance.backgroundColor = .alertBackground
@@ -162,12 +188,15 @@ class MainViewController: UIViewController {
         DispatchQueue.global().async {
             ProbeFileManager.shared.load()
         }
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(true, animated: true)
         chartView.isPause = false
+        legendView.reload()
+        dynamicDataView.reload()
     }
  
     override func viewDidAppear(_ animated: Bool) {
@@ -184,20 +213,31 @@ class MainViewController: UIViewController {
         super.viewDidLayoutSubviews()
         
         ToastView.appearance().bottomOffsetPortrait = view.height - view.safeAreaInsets.top - 100
-        topBarView.frame = CGRect(x: 0, y: view.safeAreaInsets.top, width: view.width, height: 40)
-        recordButton.size = CGSize(width: 60, height: 26)
-        recordButton.rightMargin = 100
-        recordButton.centerYInSuperview()
-        fileButton.size = CGSize(width: 60, height: 26)
-        fileButton.rightMargin = 20
-        fileButton.centerYInSuperview()
-        settingButton.size = CGSize(width: 60, height: 26)
-        settingButton.frame.minX = 20
-        settingButton.centerYInSuperview()
-        tareButton.size = CGSize(width: 60, height: 26)
-        tareButton.frame.minX = settingButton.frame.maxX + 20
-        tareButton.centerYInSuperview()
-        displayDataView.frame = CGRect(x: 0, y: topBarView.frame.maxY, width: view.width, height: 80)
+//        topBarView.frame = CGRect(x: 0, y: view.safeAreaInsets.top, width: view.width, height: 40)
+//        recordButton.size = CGSize(width: 60, height: 26)
+//        recordButton.rightMargin = 100
+//        recordButton.centerYInSuperview()
+//        fileButton.size = CGSize(width: 60, height: 26)
+//        fileButton.rightMargin = 20
+//        fileButton.centerYInSuperview()
+//        settingButton.size = CGSize(width: 60, height: 26)
+//        settingButton.frame.minX = 20
+//        settingButton.centerYInSuperview()
+//        tareButton.size = CGSize(width: 60, height: 26)
+//        tareButton.frame.minX = settingButton.frame.maxX + 20
+//        tareButton.centerYInSuperview()
+//        displayDataView.frame = CGRect(x: 0, y: topBarView.frame.maxY, width: view.width, height: 80)
+        
+        legendView.minY = view.safeAreaInsets.top + kFitHei(8)
+        legendView.centerXInSuperview(margin: 18)
+        legendView.height = kFitHei(45)
+        
+        menuView.size = CGSize(width: view.width, height: kFitHei(kFitHei(50)))
+        menuView.bottomMargin = view.safeAreaInsets.bottom
+        
+        dynamicDataView.size = CGSize(width: view.width, height: kFitHei(280))
+        dynamicDataView.maxY = menuView.minY
+        dynamicDataView.edgeInsets = UIEdgeInsets(top: kFitHei(26), left: kFitWid(14), bottom: kFitHei(26), right: kFitWid(14))
         
         bottomView.width = view.width
         
@@ -244,7 +284,7 @@ class MainViewController: UIViewController {
         bottomView.height = slider.maxY + view.safeAreaInsets.bottom
         bottomView.bottomMargin = 0
 
-        chartView.frame = CGRect(x: 0, y: displayDataView.frame.maxY, width: view.frame.width, height: bottomView.minY - displayDataView.frame.maxY)
+        chartView.frame = CGRect(x: 0, y: legendView.frame.maxY + kFitHei(16), width: view.frame.width, height: dynamicDataView.minY - legendView.maxY - kFitHei(16))
 
     }
     

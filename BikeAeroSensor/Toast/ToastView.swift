@@ -24,7 +24,7 @@ open class ToastView: UIView {
   }
 
   /// The background view's corner radius.
-  @objc open dynamic var cornerRadius: CGFloat {
+    @objc open dynamic override var cornerRadius: CGFloat {
     get { return self.backgroundView.layer.cornerRadius }
     set { self.backgroundView.layer.cornerRadius = newValue }
   }

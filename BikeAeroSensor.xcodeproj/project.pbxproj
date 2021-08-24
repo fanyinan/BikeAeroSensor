@@ -48,6 +48,15 @@
 		CF46DE9726D13388005A7CB0 /* UDPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF46DE9626D13388005A7CB0 /* UDPManager.swift */; };
 		CF46DE9B26D1EE15005A7CB0 /* Slider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF46DE9A26D1EE14005A7CB0 /* Slider.swift */; };
 		CF46DE9E26D1EEAB005A7CB0 /* VMathTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF46DE9D26D1EEAA005A7CB0 /* VMathTool.swift */; };
+		CF46DEA126D52726005A7CB0 /* GridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF46DEA026D52726005A7CB0 /* GridView.swift */; };
+		CF46DEA426D52C11005A7CB0 /* LegendCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF46DEA326D52C11005A7CB0 /* LegendCell.swift */; };
+		CF46DEA826D52EA2005A7CB0 /* SizeFitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF46DEA726D52EA1005A7CB0 /* SizeFitManager.swift */; };
+		CF46DEAC26D533A0005A7CB0 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = CF46DEAB26D533A0005A7CB0 /* SnapKit */; };
+		CF46DEAF26D535C7005A7CB0 /* ShadowCornerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF46DEAE26D535C7005A7CB0 /* ShadowCornerButton.swift */; };
+		CF46DEB626D53A49005A7CB0 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF46DEB526D53A49005A7CB0 /* MenuView.swift */; };
+		CF46DEB926D53A6E005A7CB0 /* MenuView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CF46DEB826D53A6E005A7CB0 /* MenuView.xib */; };
+		CF46DEBC26D53CA6005A7CB0 /* UIView+IBInspectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF46DEBB26D53CA6005A7CB0 /* UIView+IBInspectable.swift */; };
+		CF46DEC026D54EC5005A7CB0 /* DynamicDataCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF46DEBF26D54EC5005A7CB0 /* DynamicDataCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -91,6 +100,14 @@
 		CF46DE9626D13388005A7CB0 /* UDPManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UDPManager.swift; sourceTree = "<group>"; };
 		CF46DE9A26D1EE14005A7CB0 /* Slider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Slider.swift; sourceTree = "<group>"; };
 		CF46DE9D26D1EEAA005A7CB0 /* VMathTool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VMathTool.swift; sourceTree = "<group>"; };
+		CF46DEA026D52726005A7CB0 /* GridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridView.swift; sourceTree = "<group>"; };
+		CF46DEA326D52C11005A7CB0 /* LegendCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegendCell.swift; sourceTree = "<group>"; };
+		CF46DEA726D52EA1005A7CB0 /* SizeFitManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SizeFitManager.swift; sourceTree = "<group>"; };
+		CF46DEAE26D535C7005A7CB0 /* ShadowCornerButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShadowCornerButton.swift; sourceTree = "<group>"; };
+		CF46DEB526D53A49005A7CB0 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
+		CF46DEB826D53A6E005A7CB0 /* MenuView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MenuView.xib; sourceTree = "<group>"; };
+		CF46DEBB26D53CA6005A7CB0 /* UIView+IBInspectable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+IBInspectable.swift"; sourceTree = "<group>"; };
+		CF46DEBF26D54EC5005A7CB0 /* DynamicDataCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicDataCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +119,7 @@
 				CF100DD826CEBA9000C7672A /* Algorithms in Frameworks */,
 				CF46DE7D26D0F6A7005A7CB0 /* Zip in Frameworks */,
 				CF100D9B26CAB75800C7672A /* CocoaAsyncSocket in Frameworks */,
+				CF46DEAC26D533A0005A7CB0 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,6 +137,7 @@
 				CC4DC40F26CCDE0800031340 /* UIColor+Extension.swift */,
 				CC4DC40D26CCDE0800031340 /* UIView+Common.swift */,
 				CC4DC40C26CCDE0800031340 /* UIView+Layout.swift */,
+				CF46DEBB26D53CA6005A7CB0 /* UIView+IBInspectable.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -149,7 +168,12 @@
 				CF100DA226CD4C2400C7672A /* TestViewController.swift */,
 				CF100DA326CD4C2400C7672A /* TestViewController.xib */,
 				CF100D8826CAB54C00C7672A /* ViewController.swift */,
+				CF46DEA026D52726005A7CB0 /* GridView.swift */,
+				CF46DEA326D52C11005A7CB0 /* LegendCell.swift */,
+				CF46DEBF26D54EC5005A7CB0 /* DynamicDataCell.swift */,
 				CC4DC40026CCC61B00031340 /* MainViewController.swift */,
+				CF46DEB526D53A49005A7CB0 /* MenuView.swift */,
+				CF46DEB826D53A6E005A7CB0 /* MenuView.xib */,
 				CF100DDA26D0C71600C7672A /* ProbeFileManager.swift */,
 				CF100DF226D0DB0800C7672A /* ProbeFileViewController.swift */,
 				CF46DE7326D0DFE0005A7CB0 /* ProbeFileCell.swift */,
@@ -182,6 +206,8 @@
 		CF46DE7626D0E015005A7CB0 /* Utilty */ = {
 			isa = PBXGroup;
 			children = (
+				CF46DEAE26D535C7005A7CB0 /* ShadowCornerButton.swift */,
+				CF46DEA726D52EA1005A7CB0 /* SizeFitManager.swift */,
 				CF46DE9D26D1EEAA005A7CB0 /* VMathTool.swift */,
 				CF46DE7726D0E026005A7CB0 /* Reusable.swift */,
 			);
@@ -223,6 +249,7 @@
 				CF100DD726CEBA9000C7672A /* Algorithms */,
 				CF100DDE26D0CB9E00C7672A /* PathKit */,
 				CF46DE7C26D0F6A7005A7CB0 /* Zip */,
+				CF46DEAB26D533A0005A7CB0 /* SnapKit */,
 			);
 			productName = BikeAeroSensor;
 			productReference = CF100D8126CAB54C00C7672A /* BikeAeroSensor.app */;
@@ -256,6 +283,7 @@
 				CF100DD626CEBA9000C7672A /* XCRemoteSwiftPackageReference "swift-algorithms" */,
 				CF100DDD26D0CB9E00C7672A /* XCRemoteSwiftPackageReference "PathKit" */,
 				CF46DE7B26D0F6A7005A7CB0 /* XCRemoteSwiftPackageReference "Zip" */,
+				CF46DEAA26D533A0005A7CB0 /* XCRemoteSwiftPackageReference "SnapKit" */,
 			);
 			productRefGroup = CF100D8226CAB54C00C7672A /* Products */;
 			projectDirPath = "";
@@ -272,6 +300,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CF100D9126CAB55100C7672A /* LaunchScreen.storyboard in Resources */,
+				CF46DEB926D53A6E005A7CB0 /* MenuView.xib in Resources */,
 				CF46DE9426D13012005A7CB0 /* SettingViewController.xib in Resources */,
 				CF100DA526CD4C2400C7672A /* TestViewController.xib in Resources */,
 				CF100D8E26CAB55100C7672A /* Assets.xcassets in Resources */,
@@ -288,17 +317,22 @@
 			files = (
 				CF100DA426CD4C2400C7672A /* TestViewController.swift in Sources */,
 				CF46DE9726D13388005A7CB0 /* UDPManager.swift in Sources */,
+				CF46DEAF26D535C7005A7CB0 /* ShadowCornerButton.swift in Sources */,
+				CF46DEA826D52EA2005A7CB0 /* SizeFitManager.swift in Sources */,
 				CF100DE226D0CD8F00C7672A /* Path+Extension.swift in Sources */,
+				CF46DEB626D53A49005A7CB0 /* MenuView.swift in Sources */,
 				CF46DE7426D0DFE0005A7CB0 /* ProbeFileCell.swift in Sources */,
 				CF46DE9B26D1EE15005A7CB0 /* Slider.swift in Sources */,
 				CF100D8926CAB54C00C7672A /* ViewController.swift in Sources */,
 				CF100DF326D0DB0800C7672A /* ProbeFileViewController.swift in Sources */,
 				CF46DE9326D13012005A7CB0 /* SettingViewController.swift in Sources */,
 				CF46DE9E26D1EEAB005A7CB0 /* VMathTool.swift in Sources */,
+				CF46DEBC26D53CA6005A7CB0 /* UIView+IBInspectable.swift in Sources */,
 				CC4DC41326CCDE0800031340 /* UIView+Common.swift in Sources */,
 				CC4DC41126CCDE0800031340 /* CGRect+Extension.swift in Sources */,
 				CC4DC41526CCDE0800031340 /* UIColor+Extension.swift in Sources */,
 				CF100D8526CAB54C00C7672A /* AppDelegate.swift in Sources */,
+				CF46DEC026D54EC5005A7CB0 /* DynamicDataCell.swift in Sources */,
 				CF100D8726CAB54C00C7672A /* SceneDelegate.swift in Sources */,
 				CF100DCA26CEA7C900C7672A /* Chart.swift in Sources */,
 				CC4DC41426CCDE0800031340 /* CGSize+Extension.swift in Sources */,
@@ -308,9 +342,11 @@
 				CF46DE7826D0E026005A7CB0 /* Reusable.swift in Sources */,
 				CF46DE8C26D0FF93005A7CB0 /* ToastCenter.swift in Sources */,
 				CF46DE8B26D0FF93005A7CB0 /* Toast.swift in Sources */,
+				CF46DEA426D52C11005A7CB0 /* LegendCell.swift in Sources */,
 				CC4DC41026CCDE0800031340 /* CGPoint+Extension.swift in Sources */,
 				CC4DC40526CCCAD200031340 /* ChartView.swift in Sources */,
 				CF100DCB26CEA7C900C7672A /* ChartSeries.swift in Sources */,
+				CF46DEA126D52726005A7CB0 /* GridView.swift in Sources */,
 				CC4DC40126CCC61B00031340 /* MainViewController.swift in Sources */,
 				CF46DE8A26D0FF93005A7CB0 /* UIApplication+Load.swift in Sources */,
 				CF100DA026CD453300C7672A /* UDP.swift in Sources */,
@@ -553,6 +589,14 @@
 				minimumVersion = 2.1.1;
 			};
 		};
+		CF46DEAA26D533A0005A7CB0 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -575,6 +619,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = CF46DE7B26D0F6A7005A7CB0 /* XCRemoteSwiftPackageReference "Zip" */;
 			productName = Zip;
+		};
+		CF46DEAB26D533A0005A7CB0 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CF46DEAA26D533A0005A7CB0 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
