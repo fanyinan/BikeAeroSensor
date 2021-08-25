@@ -14,12 +14,22 @@ class GridCell: UICollectionViewCell, Reusable {
 class GridView<T: GridCell>: UIView, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     private let cellType: T.Type
-        
+    private var cells: [T?] = []
+    
     var hSpace: CGFloat = 0
     var vSpace: CGFloat = 0
     var cellSize: CGSize?
-    var row = 0
-    var col = 0
+    var row = 0 {
+        didSet {
+            cells = [T?](repeating: nil, count: row * col)
+        }
+    }
+    
+    var col = 0 {
+        didSet {
+            cells = [T?](repeating: nil, count: row * col)
+        }
+    }
     var edgeInsets = UIEdgeInsets.zero
     
     var updateCell: ((T, Int) -> Void)?
@@ -70,7 +80,15 @@ class GridView<T: GridCell>: UIView, UICollectionViewDataSource, UICollectionVie
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(for: indexPath, cellType: cellType)
+        
+        let cell: T
+        if let storeCell = cells[indexPath.row] {
+            cell = storeCell
+        } else {
+            cell = collectionView.dequeueReusableCell(for: indexPath, cellType: cellType)
+            cells[indexPath.row] = cell
+        }
+        
         updateCell?(cell, indexPath.row)
         return cell
     }

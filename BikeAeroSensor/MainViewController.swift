@@ -21,7 +21,7 @@ struct ProbeData {
     let bmpTemperature: Double
     let bmpPressure: Double
     let visualData: [String: Double]
-    var displayData: [(String, Double)]
+    var displayData: [DynamicData]
 }
 
 class VisualInfo {
@@ -163,6 +163,22 @@ class MainViewController: UIViewController {
         }
         
         view.addSubview(menuView)
+        menuView.onClickBlock = { [unowned self] action in
+            switch action {
+            case .setting:
+                let vc = SettingViewController()
+                self.navigationController?.present(vc, animated: true, completion: nil)
+            case .file:
+                self.navigationController?.pushViewController(ProbeFileViewController(), animated: true)
+            case .tareOn:
+                tarePreData = [:]
+            case .tareOff:
+                tarePreData = nil
+                tareData = nil
+            default:
+                break
+            }
+        }
         
         dynamicDataView.collectionView.clipsToBounds = false
         dynamicDataView.row = 3
@@ -170,7 +186,12 @@ class MainViewController: UIViewController {
         dynamicDataView.hSpace = kFitWid(30)
         dynamicDataView.vSpace = kFitHei(12)
         dynamicDataView.updateCell = { [unowned self] cell, index in
-//            cell.setData(color: self.visualDatas[index].color, text: self.visualDatas[index].label)
+            guard let data = self.currentData?.displayData else { return }
+            guard data.count > index else {
+                cell.setData(nil)
+                return
+            }
+            cell.setData(data[index])
         }
         
         view.addSubview(dynamicDataView)
@@ -197,6 +218,7 @@ class MainViewController: UIViewController {
         chartView.isPause = false
         legendView.reload()
         dynamicDataView.reload()
+        menuView.start()
     }
  
     override func viewDidAppear(_ animated: Bool) {
@@ -207,6 +229,7 @@ class MainViewController: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         chartView.isPause = true
+        menuView.end()
     }
     
     override func viewDidLayoutSubviews() {
@@ -312,7 +335,7 @@ class MainViewController: UIViewController {
         let width: CGFloat = (view.width - space * CGFloat(colCount + 1)) / CGFloat(colCount)
         let height: CGFloat = 30
         
-        for (i, (title, value)) in displayData.enumerated() {
+        for (i, data) in displayData.enumerated() {
             
             let label: UILabel
             if i < displayDataLabels.count {
@@ -325,7 +348,7 @@ class MainViewController: UIViewController {
                 displayDataView.addSubview(label)
             }
             
-            label.text = title + ": " + String(format: "%.1f", value)
+            label.text = data.name + ": " + String(format: "%.1f", data.value)
             
             let row = i / colCount
             let col = i % colCount
@@ -431,17 +454,16 @@ extension MainViewController: UDPListener {
         visualData["rollAngle"] = Double(values[13])!
         visualData["yawAngle"] = Double(values[14])!
 
-        var displayData: [(String, Double)] = []
-        displayData.append(("pitchAngle", Double(values[12])!))
-        displayData.append(("rollAngle", Double(values[13])!))
-        displayData.append(("yawAngle", Double(values[14])!))
-        displayData.append(("BT", Double(values[10])!))
-        displayData.append(("bmpPressure", Double(values[11])!))
-        displayData.append(("batteryVoltage", Double(values[3])!))
+        var displayData: [DynamicData] = []
+        displayData.append(DynamicData(name: "pitchAngle", value: Double(values[12])!, unit: "deg"))
+        displayData.append(DynamicData(name: "rollAngle", value: Double(values[13])!, unit: "deg"))
+        displayData.append(DynamicData(name: "yawAngle", value: Double(values[14])!, unit: "deg"))
+        displayData.append(DynamicData(name: "BT", value: Double(values[10])!, unit: "°C"))
+        displayData.append(DynamicData(name: "ATM", value: Double(values[11])!, unit: "kPa"))
+//        displayData.append(DynamicData(name: "batteryVoltage", value: Double(values[3])!, unit: ""))
 
 //        let probeData = ProbeData(currentDataIndex: currentDataIndex, visualData: visualData)
         let probeData = ProbeData(currentDataIndex: currentDataIndex, wiFiSignalStrength: wiFiSignalStrength, currentDataFrequency: currentDataFrequency, batteryVoltage: batteryVoltage, windSpeed: 0, windPitching: 0, windYaw: 0, sensorPitch: pitchAngle, sensorRoll: rollAngle, sensoryaw: yawAngle, bmpTemperature: bmpTemperature, bmpPressure: bmpPressure, visualData: visualData, displayData: displayData)
-        self.currentData = probeData
         
         if let tarePreData = tarePreData, (tarePreData.first?.value.count ?? 0) < tarePreDataCount {
             for (key, value) in visualData {
@@ -453,7 +475,10 @@ extension MainViewController: UDPListener {
         }
         
         DispatchQueue.main.async {
+            self.currentData = probeData
             self.updateDisplayDataView()
+            self.dynamicDataView.reload()
+            self.menuView.update(battery: batteryVoltage, wifi: wiFiSignalStrength)
         }
 //        let chartDatas = visualDatas.filter({ !$0.values.isEmpty }).map({ ChartData(values: $0.values, color: $0.color) })
 //        print("receive", probeData.currentDataIndex)
@@ -463,7 +488,7 @@ extension MainViewController: UDPListener {
 extension MainViewController: ChartViewDataSource {
     
     func chartData(_ chartView: ChartView) -> [String: Double] {
-                
+                        
         if !isBegin && currentData != nil {
             isBegin = true
         }
