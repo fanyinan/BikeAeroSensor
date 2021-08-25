@@ -102,7 +102,7 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = #colorLiteral(red: 0.03921568627, green: 0.4039215686, blue: 0.7019607843, alpha: 1)
+        view.backgroundColor = .theme
         
 //        view.addSubview(topBarView)
 //        topBarView.addSubview(recordButton)
@@ -175,8 +175,20 @@ class MainViewController: UIViewController {
             case .tareOff:
                 tarePreData = nil
                 tareData = nil
-            default:
+            case .function:
                 break
+            case .startRecord:
+                ProbeFileManager.shared.begin()
+            case .endRecord:
+                ProbeFileManager.shared.finish { success in
+                    DispatchQueue.main.async {
+                        if success {
+                            Toast.showRightNow("文件保存成功")
+                        } else {
+                            Toast.showRightNow("未写入数据，文件未保存")
+                        }
+                    }
+                }
             }
         }
         

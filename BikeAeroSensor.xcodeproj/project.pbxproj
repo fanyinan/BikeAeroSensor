@@ -57,6 +57,7 @@
 		CF46DEB926D53A6E005A7CB0 /* MenuView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CF46DEB826D53A6E005A7CB0 /* MenuView.xib */; };
 		CF46DEBC26D53CA6005A7CB0 /* UIView+IBInspectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF46DEBB26D53CA6005A7CB0 /* UIView+IBInspectable.swift */; };
 		CF46DEC026D54EC5005A7CB0 /* DynamicDataCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF46DEBF26D54EC5005A7CB0 /* DynamicDataCell.swift */; };
+		CF46DF3626D697D4005A7CB0 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF46DF3526D697D4005A7CB0 /* UIImage+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -108,6 +109,7 @@
 		CF46DEB826D53A6E005A7CB0 /* MenuView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MenuView.xib; sourceTree = "<group>"; };
 		CF46DEBB26D53CA6005A7CB0 /* UIView+IBInspectable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+IBInspectable.swift"; sourceTree = "<group>"; };
 		CF46DEBF26D54EC5005A7CB0 /* DynamicDataCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicDataCell.swift; sourceTree = "<group>"; };
+		CF46DF3526D697D4005A7CB0 /* UIImage+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,6 +140,7 @@
 				CC4DC40D26CCDE0800031340 /* UIView+Common.swift */,
 				CC4DC40C26CCDE0800031340 /* UIView+Layout.swift */,
 				CF46DEBB26D53CA6005A7CB0 /* UIView+IBInspectable.swift */,
+				CF46DF3526D697D4005A7CB0 /* UIImage+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -342,6 +345,7 @@
 				CF46DE7826D0E026005A7CB0 /* Reusable.swift in Sources */,
 				CF46DE8C26D0FF93005A7CB0 /* ToastCenter.swift in Sources */,
 				CF46DE8B26D0FF93005A7CB0 /* Toast.swift in Sources */,
+				CF46DF3626D697D4005A7CB0 /* UIImage+Extension.swift in Sources */,
 				CF46DEA426D52C11005A7CB0 /* LegendCell.swift in Sources */,
 				CC4DC41026CCDE0800031340 /* CGPoint+Extension.swift in Sources */,
 				CC4DC40526CCCAD200031340 /* ChartView.swift in Sources */,

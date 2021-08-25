@@ -10,7 +10,7 @@ import UIKit
 
 extension UIColor {
     
-    static let theme = #colorLiteral(red: 0.003921568627, green: 0.3803921569, blue: 0.6352941176, alpha: 1)
+    static let theme = #colorLiteral(red: 0.003921568627, green: 0.5450980392, blue: 0.8352941176, alpha: 1)
     static let subTheme = #colorLiteral(red: 0.6, green: 0.5254901961, blue: 0.7215686275, alpha: 1)
     static let norm = #colorLiteral(red: 0.5921568627, green: 0.5921568627, blue: 0.5921568627, alpha: 1)
     static let separator = #colorLiteral(red: 0.199207902, green: 0.2001366317, blue: 0.202382654, alpha: 1)

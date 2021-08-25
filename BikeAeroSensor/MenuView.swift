@@ -8,33 +8,44 @@
 import UIKit
 
 enum MenuActionType {
-    case setting, file, function, tareOn, tareOff
+    case setting, file, function, tareOn, tareOff, startRecord, endRecord
+}
+
+enum RecordStatus {
+    case end, prepare, recording
 }
 
 class MenuView: UIView, NibLoadable {
 
     @IBOutlet weak var batteryPercentViewWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var batteryPercentLabel: UILabel!
+    @IBOutlet weak var tareImageView: UIImageView!
     @IBOutlet var wiFiSignalStrengthView: [UIView]!
-    
+    @IBOutlet weak var recordIconView: UIView!
+    @IBOutlet weak var recLabel: UILabel!
+    @IBOutlet weak var recordStatusView: UIView!
+    @IBOutlet weak var recTimeLabel: UILabel!
+
     private var batteryPercent: Double = 0
     private var wifi = 0
-    private var isTare = false
-    
+    private var recordStatus: RecordStatus = .end
+    private var timer: Timer?
+    private var currentTime = 0
+    private var tareTintImage: UIImage?
+    private var tareOriginImage: UIImage?
+
     private let batteryMin = 3.6
     private let batteryMax = 4.2
-    private var timer: Timer?
+    
     
     var onClickBlock: ((MenuActionType) -> Void)?
     
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
+    override func awakeFromNib() {
+        super.awakeFromNib()
         wiFiSignalStrengthView.forEach({ $0.backgroundColor = .theme })
+        tareTintImage = tareImageView.image?.tintColor(.theme)
+        tareOriginImage = tareImageView.image
+        recTimeLabel.textColor = .theme
     }
     
     func update(battery: Double, wifi: Int) {
@@ -80,14 +91,82 @@ class MenuView: UIView, NibLoadable {
         onClickBlock?(.function)
     }
     
-    @IBAction func onTare(_ sender: UIButton) {
-        isTare = !isTare
-        if isTare {
-            sender.tintColor = .theme
-            onClickBlock?(.tareOn)
-        } else {
-            sender.tintColor = .black
-            onClickBlock?(.tareOff)
+    @IBAction func onTare(_ button: UIControl) {
+        button.isSelected = !button.isSelected
+        tareImageView.image = button.isSelected ? tareTintImage : tareOriginImage
+        onClickBlock?(button.isSelected ? .tareOn : .tareOff)
+    }
+    
+    @IBAction func onRecord(_ sender: Any) {
+        switch recordStatus {
+        case .end:
+            beginCountDown()
+        case .prepare:
+            break
+        case .recording:
+            recordStatusView.alpha = 1
+            recTimeLabel.alpha = 0
+            recordStatusView.backgroundColor = .red
+            recordStatusView.layer.removeAllAnimations()
+            recordIconView.setBorder(color: .black, width: 2)
+            recLabel.textColor = .black
+            recordStatus = .end
+            onClickBlock?(.endRecord)
         }
     }
+    
+    private func beginCountDown() {
+        
+        UIView.animate(withDuration: 0.2, animations: {
+            self.recordStatusView.alpha = 0
+        })
+        
+        recTimeLabel.alpha = 0
+        currentTime = 3
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(onCountDown), userInfo: nil, repeats: true)
+        timer?.fire()
+        recordStatus = .prepare
+        recordIconView.setBorder(color: .theme, width: 2)
+        recLabel.textColor = .theme
+    }
+    
+    @objc private func onCountDown() {
+        if currentTime < 0 {
+            timer?.invalidate()
+            recordStatus = .recording
+            recordStatusView.backgroundColor = #colorLiteral(red: 0, green: 1, blue: 0.3719732761, alpha: 1)
+            beginBlink()
+            onClickBlock?(.startRecord)
+            return
+        }
+        
+        UIView.animate(withDuration: 0.3) {
+            self.recTimeLabel.alpha = 0
+        } completion: { _ in
+            self.recTimeLabel.text = "\(self.currentTime)"
+            self.currentTime -= 1
+            UIView.animate(withDuration: 0.3, animations: {
+                self.recTimeLabel.alpha = 1
+            })
+        }
+    }
+    
+    private func beginBlink() {
+        UIView.animate(withDuration: 0.2, animations: {
+            self.recTimeLabel.alpha = 0
+        })
+        
+        let animation = CABasicAnimation(keyPath: "opacity")
+        animation.fromValue = 0
+        animation.toValue = 1
+        animation.repeatCount = Float.greatestFiniteMagnitude
+        animation.duration = 0.5
+        animation.autoreverses = true
+        recordStatusView.layer.add(animation, forKey: nil)
+//        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(onBlink), userInfo: nil, repeats: true)
+    }
+    
+//    @objc private func onBlink() {
+//
+//    }
 }
