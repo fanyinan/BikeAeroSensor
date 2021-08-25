@@ -178,6 +178,7 @@ class MainViewController: UIViewController {
             case .function:
                 break
             case .startRecord:
+                Toast.showRightNow("开始写入数据")
                 ProbeFileManager.shared.begin()
             case .endRecord:
                 ProbeFileManager.shared.finish { success in
@@ -247,7 +248,7 @@ class MainViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        ToastView.appearance().bottomOffsetPortrait = view.height - view.safeAreaInsets.top - 100
+        ToastView.appearance().bottomOffsetPortrait = view.safeAreaInsets.bottom + 120
 //        topBarView.frame = CGRect(x: 0, y: view.safeAreaInsets.top, width: view.width, height: 40)
 //        recordButton.size = CGSize(width: 60, height: 26)
 //        recordButton.rightMargin = 100
