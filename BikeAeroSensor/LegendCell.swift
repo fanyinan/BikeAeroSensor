@@ -44,8 +44,16 @@ class LegendCell: GridCell {
 //        label.frame = CGRect(x: colorView.maxX + 5, y: 0, width: <#T##CGFloat#>, height: <#T##CGFloat#>)
     }
     
-    func setData(color: UIColor, text: String) {
-        colorView.backgroundColor = color
-        label.text = text
+    func setData(_ data: VisualInfo?) {
+        
+        guard let data = data else {
+            colorView.isHidden = true
+            label.isHidden = true
+            return
+        }
+        colorView.isHidden = false
+        label.isHidden = false
+        colorView.backgroundColor = data.color
+        label.text = data.label
     }
 }

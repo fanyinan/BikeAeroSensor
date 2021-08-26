@@ -30,7 +30,7 @@ class VisualInfo {
     var values: [Double] = []
     var needShow: Bool
     
-    init(label: String, color: UIColor, needShow: Bool = true) {
+    init(label: String, color: UIColor, needShow: Bool = false) {
         self.label = label
         self.color = color
         self.needShow = needShow
@@ -159,7 +159,12 @@ class MainViewController: UIViewController {
         legendView.vSpace = kFitHei(13)
         view.addSubview(legendView)
         legendView.updateCell = { [unowned self] cell, index in
-            cell.setData(color: self.visualDatas[index].color, text: self.visualDatas[index].label)
+            let datas = self.visualDatas.filter({ $0.needShow })
+            if datas.count > index {
+                cell.setData(datas[index])
+            } else {
+                cell.setData(nil)
+            }
         }
         
         view.addSubview(menuView)
@@ -223,6 +228,11 @@ class MainViewController: UIViewController {
             ProbeFileManager.shared.load()
         }
         
+        view.bringSubviewToFront(menuView)
+        menuView.functionView.visualInfos = visualDatas
+        menuView.functionView.onUpdate = { [unowned self] in
+            self.legendView.reload()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -322,6 +332,7 @@ class MainViewController: UIViewController {
 
         chartView.frame = CGRect(x: 0, y: legendView.frame.maxY + kFitHei(16), width: view.frame.width, height: dynamicDataView.minY - legendView.maxY - kFitHei(16))
 
+        menuView.menuItemHeight = view.height - chartView.convert(CGPoint(x: 0, y: chartView.height), to: nil).y
     }
     
     private func setupLegend() {
@@ -461,8 +472,8 @@ extension MainViewController: UDPListener {
         visualData["icmGyrY"] = Double(values[19])!
         visualData["icmGyrZ"] = Double(values[20])!
         visualData["currentDataFrequency"] = Double(values[2])!
-        visualData["bmpTemperature"] = Double(values[10])!
-        visualData["bmpPressure"] = Double(values[11])!
+        visualData["dpTemp"] = Double(values[10])!
+        visualData["ATM"] = Double(values[11])!
         visualData["pitchAngle"] = Double(values[12])!
         visualData["rollAngle"] = Double(values[13])!
         visualData["yawAngle"] = Double(values[14])!

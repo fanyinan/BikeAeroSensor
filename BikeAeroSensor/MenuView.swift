@@ -26,6 +26,8 @@ class MenuView: UIView, NibLoadable {
     @IBOutlet weak var recordStatusView: UIView!
     @IBOutlet weak var recTimeLabel: UILabel!
 
+    let functionView = FunctionMenuItem()
+
     private var batteryPercent: Double = 0
     private var wifi = 0
     private var recordStatus: RecordStatus = .end
@@ -37,6 +39,11 @@ class MenuView: UIView, NibLoadable {
     private let batteryMin = 3.6
     private let batteryMax = 4.2
     
+    var menuItemHeight: CGFloat = 0
+    
+    var safeBottom: CGFloat {
+        return SizeFitManager.shared.screenHeight - convert(CGPoint(x: 0, y: height), to: nil).y
+    }
     
     var onClickBlock: ((MenuActionType) -> Void)?
     
@@ -46,6 +53,20 @@ class MenuView: UIView, NibLoadable {
         tareTintImage = tareImageView.image?.tintColor(.theme)
         tareOriginImage = tareImageView.image
         recTimeLabel.textColor = .theme
+        
+        functionView.menuView = self
+        functionView.onHide = { [weak self] velocity in
+            guard let self = self else { return }
+            self.hideCurrentMenuItem(velocity: velocity)
+        }
+    }
+    
+    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        if functionView.status == .normal {
+            return functionView.frame.contains(point)
+        }
+        
+        return super.point(inside: point, with: event)
     }
     
     func update(battery: Double, wifi: Int) {
@@ -88,7 +109,8 @@ class MenuView: UIView, NibLoadable {
     }
     
     @IBAction func onFunction(_ sender: Any) {
-        onClickBlock?(.function)
+//        onClickBlock?(.function)
+        showMeneItemView(functionView, delay: 0.1, duration: 0.35)
     }
     
     @IBAction func onTare(_ button: UIControl) {
@@ -163,10 +185,69 @@ class MenuView: UIView, NibLoadable {
         animation.duration = 0.5
         animation.autoreverses = true
         recordStatusView.layer.add(animation, forKey: nil)
-//        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(onBlink), userInfo: nil, repeats: true)
     }
     
-//    @objc private func onBlink() {
-//
-//    }
+    private func showMeneItemView(_ menuItemView: MenuItemView, delay: TimeInterval, duration: Double) {
+        func pop() {
+            menuItemView.willPresent()
+            
+            let animation = CABasicAnimation(keyPath: "shadowOpacity")
+            animation.fromValue = 0
+            animation.toValue = 0.12
+            animation.beginTime = CACurrentMediaTime() + delay
+            animation.duration = duration
+            menuItemView.layer.add(animation, forKey: nil)
+            
+            UIView.animate(withDuration: duration, delay: delay, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
+                menuItemView.maxY = self.height + self.safeBottom
+                menuItemView.alpha = 1
+            }, completion: { _ in
+//                self.navigationView.popByPan = false
+                menuItemView.present()
+            })
+        }
+        
+        menuItemView.minY = height
+        menuItemView.alpha = 0
+//        let menuItemViewHeight = delegate.menuView(self, willShowMenuItemWith: label, menuItemView: menuItemView, node: node)
+        let menuItemViewHeight: CGFloat = menuItemHeight
+        menuItemView.initSize(CGSize(width: width, height: menuItemViewHeight), bottomUnavailableHeight: safeBottom)
+        addSubview(menuItemView)
+        
+        //使menuItemView完全加载完再弹出，为了音频和特效菜单的轴能够设置正确的contentOffset
+        delayTask(0.01) {
+            pop()
+        }
+    }
+    
+    func hideCurrentMenuItem(velocity: CGFloat? = nil, isResetLabel: Bool = true, completion: (() -> Void)? = nil) {
+        hideMenuItemView(functionView, velocity: velocity) {
+            completion?()
+        }
+    }
+    
+    private func hideMenuItemView(_ menuItemView: MenuItemView, velocity: CGFloat? = nil, completion: (() -> Void)? = nil) {
+        menuItemView.willDismiss()
+        
+        var duration = 0.2
+        
+        if let velocity = velocity {
+            duration = min(duration, TimeInterval((height - menuItemView.minY) / velocity))
+        }
+        
+        let animation = CABasicAnimation(keyPath: "shadowOpacity")
+        animation.toValue = 0
+        animation.beginTime = CACurrentMediaTime()
+        animation.duration = duration
+        menuItemView.layer.add(animation, forKey: nil)
+        
+        UIView.animate(withDuration: duration, delay: 0, options: .curveEaseInOut, animations: {
+            menuItemView.minY = self.height
+            menuItemView.alpha = 0
+        }, completion: { _ in
+            menuItemView.removeFromSuperview()
+            menuItemView.didDismiss()
+            completion?()
+        })
+    }
 }

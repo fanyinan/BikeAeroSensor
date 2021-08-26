@@ -21,7 +21,7 @@ extension UIColor {
     static let editBackground = #colorLiteral(red: 0.1294117647, green: 0.1333333333, blue: 0.1411764706, alpha: 1)
     static let alertBackground = #colorLiteral(red: 0.2156862745, green: 0.2, blue: 0.2395818532, alpha: 1)
     static let deselect = #colorLiteral(red: 0.8, green: 0.8, blue: 0.8, alpha: 1)
-    static let menuBackground = #colorLiteral(red: 0.1882352941, green: 0.1960784314, blue: 0.2117647059, alpha: 1)
+    static let menuBackground = #colorLiteral(red: 0.9646111131, green: 0.964772284, blue: 0.9645897746, alpha: 1)
 
     convenience init(hex: UInt, alpha: CGFloat = 1) {
         
