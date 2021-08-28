@@ -103,9 +103,9 @@ class MainViewController: UIViewController {
             switch action {
             case .setting:
                 let vc = SettingViewController()
-                self.navigationController?.present(vc, animated: true, completion: nil)
+                self.present(vc, animated: true, completion: nil)
             case .file:
-                self.navigationController?.present(ProbeFileViewController(), animated: true, completion: nil)
+                self.present(ProbeFileViewController(), animated: true, completion: nil)
             case .tareOn:
                 tarePreData = [:]
             case .tareOff:
@@ -224,45 +224,6 @@ class MainViewController: UIViewController {
 
         menuView.menuItemHeight = view.height - chartView.convert(CGPoint(x: 0, y: chartView.height), to: nil).y + 20
     }
-  
-    @objc private func onRecord(_ button: UIButton) {
-        button.isSelected = !button.isSelected
-        button.backgroundColor = button.isSelected ? #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1) : #colorLiteral(red: 0.3471153975, green: 0.5619726777, blue: 0.6928223372, alpha: 1)
-        if button.isSelected {
-            ProbeFileManager.shared.begin()
-        } else {
-            ProbeFileManager.shared.finish { success in
-                DispatchQueue.main.async {
-                    if success {
-                        Toast.showRightNow("文件保存成功")
-                    } else {
-                        Toast.showRightNow("未写入数据，文件未保存")
-                    }
-                }
-            }
-        }
-    }
-    
-    @objc private func onFile(_ button: UIButton) {
-        navigationController?.pushViewController(ProbeFileViewController(), animated: true)
-    }
-    
-    @objc private func onSetting(_ button: UIButton) {
-        let vc = SettingViewController()
-        navigationController?.present(vc, animated: true, completion: nil)
-    }
-    
-    @objc private func onTare(_ button: UIButton) {
-        button.isSelected = !button.isSelected
-        button.backgroundColor = button.isSelected ? #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1) : #colorLiteral(red: 0.3471153975, green: 0.5619726777, blue: 0.6928223372, alpha: 1)
-        if button.isSelected {
-            tarePreData = [:]
-        } else {
-            tarePreData = nil
-            tareData = nil
-        }
-    }
-
 }
 
 

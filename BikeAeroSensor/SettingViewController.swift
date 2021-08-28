@@ -16,14 +16,18 @@ class SettingViewController: UIViewController {
     @IBOutlet weak var sendHostTextField: UITextField!
 
     @IBOutlet weak var sendTextField: UITextField!
-    @IBOutlet weak var receiveTextView: UITextView!
-    
+//    @IBOutlet weak var receiveTextView: UITextView!
+    @IBOutlet weak var candidateColorView: UIView!
+    @IBOutlet weak var colorField: UITextField!
+
     private var isSimulateOpen = false
     private var currentDataIndex = 0
     
     private let sendView = GridView(cellType: SendCell.self)
     private let sendInfos: [(String, String)] = [("重启", "R"), ("加速器校准", "A"), ("磁力计校准", "M"),]
-
+    private let candidateColors: [UInt] = [0x018BD5, 0xCE0755, 0x77C344]
+    private var colorButtons: [UIButton] = []
+    
     private lazy var displayLink: CADisplayLink = {
         let displayLink = CADisplayLink(target: self, selector: #selector(update))
         displayLink.add(to: RunLoop.main, forMode: .default)
@@ -65,12 +69,28 @@ class SettingViewController: UIViewController {
             cell.setData(title: self.sendInfos[index].0, sendContent: self.sendInfos[index].1)
         }
         
+        for (i, color) in candidateColors.enumerated() {
+            let colorView = UIButton()
+            colorView.addTarget(self, action: #selector(onSelectColor(_:)), for: .touchUpInside)
+            colorView.tag = i
+            colorView.backgroundColor = UIColor(hex: color)
+            candidateColorView.addSubview(colorView)
+            colorButtons.append(colorView)
+        }
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         sendView.size = CGSize(width: view.width, height: 40)
         sendView.bottomMargin = view.safeAreaInsets.bottom + 50
+        for (i, button) in colorButtons.enumerated() {
+            button.frame = CGRect(x: (candidateColorView.height + 6) * CGFloat(i), y: 0, width: candidateColorView.height, height: candidateColorView.height)
+        }
+
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         sendView.reload()
     }
     
@@ -125,15 +145,42 @@ class SettingViewController: UIViewController {
         view.endEditing(true)
     }
     
+    @objc private func onSelectColor(_ button: UIButton) {
+        let color = candidateColors[button.tag]
+        let str = String(format: "%06x", color)
+        colorField.text = str.uppercased()
+    }
+    
+    @IBAction func onColorApply(_ button: UIButton) {
+        let colorStr = colorField.text ?? ""
+        let isColor = isColorStrAvaliable(colorStr)
+        guard isColor else {
+            Toast.showRightNow("不是合法的颜色")
+            return
+        }
+        UserDefaults.standard.setValue(colorStr, forKey: "theme_color")
+        AlertView(title: "注意", message: "颜色设置成功，重启后生效", markButtonTitle: "确定", otherButtonTitles: nil).show()
+    }
+    
     private func appendText(_ str: String) {
         
         DispatchQueue.main.async {
-            let newStr = self.receiveTextView.text! + str + "\n"
-            self.receiveTextView.text = newStr
-            self.receiveTextView.setContentOffset(CGPoint(x: 0, y: max(0, self.receiveTextView.contentSize.height - self.receiveTextView.frame.height)), animated: true)
+//            let newStr = self.receiveTextView.text! + str + "\n"
+//            self.receiveTextView.text = newStr
+//            self.receiveTextView.setContentOffset(CGPoint(x: 0, y: max(0, self.receiveTextView.contentSize.height - self.receiveTextView.frame.height)), animated: true)
         }
     }
    
+    private func isColorStrAvaliable(_ str: String) -> Bool {
+        guard str.count == 6 else { return false }
+        for char in str {
+            if !["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"].contains(char) {
+                return false
+            }
+        }
+        return true
+    }
+    
     @objc func update() {
         
         guard let host = sendHostTextField.text, !host.isEmpty else {
@@ -201,7 +248,7 @@ extension SettingViewController: UDPListener {
 
     func didReceive(_ data: Data, fromHost host: String, port: UInt16) {
         let str = String(data: data, encoding: .utf8)!
-        print(#function, str, host, port)
+//        print(#function, str, host, port)
 //        appendText("接收数据：" + str)
     }
     

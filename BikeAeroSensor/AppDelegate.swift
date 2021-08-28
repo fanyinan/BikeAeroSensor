@@ -23,6 +23,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window.backgroundColor = #colorLiteral(red: 0.1791777015, green: 0.1778892577, blue: 0.1801685095, alpha: 1)
         window.makeKeyAndVisible()
         
+        let color = UserDefaults.standard.object(forKey: "theme_color") as? String
+        UIColor.theme = UIColor(hexStr: color ?? "018BD5")
 //        App.isToHiddenStatus = window.safeAreaInsets.top <= 20
         
         window.rootViewController = MainViewController()
