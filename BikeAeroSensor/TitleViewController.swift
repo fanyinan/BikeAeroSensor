@@ -31,9 +31,9 @@ class TitleViewController: UIViewController {
         titleView.snp.makeConstraints { make in
             make.top.left.right.equalToSuperview()
             if UIScreen.main.bounds.size.height <= 667 {
-                make.height.equalTo(80 + SizeFitManager.shared.safeTopMargin)
+                make.height.equalTo(60 + SizeFitManager.shared.safeTopMargin)
             } else {
-                make.height.equalTo(100 + SizeFitManager.shared.safeTopMargin)
+                make.height.equalTo(80 + SizeFitManager.shared.safeTopMargin)
             }
         }
         

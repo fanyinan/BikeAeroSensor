@@ -18,14 +18,14 @@ class ChartData {
 }
 
 protocol ChartViewDataSource: NSObjectProtocol {
-    func chartData(_ chartView: ChartView) -> [String: Double]
-    func lineColor(_ key: String) -> UIColor
+    func chartData(_ chartView: ChartView) -> [DataName: Double]
+    func lineColor(_ key: DataName) -> UIColor
 }
 
 class ChartView: UIView {
 
     private let chart = Chart()
-    private var datas: [String: ChartData] = [:]
+    private var datas: [DataName: ChartData] = [:]
     let xAxisCount = 30
     var maxValueCount: Int { xAxisCount + 1 }
 

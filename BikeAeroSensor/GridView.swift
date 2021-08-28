@@ -33,6 +33,7 @@ class GridView<T: GridCell>: UIView, UICollectionViewDataSource, UICollectionVie
     var edgeInsets = UIEdgeInsets.zero
     
     var updateCell: ((T, Int) -> Void)?
+    var onClick: ((T, Int) -> Void)?
     
     init(cellType: T.Type) {
         self.cellType = cellType
@@ -75,6 +76,10 @@ class GridView<T: GridCell>: UIView, UICollectionViewDataSource, UICollectionVie
         collectionView.reloadData()
     }
     
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        let r = super.hitTest(point, with: event)
+        return r
+    }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return row * col
     }
@@ -94,6 +99,6 @@ class GridView<T: GridCell>: UIView, UICollectionViewDataSource, UICollectionVie
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
+        onClick?(cells[indexPath.row]!, indexPath.row)
     }
 }

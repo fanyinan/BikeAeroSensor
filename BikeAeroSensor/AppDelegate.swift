@@ -25,8 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
 //        App.isToHiddenStatus = window.safeAreaInsets.top <= 20
         
-        let navigationViewController = UINavigationController(rootViewController: MainViewController())
-        window.rootViewController = navigationViewController
+        window.rootViewController = MainViewController()
         
         self.window = window
         

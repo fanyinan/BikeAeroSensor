@@ -46,8 +46,8 @@ class ChartDataItemCell: UICollectionViewCell, Reusable {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setData(_ data: VisualInfo) {
-        titleLabel.text = data.label
+    func setData(_ data: DataInfo) {
+        titleLabel.text = data.label.rawValue
         colorView.backgroundColor = data.color
         if data.needShow {
             containerView.contentView.setBorder(color: data.color, width: 2)

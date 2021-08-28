@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 
 struct DynamicData {
-    var name: String
+    var name: DataName
     var value: Double
     var unit: String
 }
@@ -20,10 +20,12 @@ class DynamicDataCell: GridCell {
     private let titleLabel = UILabel()
     private let valueLabel = UILabel()
     private let unitLabel = UILabel()
+    private let addImageView = UIImageView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         clipsToBounds = false
+        containerView.isUserInteractionEnabled = false
         addSubview(containerView)
         containerView.setRadius(6)
         containerView.setShadow(color: .black, offsetX: 0, offsetY: 2, radius: 2, opacity: 0.08)
@@ -64,6 +66,15 @@ class DynamicDataCell: GridCell {
             make.bottom.equalTo(valueLabel.snp.bottom).offset(-3)
             make.left.equalTo(valueLabel.snp.right).offset(2)
         }
+        
+        addImageView.isUserInteractionEnabled = false
+        containerView.addSubview(addImageView)
+        addImageView.image = UIImage(named: "add")
+        addImageView.alpha = 0.5
+        addImageView.contentMode = .scaleAspectFit
+        addImageView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -80,12 +91,14 @@ class DynamicDataCell: GridCell {
             titleLabel.isHidden = true
             valueLabel.isHidden = true
             unitLabel.isHidden = true
+            addImageView.isHidden = false
             return
         }
+        addImageView.isHidden = true
         titleLabel.isHidden = false
         valueLabel.isHidden = false
         unitLabel.isHidden = false
-        titleLabel.text = data.name
+        titleLabel.text = data.name.rawValue
         valueLabel.text = String(format: "%.1f", data.value)
         unitLabel.text = data.unit
     }

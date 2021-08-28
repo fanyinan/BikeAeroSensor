@@ -85,7 +85,6 @@ class MenuView: UIView, NibLoadable {
     }
     
     @objc private func refreshUI() {
-        print("batteryPercent", batteryPercent)
         batteryPercentViewWidthConstraint?.constant = CGFloat(batteryPercent * 22)
         batteryPercentLabel?.text = "\(Int((batteryPercent * 100).rounded()))%"
         

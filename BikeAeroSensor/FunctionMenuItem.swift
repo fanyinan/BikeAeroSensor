@@ -9,7 +9,7 @@ import UIKit
 
 class FunctionMenuItem: MenuItemView {
 
-    var visualInfos: [VisualInfo] = []
+    var visualInfos: [DataInfo] = []
         
     var onUpdate: (() -> Void)?
     
@@ -72,8 +72,13 @@ extension FunctionMenuItem: UICollectionViewDataSource {
 extension FunctionMenuItem: UICollectionViewDelegateFlowLayout{
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
         let data = visualInfos[indexPath.row]
+
+        guard visualInfos.filter({ $0.needShow }).count < 6 || data.needShow else {
+            Toast.showRightNow("最多选择6项")
+            return
+        }
+        
         data.needShow = !data.needShow
         collectionView.reloadData()
         onUpdate?()
