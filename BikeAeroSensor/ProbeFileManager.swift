@@ -68,13 +68,14 @@ class ProbeDataFile {
 class ProbeFileInfo: Codable {
     
     enum CodingKeys: CodingKey {
-        case startTime, endTime, dataCount, fileName, name
+        case startTime, endTime, dataCount, fileName, name, isSent
     }
     
     var name: String?
     private(set) var startTime = Date()
     private(set) var endTime: Date!
     private(set) var dataCount = 0
+    private(set) var isSent = true
     var displayName: String {
         dateFormatter.dateFormat = "MM-dd HH:mm:ss"
         return name ?? dateFormatter.string(from: startTime)
@@ -102,6 +103,7 @@ class ProbeFileInfo: Codable {
         dataCount = try container.decode(Int.self, forKey: .dataCount)
         fileName = try container.decode(String.self, forKey: .fileName)
         name = try container.decode(String?.self, forKey: .name)
+        isSent = try container.decode(Bool.self, forKey: .isSent)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -111,6 +113,7 @@ class ProbeFileInfo: Codable {
         try container.encode(dataCount, forKey: .dataCount)
         try container.encode(fileName, forKey: .fileName)
         try container.encode(name, forKey: .name)
+        try container.encode(isSent, forKey: .isSent)
     }
     
     func increaseCount() {
@@ -119,6 +122,10 @@ class ProbeFileInfo: Codable {
     
     func end() {
         endTime = Date()
+    }
+    
+    func markSent() {
+        isSent = true
     }
 }
 

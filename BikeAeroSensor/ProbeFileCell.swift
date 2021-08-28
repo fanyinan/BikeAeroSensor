@@ -12,6 +12,7 @@ class ProbeFileCell: UITableViewCell, Reusable {
 
     private let fileNameLabel = UILabel()
     private let descriptionLabel = UILabel()
+    private var sentLabel = UILabel()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -21,7 +22,6 @@ class ProbeFileCell: UITableViewCell, Reusable {
         fileNameLabel.snp.makeConstraints { make in
             make.left.equalToSuperview().offset(30)
             make.top.equalToSuperview().offset(10)
-            make.right.equalToSuperview().offset(-30)
         }
         
         contentView.addSubview(descriptionLabel)
@@ -33,6 +33,19 @@ class ProbeFileCell: UITableViewCell, Reusable {
             make.right.equalToSuperview().offset(-30)
         }
         
+        contentView.addSubview(sentLabel)
+        sentLabel.font = UIFont.systemFont(ofSize: 10)
+        sentLabel.textColor = .white
+        sentLabel.backgroundColor = .theme
+        sentLabel.textAlignment = .center
+        sentLabel.setCornerRadius(4)
+        sentLabel.snp.makeConstraints { make in
+            make.left.equalTo(fileNameLabel.snp.right).offset(16)
+            make.centerY.equalTo(fileNameLabel.snp.centerY)
+            make.width.equalTo(40)
+            make.height.equalTo(16)
+        }
+        sentLabel.text = "已发送"
     }
     
     required init?(coder: NSCoder) {
@@ -46,5 +59,6 @@ class ProbeFileCell: UITableViewCell, Reusable {
     func setData(_ fileInfo: ProbeFileInfo) {
         fileNameLabel.text = fileInfo.displayName
         descriptionLabel.text = fileInfo.desc
+        sentLabel.isHidden = !fileInfo.isSent
     }
 }

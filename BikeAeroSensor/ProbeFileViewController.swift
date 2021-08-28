@@ -135,6 +135,12 @@ class ProbeFileViewController: TitleViewController {
         }
         
         let activityVC = UIActivityViewController(activityItems: [zipURL.url], applicationActivities: nil)
+        activityVC.completionWithItemsHandler = { (type: UIActivity.ActivityType?, success: Bool, info: [Any]?, error: Error?) in
+            files.forEach({ $0.markSent() })
+            ProbeFileManager.shared.save()
+            self.reload()
+        }
+        
         present(activityVC, animated: true, completion: nil)
     }
     
