@@ -21,6 +21,9 @@ class SettingViewController: UIViewController {
     private var isSimulateOpen = false
     private var currentDataIndex = 0
     
+    private let sendView = GridView(cellType: SendCell.self)
+    private let sendInfos: [(String, String)] = [("重启", "R"), ("加速器校准", "A"), ("磁力计校准", "M"),]
+
     private lazy var displayLink: CADisplayLink = {
         let displayLink = CADisplayLink(target: self, selector: #selector(update))
         displayLink.add(to: RunLoop.main, forMode: .default)
@@ -50,6 +53,25 @@ class SettingViewController: UIViewController {
         let ips = getWiFiAddress() ?? "unknow"
         myIPLabel.text = ips
         UDPManager.default.addListener(self)
+        
+        
+        sendView.row = 1
+        sendView.col = 3
+        sendView.edgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        sendView.collectionView.clipsToBounds = false
+        sendView.hSpace = 20
+        view.addSubview(sendView)
+        sendView.updateCell = { [unowned self] cell, index in
+            cell.setData(title: self.sendInfos[index].0, sendContent: self.sendInfos[index].1)
+        }
+        
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        sendView.size = CGSize(width: view.width, height: 40)
+        sendView.bottomMargin = view.safeAreaInsets.bottom + 50
+        sendView.reload()
     }
     
     override func viewWillDisappear(_ animated: Bool) {

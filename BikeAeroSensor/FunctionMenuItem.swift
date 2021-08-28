@@ -19,7 +19,6 @@ class FunctionMenuItem: MenuItemView {
         contentView.backgroundColor = #colorLiteral(red: 0.9647058824, green: 0.9647058824, blue: 0.9647058824, alpha: 1)
         
         contentView.addSubview(collectionView)
-
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -33,6 +32,7 @@ class FunctionMenuItem: MenuItemView {
         let col = 3
         let itemWidth = (contentView.width - flowLayout.minimumInteritemSpacing * CGFloat(col - 1) - collectionView.contentInset.left - collectionView.contentInset.right) / CGFloat(col)
         flowLayout.itemSize = CGSize(width: itemWidth, height: 36)
+
     }
     
     private lazy var collectionView: UICollectionView = {

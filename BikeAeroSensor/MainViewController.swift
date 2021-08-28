@@ -332,7 +332,7 @@ class MainViewController: UIViewController {
 
         chartView.frame = CGRect(x: 0, y: legendView.frame.maxY + kFitHei(16), width: view.frame.width, height: dynamicDataView.minY - legendView.maxY - kFitHei(16))
 
-        menuView.menuItemHeight = view.height - chartView.convert(CGPoint(x: 0, y: chartView.height), to: nil).y
+        menuView.menuItemHeight = view.height - chartView.convert(CGPoint(x: 0, y: chartView.height), to: nil).y + 20
     }
     
     private func setupLegend() {

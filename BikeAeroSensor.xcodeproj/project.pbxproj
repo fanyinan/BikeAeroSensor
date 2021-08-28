@@ -47,6 +47,7 @@
 		CF31B7A026D93F6C001B9990 /* ContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF31B79A26D93F6C001B9990 /* ContainerView.swift */; };
 		CF31B7A326D9407A001B9990 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF31B7A226D9407A001B9990 /* String+Extension.swift */; };
 		CF31B7A626D9E59B001B9990 /* Version.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF31B7A526D9E59B001B9990 /* Version.swift */; };
+		CF31B7AB26D9F5FA001B9990 /* SendCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF31B7AA26D9F5FA001B9990 /* SendCell.swift */; };
 		CF46DE7426D0DFE0005A7CB0 /* ProbeFileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF46DE7326D0DFE0005A7CB0 /* ProbeFileCell.swift */; };
 		CF46DE7826D0E026005A7CB0 /* Reusable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF46DE7726D0E026005A7CB0 /* Reusable.swift */; };
 		CF46DE7D26D0F6A7005A7CB0 /* Zip in Frameworks */ = {isa = PBXBuildFile; productRef = CF46DE7C26D0F6A7005A7CB0 /* Zip */; };
@@ -114,6 +115,7 @@
 		CF31B79A26D93F6C001B9990 /* ContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContainerView.swift; sourceTree = "<group>"; };
 		CF31B7A226D9407A001B9990 /* String+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		CF31B7A526D9E59B001B9990 /* Version.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Version.swift; sourceTree = "<group>"; };
+		CF31B7AA26D9F5FA001B9990 /* SendCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendCell.swift; sourceTree = "<group>"; };
 		CF46DE7326D0DFE0005A7CB0 /* ProbeFileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeFileCell.swift; sourceTree = "<group>"; };
 		CF46DE7726D0E026005A7CB0 /* Reusable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reusable.swift; sourceTree = "<group>"; };
 		CF46DE8026D0FF93005A7CB0 /* KeyboardObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardObserver.swift; sourceTree = "<group>"; };
@@ -204,6 +206,7 @@
 				CF46DEA026D52726005A7CB0 /* GridView.swift */,
 				CF46DEA326D52C11005A7CB0 /* LegendCell.swift */,
 				CF46DEBF26D54EC5005A7CB0 /* DynamicDataCell.swift */,
+				CF31B7AA26D9F5FA001B9990 /* SendCell.swift */,
 				CC4DC40026CCC61B00031340 /* MainViewController.swift */,
 				CF31B77D26D7DD3D001B9990 /* MenuItemView.swift */,
 				CF31B78626D7E6A4001B9990 /* ChartDataItemCell.swift */,
@@ -407,6 +410,7 @@
 				CF46DE8B26D0FF93005A7CB0 /* Toast.swift in Sources */,
 				CF46DF3626D697D4005A7CB0 /* UIImage+Extension.swift in Sources */,
 				CF31B7A026D93F6C001B9990 /* ContainerView.swift in Sources */,
+				CF31B7AB26D9F5FA001B9990 /* SendCell.swift in Sources */,
 				CF46DEA426D52C11005A7CB0 /* LegendCell.swift in Sources */,
 				CC4DC41026CCDE0800031340 /* CGPoint+Extension.swift in Sources */,
 				CC4DC40526CCCAD200031340 /* ChartView.swift in Sources */,
