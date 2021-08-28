@@ -15,6 +15,7 @@ class ProbeFileViewController: TitleViewController {
     private let editButton = UIButton()
     private let shareButton = UIButton()
     private let deleteButton = UIButton()
+    private let selectAllButton = UIButton()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,6 +58,17 @@ class ProbeFileViewController: TitleViewController {
             make.right.equalTo(shareButton.snp.left).offset(-12)
             make.centerY.equalTo(shareButton.snp.centerY)
         }
+        
+        titleView.addSubview(selectAllButton)
+        selectAllButton.isHidden = true
+        selectAllButton.setTitle("全选", for: .normal)
+        selectAllButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+        selectAllButton.setTitleColor(.theme, for: .normal)
+        selectAllButton.addTarget(self, action: #selector(onSelectAll(_:)), for: .touchUpInside)
+        selectAllButton.snp.makeConstraints { make in
+            make.right.equalTo(deleteButton.snp.left).offset(-12)
+            make.centerY.equalTo(deleteButton.snp.centerY)
+        }
     }
     
     override func viewWillLayoutSubviews() {
@@ -75,6 +87,7 @@ class ProbeFileViewController: TitleViewController {
         tableView.isEditing = !tableView.isEditing
         deleteButton.isHidden = !deleteButton.isHidden
         shareButton.isHidden = !shareButton.isHidden
+        selectAllButton.isHidden = !selectAllButton.isHidden
     }
     
     @objc private func onDelete(_ button: UIButton) {
@@ -92,6 +105,10 @@ class ProbeFileViewController: TitleViewController {
     @objc private func onShare(_ button: UIButton) {
         guard let indexPaths = tableView.indexPathsForSelectedRows, !indexPaths.isEmpty else { return }
         shareFile(indexPaths: indexPaths)
+    }
+    
+    @objc private func onSelectAll(_ button: UIButton) {
+        (0..<fileList.count).forEach({ tableView.selectRow(at: IndexPath(row: $0, section: 0), animated: false, scrollPosition: .none) })
     }
     
     private func shareFile(indexPaths: [IndexPath]) {
