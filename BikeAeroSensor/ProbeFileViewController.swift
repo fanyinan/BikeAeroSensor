@@ -82,7 +82,7 @@ class ProbeFileViewController: TitleViewController {
     }
     
     @objc private func onEdit(_ button: UIButton) {
-        guard !fileList.isEmpty else { return }
+        guard !fileList.isEmpty || button.isSelected else { return }
         button.isSelected = !button.isSelected
         tableView.isEditing = !tableView.isEditing
         deleteButton.isHidden = !deleteButton.isHidden
@@ -171,6 +171,7 @@ extension ProbeFileViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard !tableView.isEditing else { return }
         shareFile(indexPaths: [indexPath])
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {

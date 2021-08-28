@@ -23,6 +23,7 @@ class ProbeDataFile {
         path.createFileIfNeeded(data: nil)
         fileHandle = FileHandle(forWritingAtPath: path.string)!
         fileInfo = ProbeFileInfo(fileName: path.lastComponentWithoutExtension)
+        writeHeader()
     }
     
     func write(_ data: Data) {
@@ -30,14 +31,37 @@ class ProbeDataFile {
             didWrite = true
         }
         
-        fileHandle.seekToEndOfFile()
-        fileHandle.write(data)
-        fileInfo.increaseCount()
+        _write(data)
     }
     
     func finish() {
         try! fileHandle.close()
         fileInfo.end()
+    }
+    
+    func writeHeader() {
+        dateFormatter.dateFormat = "YYYY-MM-dd"
+        let dateStr = dateFormatter.string(from: Date())
+        dateFormatter.dateFormat = "HH:mm:ss"
+        let timeStr = dateFormatter.string(from: Date())
+        
+        let headerStr = "# THIS FILE IS FOR AEROMETER DATA RECORDING.\n" +
+            "# Version: \(Version.current.string)\n" +
+        "# Date: \(dateStr)\n" +
+        "# Time: \(timeStr) (Hong Kong Time)\n" +
+        "# Copyright (c) 2018, The Aerodynamics Acoustics & Noise control Technology Centre(AANTC), Performance Sports Engineering Research Group\n" +
+        "# <aantc.ust.hk>\n" +
+        "# All rights reserved.\n" +
+        "***End_of_Header***\n" +
+        "currentDataIndex,wiFiSignalStrength,currentDataFrequency,batteryVoltage,differentialPressure0,differentialPressure1,differentialPressure2,differentialPressure3,differentialPressure4,averageDPTemperature,bmpTemperature,bmpPressure,pitchAngle,rollAngle,yawAngle,icmAccX,icmAccY,icmAccZ,icmGyrX,icmGyrY,icmGyrZ\n"
+        let headerData = headerStr.data(using: .utf8)!
+        _write(headerData)
+    }
+    
+    private func _write(_ data: Data) {
+        fileHandle.seekToEndOfFile()
+        fileHandle.write(data)
+        fileInfo.increaseCount()
     }
 }
 

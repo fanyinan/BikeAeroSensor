@@ -46,6 +46,7 @@
 		CF31B79F26D93F6C001B9990 /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF31B79926D93F6C001B9990 /* AlertView.swift */; };
 		CF31B7A026D93F6C001B9990 /* ContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF31B79A26D93F6C001B9990 /* ContainerView.swift */; };
 		CF31B7A326D9407A001B9990 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF31B7A226D9407A001B9990 /* String+Extension.swift */; };
+		CF31B7A626D9E59B001B9990 /* Version.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF31B7A526D9E59B001B9990 /* Version.swift */; };
 		CF46DE7426D0DFE0005A7CB0 /* ProbeFileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF46DE7326D0DFE0005A7CB0 /* ProbeFileCell.swift */; };
 		CF46DE7826D0E026005A7CB0 /* Reusable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF46DE7726D0E026005A7CB0 /* Reusable.swift */; };
 		CF46DE7D26D0F6A7005A7CB0 /* Zip in Frameworks */ = {isa = PBXBuildFile; productRef = CF46DE7C26D0F6A7005A7CB0 /* Zip */; };
@@ -112,6 +113,7 @@
 		CF31B79926D93F6C001B9990 /* AlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
 		CF31B79A26D93F6C001B9990 /* ContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContainerView.swift; sourceTree = "<group>"; };
 		CF31B7A226D9407A001B9990 /* String+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
+		CF31B7A526D9E59B001B9990 /* Version.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Version.swift; sourceTree = "<group>"; };
 		CF46DE7326D0DFE0005A7CB0 /* ProbeFileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProbeFileCell.swift; sourceTree = "<group>"; };
 		CF46DE7726D0E026005A7CB0 /* Reusable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reusable.swift; sourceTree = "<group>"; };
 		CF46DE8026D0FF93005A7CB0 /* KeyboardObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardObserver.swift; sourceTree = "<group>"; };
@@ -260,6 +262,7 @@
 				CF46DE9D26D1EEAA005A7CB0 /* VMathTool.swift */,
 				CF46DE7726D0E026005A7CB0 /* Reusable.swift */,
 				CF31B78026D7DF63001B9990 /* Thread.swift */,
+				CF31B7A526D9E59B001B9990 /* Version.swift */,
 			);
 			path = Utilty;
 			sourceTree = "<group>";
@@ -393,6 +396,7 @@
 				CF31B79E26D93F6C001B9990 /* PopViewHelper.swift in Sources */,
 				CC4DC41426CCDE0800031340 /* CGSize+Extension.swift in Sources */,
 				CF31B79C26D93F6C001B9990 /* KeyBoardController.swift in Sources */,
+				CF31B7A626D9E59B001B9990 /* Version.swift in Sources */,
 				CF46DE8F26D0FFAA005A7CB0 /* Toast+Extension.swift in Sources */,
 				CF31B79B26D93F6C001B9990 /* PopViewManager.swift in Sources */,
 				CC4DC41226CCDE0800031340 /* UIView+Layout.swift in Sources */,
@@ -571,6 +575,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.fyn.BikeAeroSensor;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -590,6 +595,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.fyn.BikeAeroSensor;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
