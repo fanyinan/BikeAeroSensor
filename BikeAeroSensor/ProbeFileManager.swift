@@ -8,16 +8,21 @@
 import Foundation
 import PathKit
 
+let dateFormatter = DateFormatter()
+
 class ProbeDataFile {
     
     private let fileHandle: FileHandle
+    let fileInfo: ProbeFileInfo
+    
     let path: Path
     var didWrite = false
-    
+
     init(path: Path) {
         self.path = path
         path.createFileIfNeeded(data: nil)
         fileHandle = FileHandle(forWritingAtPath: path.string)!
+        fileInfo = ProbeFileInfo(fileName: path.lastComponentWithoutExtension)
     }
     
     func write(_ data: Data) {
@@ -27,15 +32,37 @@ class ProbeDataFile {
         
         fileHandle.seekToEndOfFile()
         fileHandle.write(data)
+        fileInfo.increaseCount()
     }
     
     func finish() {
         try! fileHandle.close()
+        fileInfo.end()
     }
 }
 
 class ProbeFileInfo: Codable {
-    var fileName: String
+    
+    enum CodingKeys: CodingKey {
+        case startTime, endTime, dataCount, fileName, name
+    }
+    
+    var name: String?
+    private(set) var startTime = Date()
+    private(set) var endTime: Date!
+    private(set) var dataCount = 0
+    var displayName: String {
+        dateFormatter.dateFormat = "MM-dd HH:mm:ss"
+        return name ?? dateFormatter.string(from: startTime)
+    }
+    
+    var desc: String {
+        dateFormatter.dateFormat = "HH:mm:ss"
+        return "time : \(dateFormatter.string(from: startTime)) - \(dateFormatter.string(from: endTime))   count : \(dataCount)"
+    }
+    
+    private(set) var fileName: String
+    
     var filePath: Path {
         return ProbeFileManager.shared.folderPath + Path(fileName)
     }
@@ -43,15 +70,40 @@ class ProbeFileInfo: Codable {
     init(fileName: String) {
         self.fileName = fileName
     }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        startTime = try container.decode(Date.self, forKey: .startTime)
+        endTime = try container.decode(Date.self, forKey: .endTime)
+        dataCount = try container.decode(Int.self, forKey: .dataCount)
+        fileName = try container.decode(String.self, forKey: .fileName)
+        name = try container.decode(String?.self, forKey: .name)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(startTime, forKey: .startTime)
+        try container.encode(endTime, forKey: .endTime)
+        try container.encode(dataCount, forKey: .dataCount)
+        try container.encode(fileName, forKey: .fileName)
+        try container.encode(name, forKey: .name)
+    }
+    
+    func increaseCount() {
+        dataCount += 1
+    }
+    
+    func end() {
+        endTime = Date()
+    }
 }
 
 class ProbeFileManager {
     
     static let shared = ProbeFileManager()
     
-    private let dateFormatter = DateFormatter()
     private var currentFile: ProbeDataFile!
-    
+
     private(set) var fileInfos: [ProbeFileInfo] = []
     
     private lazy var configFilePath: Path = {
@@ -65,7 +117,6 @@ class ProbeFileManager {
     private let fileQueue = DispatchQueue(label: "com.file")
     
     private init() {
-        dateFormatter.dateFormat = "YYYY-MM-dd_HH:mm:ss"
         let emptyDraftInfo: [ProbeFileInfo] = []
         let data = try! JSONEncoder().encode(emptyDraftInfo)
         folderPath.createFolderIfNeeded()
@@ -79,7 +130,7 @@ class ProbeFileManager {
     
     func begin()  {
         fileQueue.async {
-            let fileName = self.dateFormatter.string(from: Date())
+            let fileName = UUID().uuidString
             let filePath = self.folderPath + Path(fileName)
             self.currentFile = ProbeDataFile(path: filePath)
         }
@@ -102,11 +153,33 @@ class ProbeFileManager {
                 completion(false)
                 return
             }
-            self.fileInfos.append(ProbeFileInfo(fileName: self.currentFile.path.lastComponentWithoutExtension))
+            self.fileInfos.append(self.currentFile.fileInfo)
             let jsonData = try! JSONEncoder().encode(self.fileInfos)
             try! self.configFilePath.write(jsonData)
             self.currentFile = nil
             completion(true)
         }
+    }
+
+    func delete(_ infos: [ProbeFileInfo], completion: @escaping (() -> Void)) {
+        
+        fileQueue.async {
+            for info in infos {            
+                self.fileInfos.removeAll(where: { $0.fileName == info.fileName })
+            }
+            self.saveSync()
+            completion()
+        }
+    }
+    
+    func save() {
+        fileQueue.async {
+            self.saveSync()
+        }
+    }
+    
+    private func saveSync() {
+        let jsonData = try! JSONEncoder().encode(fileInfos)
+        try! configFilePath.write(jsonData)
     }
 }

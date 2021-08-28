@@ -174,7 +174,7 @@ class MainViewController: UIViewController {
                 let vc = SettingViewController()
                 self.navigationController?.present(vc, animated: true, completion: nil)
             case .file:
-                self.navigationController?.pushViewController(ProbeFileViewController(), animated: true)
+                self.navigationController?.present(ProbeFileViewController(), animated: true, completion: nil)
             case .tareOn:
                 tarePreData = [:]
             case .tareOff:
