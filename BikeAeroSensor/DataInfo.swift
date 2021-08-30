@@ -65,7 +65,7 @@ enum DataName: String {
     case icmGyrX
     case icmGyrY
     case icmGyrZ
-    case windSpeed
-    case windPitch
-    case windYaw
+    case windSpeed = "wind speed"
+    case windPitch = "wind pitch"
+    case windYaw = "wind yaw"
 }

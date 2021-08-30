@@ -75,7 +75,7 @@ class ProbeFileInfo: Codable {
     private(set) var startTime = Date()
     private(set) var endTime: Date!
     private(set) var dataCount = 0
-    private(set) var isSent = true
+    private(set) var isSent = false
     var displayName: String {
         dateFormatter.dateFormat = "MM-dd HH:mm:ss"
         return name ?? dateFormatter.string(from: startTime)

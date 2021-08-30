@@ -19,6 +19,7 @@ class MenuView: UIView, NibLoadable {
 
     @IBOutlet weak var batteryPercentViewWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var batteryPercentLabel: UILabel!
+    @IBOutlet weak var batteryIconView: UIView!
     @IBOutlet weak var tareImageView: UIImageView!
     @IBOutlet var wiFiSignalStrengthView: [UIView]!
     @IBOutlet weak var recordIconView: UIView!
@@ -53,6 +54,8 @@ class MenuView: UIView, NibLoadable {
         tareTintImage = tareImageView.image?.tintColor(.theme)
         tareOriginImage = tareImageView.image
         recTimeLabel.textColor = .theme
+        recordStatusView.backgroundColor = .theme
+        batteryIconView.backgroundColor = .theme
         
         functionView.menuView = self
         functionView.onHide = { [weak self] velocity in
@@ -125,14 +128,7 @@ class MenuView: UIView, NibLoadable {
         case .prepare:
             break
         case .recording:
-            recordStatusView.alpha = 1
-            recTimeLabel.alpha = 0
-            recordStatusView.backgroundColor = .red
-            recordStatusView.layer.removeAllAnimations()
-            recordIconView.setBorder(color: .black, width: 2)
-            recLabel.textColor = .black
-            recordStatus = .end
-            onClickBlock?(.endRecord)
+            endCountDown()
         }
     }
     
@@ -151,11 +147,22 @@ class MenuView: UIView, NibLoadable {
         recLabel.textColor = .theme
     }
     
+    private func endCountDown() {
+        recordStatusView.alpha = 1
+        recTimeLabel.alpha = 0
+        recordStatusView.backgroundColor = .theme
+        recordStatusView.layer.removeAllAnimations()
+        recordIconView.setBorder(color: .black, width: 2)
+        recLabel.textColor = .black
+        recordStatus = .end
+        onClickBlock?(.endRecord)
+        
+    }
     @objc private func onCountDown() {
         if currentTime < 0 {
             timer?.invalidate()
             recordStatus = .recording
-            recordStatusView.backgroundColor = #colorLiteral(red: 0, green: 1, blue: 0.3719732761, alpha: 1)
+            recordStatusView.backgroundColor = .red
             beginBlink()
             onClickBlock?(.startRecord)
             return

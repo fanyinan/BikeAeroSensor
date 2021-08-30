@@ -54,11 +54,11 @@ class MainViewController: UIViewController {
         DataInfo(label: .differentialPressure3, color: #colorLiteral(red: 0.9568627477, green: 0.6588235497, blue: 0.5450980663, alpha: 1), unit: "Pa", isVisual: true, isDisplay: false),
         DataInfo(label: .differentialPressure4, color: #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1), unit: "Pa", isVisual: true, isDisplay: false),
         DataInfo(label: .averageDPTemperature, color: #colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1), unit: "Pa", isVisual: true, isDisplay: false),
-        DataInfo(label: .bmpTemperature, color: #colorLiteral(red: 0.6042316556, green: 0.09232855588, blue: 0.2760148644, alpha: 1), unit: "°C", isVisual: true, isDisplay: true),
-        DataInfo(label: .bmpPressure, color: #colorLiteral(red: 0.9821859002, green: 0.489916265, blue: 0.2320583761, alpha: 1), unit: "kPa", isVisual: true, isDisplay: true),
         DataInfo(label: .pitchAngle, color: #colorLiteral(red: 0.820196569, green: 0.85434407, blue: 0, alpha: 1), unit: "deg", isVisual: true, isDisplay: true),
         DataInfo(label: .rollAngle, color: #colorLiteral(red: 0.1820499003, green: 0.5240936279, blue: 0.9926010966, alpha: 1), unit: "deg", isVisual: true, isDisplay: true),
         DataInfo(label: .yawAngle, color: #colorLiteral(red: 0.8631967902, green: 0.1063003018, blue: 0.9723851085, alpha: 1), unit: "deg", isVisual: true, isDisplay: true),
+        DataInfo(label: .bmpTemperature, color: #colorLiteral(red: 0.6042316556, green: 0.09232855588, blue: 0.2760148644, alpha: 1), unit: "°C", isVisual: true, isDisplay: true),
+        DataInfo(label: .bmpPressure, color: #colorLiteral(red: 0.9821859002, green: 0.489916265, blue: 0.2320583761, alpha: 1), unit: "kPa", isVisual: true, isDisplay: true),
         DataInfo(label: .icmAccX, color: #colorLiteral(red: 0.5810584426, green: 0.1285524964, blue: 0.5745313764, alpha: 1), unit: "m/s^2", isVisual: true, isDisplay: false),
         DataInfo(label: .icmAccY, color: #colorLiteral(red: 0, green: 0.5628422499, blue: 0.3188166618, alpha: 1), unit: "m/s^2", isVisual: true, isDisplay: false),
         DataInfo(label: .icmAccZ, color: #colorLiteral(red: 1, green: 0.1491314173, blue: 0, alpha: 1), unit: "m/s^2", isVisual: true, isDisplay: false),
@@ -132,15 +132,18 @@ class MainViewController: UIViewController {
         dynamicDataView.collectionView.clipsToBounds = false
         dynamicDataView.row = 3
         dynamicDataView.col = 3
-        dynamicDataView.hSpace = kFitWid(30)
-        dynamicDataView.vSpace = kFitHei(12)
+        dynamicDataView.hSpace = kFitWid(8)
+        dynamicDataView.vSpace = kFitHei(8)
         dynamicDataView.updateCell = { [unowned self] cell, index in
-            guard let data = self.currentDynamicData?.displayData else { return }
-            guard data.count > index else {
-                cell.setData(nil)
+            guard let data = self.currentDynamicData?.displayData else {
+                cell.setData(nil, showAddWhenEmpty: index == 8)
                 return
             }
-            cell.setData(data[index])
+            guard data.count > index else {
+                cell.setData(nil, showAddWhenEmpty: index == 8)
+                return
+            }
+            cell.setData(data[index], showAddWhenEmpty: index == 8)
         }
         
         dynamicDataView.onClick = { [unowned self] cell, index in
@@ -209,7 +212,7 @@ class MainViewController: UIViewController {
         
         dynamicDataView.size = CGSize(width: view.width, height: kFitHei(280))
         dynamicDataView.maxY = menuView.minY
-        dynamicDataView.edgeInsets = UIEdgeInsets(top: kFitHei(26), left: kFitWid(14), bottom: kFitHei(26), right: kFitWid(14))
+        dynamicDataView.edgeInsets = UIEdgeInsets(top: kFitHei(26), left: kFitWid(8), bottom: kFitHei(26), right: kFitWid(8))
         
         bottomView.width = view.width
         

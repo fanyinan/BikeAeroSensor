@@ -25,7 +25,7 @@ class SettingViewController: UIViewController {
     
     private let sendView = GridView(cellType: SendCell.self)
     private let sendInfos: [(String, String)] = [("重启", "R"), ("加速器校准", "A"), ("磁力计校准", "M"),]
-    private let candidateColors: [UInt] = [0x018BD5, 0xCE0755, 0x77C344]
+    private let candidateColors: [UInt] = [0x018BD5, 0xCE0755, 0x77C344, 0xF8AF17, 0xECFF00, 0x1EFF00, 0x00FFC3, 0x7F00FF, 0xFF00F5]
     private var colorButtons: [UIButton] = []
     
     private lazy var displayLink: CADisplayLink = {
@@ -199,7 +199,7 @@ class SettingViewController: UIViewController {
         }
         
 //        let exampleValues: [Double] = [90]
-        let exampleValues: [Double] = [80,45,4.11,128.58,128.58,128.58,128.58,128.58,33.06,35.12,99.21138,-9.8,16.2,174.2,9.81,9.81,9.81,12.6,12.6,12.6]
+        let exampleValues: [Double] = [80,45,4.11,128.58,128.58,128.58,128.58,128.58,33.06,35.12,99.21138,-9.8,16.2,174.2,9.81,9.81,9.81,12.6,12.6,300]
         
         var simulateDatas = exampleValues.map({ Double.random(in: ($0 - Double.random(in: 0..<5))..<($0 + Double.random(in: 0..<5))) })
         simulateDatas.insert(Double(currentDataIndex), at: 0)
@@ -247,7 +247,7 @@ class SettingViewController: UIViewController {
 extension SettingViewController: UDPListener {
 
     func didReceive(_ data: Data, fromHost host: String, port: UInt16) {
-        let str = String(data: data, encoding: .utf8)!
+//        let str = String(data: data, encoding: .utf8)!
 //        print(#function, str, host, port)
 //        appendText("接收数据：" + str)
     }

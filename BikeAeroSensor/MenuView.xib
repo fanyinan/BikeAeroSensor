@@ -315,8 +315,8 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PoU-9i-zd1" customClass="UIControl">
                     <rect key="frame" x="262" y="0.0" width="40" height="67"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Functions" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WgA-bJ-Cih">
-                            <rect key="frame" x="-3.5" y="52" width="47.5" height="12"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Plot" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WgA-bJ-Cih">
+                            <rect key="frame" x="10.5" y="52" width="19" height="12"/>
                             <fontDescription key="fontDescription" type="system" pointSize="10"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
@@ -369,6 +369,7 @@
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
+                <outlet property="batteryIconView" destination="cQt-Qs-fhw" id="8M5-fZ-FBu"/>
                 <outlet property="batteryPercentLabel" destination="enD-y2-tz5" id="OLX-Sa-qav"/>
                 <outlet property="batteryPercentViewWidthConstraint" destination="tkF-ov-Bhv" id="Dso-Si-EKG"/>
                 <outlet property="recLabel" destination="T3J-Qi-kYs" id="Cle-zg-QtJ"/>

@@ -31,6 +31,10 @@ class ChartView: UIView {
 
     weak var dataSource: ChartViewDataSource?
     
+    private var minMaxLabel: (Double, Double) = (0, 0)
+    private var toleranceCount = 0
+    private var lastLabels: [Double]?
+    
     var isPause: Bool = true {
         didSet {
             displayLink.isPaused = isPause
@@ -41,12 +45,13 @@ class ChartView: UIView {
         super.init(frame: frame)
         
         chart.xLabels = (0...xAxisCount).striding(by: 2).map({ Double($0) })
-        chart.yLabels = (-20...180).striding(by: 20).map({ Double($0) })
+//        chart.yLabels = (-20...180).striding(by: 20).map({ Double($0) })
         chart.xLabelsFormatter = { _, _ in "" }
         chart.labelColor = .white
         chart.gridColor = #colorLiteral(red: 0.9878740907, green: 1, blue: 1, alpha: 0.1)
         chart.axesColor = #colorLiteral(red: 0.9878740907, green: 1, blue: 1, alpha: 0.1)
         addSubview(chart)
+        chart.delegate = self
     }
     
     required init?(coder: NSCoder) {
@@ -131,5 +136,60 @@ class ChartView: UIView {
                 valueList = nil
             }
         }
+    }
+}
+
+extension ChartView: ChartDelegate {
+    
+    func yAxisLabels(min: Double, max: Double) -> [Double] {
+        let yLabelMaxCount = 10
+        let valueDiff = max - min
+        if valueDiff == 0 {
+            return Array(Set([0, max])).sorted()
+        }
+        
+        let segmentLengthInValue = valueDiff / Double(yLabelMaxCount + 2)
+        let presicion: Double = 10
+        let segmentLengthInLabel = roundUp(segmentLengthInValue, presicion: presicion)
+        let minInLabel = roundUp(min, presicion: presicion) - segmentLengthInLabel * 2
+        let segmentCount = ((max - minInLabel) / segmentLengthInLabel).rounded(.up) + 1
+        let maxInLabel = minInLabel + segmentCount * segmentLengthInLabel
+        
+        let labels = (Int(minInLabel)...Int(maxInLabel)).striding(by: Int(segmentLengthInLabel)).map({ Double($0) })
+        let curMinMaxLabel = (minInLabel, maxInLabel)
+
+        guard let _lastLabels = lastLabels else {
+            lastLabels = labels
+            minMaxLabel = curMinMaxLabel
+            return labels
+        }
+        
+        if curMinMaxLabel != minMaxLabel {
+            toleranceCount += 1
+            print("toleranceCount", toleranceCount)
+        } else {
+            toleranceCount -= 1
+            toleranceCount = Swift.max(toleranceCount, 0)
+            return _lastLabels
+        }
+        
+        
+        if toleranceCount < 10 {
+            return _lastLabels
+        }
+        
+        lastLabels = labels
+        minMaxLabel = curMinMaxLabel
+        toleranceCount = 0
+        
+        return labels
+    }
+    
+    func roundDown(_ num: Double, presicion: Double) -> Double {
+        return (num / presicion).rounded(.down) * presicion
+    }
+    
+    func roundUp(_ num: Double, presicion: Double) -> Double {
+        return (num / presicion).rounded(.up) * presicion
     }
 }

@@ -136,6 +136,7 @@ class ProbeFileViewController: TitleViewController {
         
         let activityVC = UIActivityViewController(activityItems: [zipURL.url], applicationActivities: nil)
         activityVC.completionWithItemsHandler = { (type: UIActivity.ActivityType?, success: Bool, info: [Any]?, error: Error?) in
+            guard success else { return }
             files.forEach({ $0.markSent() })
             ProbeFileManager.shared.save()
             self.reload()
@@ -183,21 +184,6 @@ extension ProbeFileViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
         let fileInfo = fileList[indexPath.row]
-        
-        let renameAction = UIContextualAction(style: .normal, title: "重命名", handler: { (action, view, config) in
-            
-            let alertView = AlertView(title: "重命名", message: "请输入文件名称", markButtonTitle: "确定", otherButtonTitles: nil)
-            alertView.alertViewType = .input
-            alertView.show().onSucceed {
-                let newName = alertView.textField!.text!
-                fileInfo.name = newName
-                ProbeFileManager.shared.save()
-                self.tableView.reloadData()
-            }
-            config(true)
-        })
-
-        renameAction.backgroundColor = .orange
 
         let deleteAction = UIContextualAction(style: .destructive, title: "删除", handler: { (action, view, config) in
             ProbeFileManager.shared.delete([fileInfo], completion: {
@@ -212,7 +198,7 @@ extension ProbeFileViewController: UITableViewDelegate {
             })
         })
 
-        return UISwipeActionsConfiguration(actions: [deleteAction, renameAction])
+        return UISwipeActionsConfiguration(actions: [deleteAction])
     }
     
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {

@@ -46,14 +46,14 @@ class DynamicDataCell: GridCell {
         }
         
         containerView.addSubview(valueLabel)
-        valueLabel.font = UIFont.systemFont(ofSize: 20)
+        valueLabel.font = UIFont.systemFont(ofSize: 24, weight: .semibold)
         valueLabel.textAlignment = .right
         valueLabel.textColor = .theme
 //        valueLabel.backgroundColor = .red
         valueLabel.snp.makeConstraints { make in
             make.left.equalToSuperview()
             make.top.equalToSuperview().offset(16)
-            make.right.equalTo(containerView.snp.centerX).offset(10)
+            make.right.equalTo(containerView.snp.centerX).offset(16)
         }
         
         containerView.addSubview(unitLabel)
@@ -85,13 +85,13 @@ class DynamicDataCell: GridCell {
         super.layoutSubviews()
     }
     
-    func setData(_ data: DynamicData?) {
+    func setData(_ data: DynamicData?, showAddWhenEmpty: Bool) {
         
         guard let data = data else {
             titleLabel.isHidden = true
             valueLabel.isHidden = true
             unitLabel.isHidden = true
-            addImageView.isHidden = false
+            addImageView.isHidden = !showAddWhenEmpty
             return
         }
         addImageView.isHidden = true

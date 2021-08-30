@@ -38,6 +38,17 @@ public protocol ChartDelegate: class {
      
      */
     func didEndTouchingChart(_ chart: Chart)
+    
+    func yAxisLabels(min: Double, max: Double) -> [Double]
+
+}
+
+extension ChartDelegate {
+    func didTouchChart(_ chart: Chart, indexes: [Int?], x: Double, left: CGFloat) {}
+    func didFinishTouchingChart(_ chart: Chart) {}
+    func didEndTouchingChart(_ chart: Chart) {}
+    func yAxisLabels(min: Double, max: Double) -> [Double] { return [] }
+
 }
 
 /**
@@ -225,6 +236,8 @@ open class Chart: UIControl {
     // Represent a set of points corresponding to a segment line on the chart.
     typealias ChartLineSegment = [ChartPoint]
 
+    private var customYLabels: [Double] = []
+    
     // MARK: initializations
 
     override public init(frame: CGRect) {
@@ -332,6 +345,8 @@ open class Chart: UIControl {
 
         // Draw content
 
+        customYLabels = self.delegate!.yAxisLabels(min: self.min.y, max: self.max.y)
+
         for (index, series) in self.series.enumerated() {
 
             // Separate each line in multiple segments over and below the x axis
@@ -425,15 +440,19 @@ open class Chart: UIControl {
     }
 
     fileprivate func scaleValuesOnYAxis(_ values: [Double]) -> [Double] {
+        let labels = customYLabels
+        let minLabel = labels.first!
+        let maxLabel = labels.last!
+        
         let height = Double(drawingHeight)
         var factor: Double
-        if max.y - min.y == 0 {
+        if maxLabel - minLabel == 0 {
             factor = 0
         } else {
-            factor = height / (max.y - min.y)
+            factor = height / (maxLabel - minLabel)
         }
 
-        let scaled = values.map { Double(self.topInset) + height - factor * ($0 - self.min.y) }
+        let scaled = values.map { Double(self.topInset) + height - factor * ($0 - minLabel) }
 
         return scaled
     }
@@ -628,10 +647,14 @@ open class Chart: UIControl {
 
         var labels: [Double]
         if yLabels == nil {
-            labels = [(min.y + max.y) / 2, max.y]
-            if yLabelsOnRightSide || min.y != 0 {
-                labels.insert(min.y, at: 0)
+            labels = customYLabels
+            if labels.isEmpty {
+                labels = [(min.y + max.y) / 2, max.y]
+                if yLabelsOnRightSide || min.y != 0 {
+                    labels.insert(min.y, at: 0)
+                }
             }
+            
         } else {
             labels = yLabels!
         }
