@@ -46,26 +46,26 @@ class DataInfo {
 enum DataName: String {
     case currentDataIndex
     case wiFiSignalStrength
-    case currentDataFrequency
+    case currentDataFrequency = "Current Data Frequency"
     case batteryVoltage
-    case differentialPressure0
-    case differentialPressure1
-    case differentialPressure2
-    case differentialPressure3
-    case differentialPressure4
-    case averageDPTemperature
+    case differentialPressure0 = "Differential Pressure 0"
+    case differentialPressure1 = "Differential Pressure 1"
+    case differentialPressure2 = "Differential Pressure 2"
+    case differentialPressure3 = "Differential Pressure 3"
+    case differentialPressure4 = "Differential Pressure 4"
+    case averageDPTemperature = "average DP Temperature"
     case bmpTemperature = "dpTemp"
     case bmpPressure = "ATM"
-    case pitchAngle
-    case rollAngle
-    case yawAngle
-    case icmAccX
-    case icmAccY
-    case icmAccZ
-    case icmGyrX
-    case icmGyrY
-    case icmGyrZ
-    case windSpeed = "wind speed"
-    case windPitch = "wind pitch"
-    case windYaw = "wind yaw"
+    case pitchAngle = "Pitch Angle"
+    case rollAngle = "Roll Angle"
+    case yawAngle = "Yaw Angle"
+    case icmAccX = "Icm Acc X"
+    case icmAccY = "Icm Acc Y"
+    case icmAccZ = "Icm Acc Z"
+    case icmGyrX = "Icm Gyr X"
+    case icmGyrY = "Icm Gyr Y"
+    case icmGyrZ = "Icm Gyr Z"
+    case windSpeed = "Wind Speed"
+    case windPitch = "Wind Pitch"
+    case windYaw = "Wind Yaw"
 }
