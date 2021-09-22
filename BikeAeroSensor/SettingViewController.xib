@@ -180,11 +180,41 @@
                         <action selector="onColorApply:" destination="-1" eventType="touchUpInside" id="vod-iR-jlx"/>
                     </connections>
                 </button>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Zr-sM-89f">
+                    <rect key="frame" x="69.5" y="822" width="275.5" height="60"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Copyright by PSE team, AANTC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p4G-wQ-EYq">
+                            <rect key="frame" x="0.0" y="0.0" width="203.5" height="60"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="fKG-rr-Tjp">
+                            <rect key="frame" x="215.5" y="0.0" width="60" height="60"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="60" id="3PK-vl-iin"/>
+                                <constraint firstAttribute="height" constant="60" id="mGx-tL-rJl"/>
+                            </constraints>
+                        </imageView>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstItem="fKG-rr-Tjp" firstAttribute="centerY" secondItem="p4G-wQ-EYq" secondAttribute="centerY" id="2Cw-qh-iTb"/>
+                        <constraint firstItem="fKG-rr-Tjp" firstAttribute="leading" secondItem="p4G-wQ-EYq" secondAttribute="trailing" constant="12" id="9e1-jG-mbo"/>
+                        <constraint firstItem="fKG-rr-Tjp" firstAttribute="top" secondItem="4Zr-sM-89f" secondAttribute="top" id="csf-sk-fnC"/>
+                        <constraint firstItem="p4G-wQ-EYq" firstAttribute="leading" secondItem="4Zr-sM-89f" secondAttribute="leading" id="hOq-86-KKI"/>
+                        <constraint firstAttribute="trailing" secondItem="fKG-rr-Tjp" secondAttribute="trailing" id="i12-D0-SjG"/>
+                        <constraint firstAttribute="bottom" secondItem="p4G-wQ-EYq" secondAttribute="bottom" id="sOe-bM-Txw"/>
+                        <constraint firstItem="p4G-wQ-EYq" firstAttribute="top" secondItem="4Zr-sM-89f" secondAttribute="top" id="sg5-I7-1Td"/>
+                        <constraint firstAttribute="bottom" secondItem="fKG-rr-Tjp" secondAttribute="bottom" id="xrx-oB-XWm"/>
+                    </constraints>
+                </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="mk6-pc-h9t"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
                 <constraint firstItem="gjQ-4X-rH9" firstAttribute="leading" secondItem="ftM-oJ-GSL" secondAttribute="trailing" constant="40" id="01H-Up-LQO"/>
+                <constraint firstItem="4Zr-sM-89f" firstAttribute="bottom" secondItem="mk6-pc-h9t" secondAttribute="bottom" constant="20" id="1Nj-pb-Kmn"/>
                 <constraint firstItem="mk6-pc-h9t" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="CeN-V1-4Ow" secondAttribute="trailing" symbolic="YES" id="1mZ-TI-XTx"/>
                 <constraint firstItem="48j-zL-Lkf" firstAttribute="leading" secondItem="8it-sv-5KJ" secondAttribute="trailing" constant="30" id="4fH-lR-NmV"/>
                 <constraint firstItem="alx-yH-wdS" firstAttribute="centerY" secondItem="hFt-9Y-CLQ" secondAttribute="centerY" id="8qE-Z3-ZFe"/>
@@ -201,6 +231,7 @@
                 <constraint firstItem="aDP-t5-sgf" firstAttribute="centerY" secondItem="gjQ-4X-rH9" secondAttribute="centerY" id="PgW-Vg-DCT"/>
                 <constraint firstItem="Wjz-PF-q1D" firstAttribute="top" secondItem="UrI-BF-cSb" secondAttribute="bottom" constant="40" id="QHM-6w-r7T"/>
                 <constraint firstItem="0Rr-uB-Si8" firstAttribute="leading" secondItem="mk6-pc-h9t" secondAttribute="leading" constant="40" id="R3m-bn-pwp"/>
+                <constraint firstItem="4Zr-sM-89f" firstAttribute="centerX" secondItem="SCJ-Ej-GWu" secondAttribute="centerX" id="RST-fj-o9v"/>
                 <constraint firstItem="hFt-9Y-CLQ" firstAttribute="top" secondItem="Wjz-PF-q1D" secondAttribute="bottom" constant="30" id="SoI-Lq-XIh"/>
                 <constraint firstItem="CeN-V1-4Ow" firstAttribute="top" secondItem="3SF-VB-gZP" secondAttribute="bottom" constant="30" id="V8A-Rt-hCp"/>
                 <constraint firstItem="gjQ-4X-rH9" firstAttribute="leading" secondItem="Pbr-ap-nWo" secondAttribute="trailing" constant="4" id="XU6-4c-0el"/>
@@ -229,6 +260,7 @@
         </view>
     </objects>
     <resources>
+        <image name="logo" width="3793" height="1130"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
