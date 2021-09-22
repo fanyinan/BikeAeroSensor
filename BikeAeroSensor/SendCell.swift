@@ -47,7 +47,9 @@ class SendCell: GridCell {
     @objc private func onSend() {
         guard let data = sendContent?.data(using: .utf8) else { return }
         let success = UDPManager.default.send(data)
-        if !success {
+        if success {
+            Toast.showRightNow("发送成功")
+        } else {
             Toast.showRightNow("发送失败，ip或端口号为空")
         }
     }

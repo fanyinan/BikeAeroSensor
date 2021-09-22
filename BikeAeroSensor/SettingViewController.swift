@@ -54,6 +54,7 @@ class SettingViewController: UIViewController {
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(onClickEmpty(_:)))
         view.addGestureRecognizer(tap)
+        tap.delegate = self
         let ips = getWiFiAddress() ?? "unknow"
         myIPLabel.text = ips
         UDPManager.default.addListener(self)
@@ -260,5 +261,12 @@ extension SettingViewController: UDPListener {
     
     func didNotSend(_ tag: Int, dueToError error: Error?) {
         appendText("数据发送失败：\(error?.localizedDescription ?? "未知错误")")
+    }
+}
+
+extension SettingViewController: UIGestureRecognizerDelegate {
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        return !view.subviews.map({ $0.frame.contains(touch.location(in: view)) }).contains(true)
     }
 }
