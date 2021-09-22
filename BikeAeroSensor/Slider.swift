@@ -156,7 +156,7 @@ class Slider: UIView {
         pan.delegate = self
         addGestureRecognizer(pan)
         
-        progressView.backgroundColor = #colorLiteral(red: 0, green: 0.5019607843, blue: 0.768627451, alpha: 1)
+        progressView.backgroundColor = #colorLiteral(red: 0.1999762356, green: 0.200016588, blue: 0.1999709308, alpha: 1)
         addSubview(progressView)
         
         addSubview(progressIndicatorView)
@@ -166,7 +166,7 @@ class Slider: UIView {
         addSubview(indicatorMarkView)
         indicatorMarkView.backgroundColor = .theme
         indicatorMarkView.isUserInteractionEnabled = false
-        indicatorMarkView.setBorder(color: #colorLiteral(red: 0.4937463403, green: 0.8553477526, blue: 1, alpha: 1), width: 3)
+        indicatorMarkView.setBorder(color: .white, width: 3)
 
         valueLabel.font = UIFont.boldSystemFont(ofSize: 12)
         valueLabel.textColor = #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1)

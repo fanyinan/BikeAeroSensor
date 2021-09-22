@@ -17,7 +17,6 @@ class MainViewController: UIViewController {
     private let tareButton = UIButton()
     private let displayDataView = UIView()
     private let bottomView = UIView()
-    private let slider = Slider()
     private let sendButtonContainerView = UIView()
     private var sendButtons: [UIButton] = []
     private let legendView = GridView(cellType: LegendCell.self)
@@ -26,9 +25,9 @@ class MainViewController: UIViewController {
     
     private var currentData: ProbeData?
     private var currentDynamicData: ProbeData?
+    private var toleranceFrameCount = 5
 
     private var isBegin = false
-    private var toleranceFrameCount = 5
     private var currentDelayCount = 0
     private var backupData: [DataName: Double]?
     
@@ -80,10 +79,6 @@ class MainViewController: UIViewController {
         chartView.dataSource = self
         bottomView.backgroundColor = .white
         view.addSubview(bottomView)
-        bottomView.addSubview(slider)
-    
-        slider.delegate = self
-        slider.config(minValue: 0, maxValue: 30, initValue: toleranceFrameCount)
         
         legendView.row = 2
         legendView.col = 3
@@ -177,6 +172,10 @@ class MainViewController: UIViewController {
         menuView.functionView.onUpdate = { [unowned self] in
             self.legendView.reload()
         }
+        
+        menuView.functionView.onSetTolerance = { [unowned self] toleranceFrameCount in
+            self.toleranceFrameCount = toleranceFrameCount
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -216,11 +215,7 @@ class MainViewController: UIViewController {
         
         bottomView.width = view.width
         
-        slider.height = 60
-        slider.minY = sendButtonContainerView.maxY + 30
-        slider.centerXInSuperview(margin: 30)
-        
-        bottomView.height = slider.maxY + view.safeAreaInsets.bottom
+        bottomView.height = view.safeAreaInsets.bottom
         bottomView.bottomMargin = 0
 
         chartView.frame = CGRect(x: 0, y: legendView.frame.maxY + kFitHei(16), width: view.frame.width, height: dynamicDataView.minY - legendView.maxY - kFitHei(16))
@@ -340,21 +335,3 @@ extension MainViewController: ChartViewDataSource {
     }
 }
 
-extension MainViewController: SliderDelegate {
-    
-    func valueChanged(_ slider: Slider, value: Int) {
-        if slider.maxValue == value {
-            toleranceFrameCount = Int.max
-        } else {
-            toleranceFrameCount = value
-        }
-    }
-    
-    func displayText(value: Int) -> String {
-        if value == slider.maxValue {
-            return "Max"
-        } else {
-            return "\(value)"
-        }
-    }
-}

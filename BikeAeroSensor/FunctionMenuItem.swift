@@ -9,16 +9,25 @@ import UIKit
 
 class FunctionMenuItem: MenuItemView {
 
+    private let slider = Slider()
+    private var toleranceFrameCount = 5
+
     var visualInfos: [DataInfo] = []
         
     var onUpdate: (() -> Void)?
-    
+    var onSetTolerance: ((Int) -> Void)?
+
     override init() {
         super.init()
         
         contentView.backgroundColor = #colorLiteral(red: 0.9647058824, green: 0.9647058824, blue: 0.9647058824, alpha: 1)
         
         contentView.addSubview(collectionView)
+        
+        contentView.addSubview(slider)
+    
+        slider.delegate = self
+        slider.config(minValue: 0, maxValue: 30, initValue: toleranceFrameCount)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -33,6 +42,9 @@ class FunctionMenuItem: MenuItemView {
         let itemWidth = (contentView.width - flowLayout.minimumInteritemSpacing * CGFloat(col - 1) - collectionView.contentInset.left - collectionView.contentInset.right) / CGFloat(col)
         flowLayout.itemSize = CGSize(width: itemWidth, height: 36)
 
+        slider.height = 30
+        slider.bottomMargin = 0
+        slider.centerXInSuperview(margin: 30)
     }
     
     private lazy var collectionView: UICollectionView = {
@@ -82,5 +94,25 @@ extension FunctionMenuItem: UICollectionViewDelegateFlowLayout{
         data.needShow = !data.needShow
         collectionView.reloadData()
         onUpdate?()
+    }
+}
+
+extension FunctionMenuItem: SliderDelegate {
+    
+    func valueChanged(_ slider: Slider, value: Int) {
+        if slider.maxValue == value {
+            toleranceFrameCount = Int.max
+        } else {
+            toleranceFrameCount = value
+        }
+        onSetTolerance?(toleranceFrameCount)
+    }
+    
+    func displayText(value: Int) -> String {
+        if value == slider.maxValue {
+            return "Max"
+        } else {
+            return "\(value)"
+        }
     }
 }
