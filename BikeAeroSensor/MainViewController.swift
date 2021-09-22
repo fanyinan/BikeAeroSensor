@@ -64,8 +64,11 @@ class MainViewController: UIViewController {
         DataInfo(label: .icmGyrX, color: #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1), unit: "rad/S^2", isVisual: true, isDisplay: false),
         DataInfo(label: .icmGyrY, color: #colorLiteral(red: 0.01680417731, green: 0.1983509958, blue: 1, alpha: 1), unit: "rad/S^2", isVisual: true, isDisplay: false),
         DataInfo(label: .icmGyrZ, color: #colorLiteral(red: 1, green: 0.5409764051, blue: 0.8473142982, alpha: 1), unit: "rad/S^2", isVisual: true, isDisplay: false),
+        DataInfo(label: .windSpeed, color: #colorLiteral(red: 0, green: 0.8661341071, blue: 0.1548731029, alpha: 1), unit: "m/s", isVisual: true, isDisplay: true),
+        DataInfo(label: .windPitch, color: #colorLiteral(red: 1, green: 0.3544633389, blue: 0.6672851443, alpha: 1), unit: "deg", isVisual: true, isDisplay: true),
+        DataInfo(label: .windYaw, color: #colorLiteral(red: 0.9873083234, green: 0.6549053788, blue: 0, alpha: 1), unit: "deg", isVisual: true, isDisplay: true),
     ]
-
+    
     let displayDataOrder: [DataName] = [.windSpeed, .windPitch, .windYaw, .pitchAngle, .rollAngle, .yawAngle, .bmpTemperature, .bmpPressure]
     
     private lazy var colorDict: [DataName: UIColor] = {
@@ -222,7 +225,7 @@ class MainViewController: UIViewController {
 
         chartView.frame = CGRect(x: 0, y: legendView.frame.maxY + kFitHei(16), width: view.frame.width, height: dynamicDataView.minY - legendView.maxY - kFitHei(16))
 
-        menuView.menuItemHeight = view.height - chartView.convert(CGPoint(x: 0, y: chartView.height), to: nil).y + 20
+        menuView.menuItemHeight = view.height - chartView.convert(CGPoint(x: 0, y: chartView.height), to: nil).y + 40
     }
 }
 
@@ -237,22 +240,26 @@ extension MainViewController: UDPListener {
         var visualData: [DataName: Double] = [:]
         var displayData: [DynamicData] = []
 
-        for (value, dataInfo) in zip(values, datas) {
+        for (index, dataInfo) in datas.enumerated() {
+            
+            let value: Double
+            if index < values.count {
+                value = Double(values[index])!
+            } else {
+                value = 100
+            }
+            
             if dataInfo.isVisual {
-                visualData[dataInfo.label] = Double(value)!
+                visualData[dataInfo.label] = value
             }
             
             if dataInfo.isDisplay {
-                displayData.append(DynamicData(name: dataInfo.label, value: Double(value)!, unit: dataInfo.unit))
+                displayData.append(DynamicData(name: dataInfo.label, value: value, unit: dataInfo.unit))
             }
         }
         
         let wiFiSignalStrength = Int(Double(values[1])!)
         let batteryVoltage = Double(values[3])!
-
-        displayData.insert(DynamicData(name: .windSpeed, value: 0, unit: "m/s"), at: 0)
-        displayData.insert(DynamicData(name: .windPitch, value: 0, unit: "deg"), at: 1)
-        displayData.insert(DynamicData(name: .windYaw, value: 0, unit: "deg"), at: 2)
         
         displayData.sort(by: { self.displayDataOrder.firstIndex(of: $0.name)! < self.displayDataOrder.firstIndex(of: $1.name)! })
         
