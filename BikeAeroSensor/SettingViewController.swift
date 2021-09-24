@@ -128,7 +128,7 @@ class SettingViewController: UIViewController {
         }
         
         guard let port = UInt16(portStr) else {
-            appendText("发送数据失败：port必须时数字")
+            appendText("发送数据失败：port必须为数字")
             return
         }
         
@@ -160,7 +160,7 @@ class SettingViewController: UIViewController {
             return
         }
         UserDefaults.standard.setValue(colorStr, forKey: "theme_color")
-        AlertView(title: "注意", message: "颜色设置成功，重启后生效", markButtonTitle: "确定", otherButtonTitles: nil).show()
+        AlertView(title: "成功", message: "颜色设置成功，重启后生效", markButtonTitle: "确定", otherButtonTitles: nil).show()
     }
     
     private func appendText(_ str: String) {

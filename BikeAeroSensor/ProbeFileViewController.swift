@@ -21,7 +21,7 @@ class ProbeFileViewController: TitleViewController {
         super.viewDidLoad()
         self.navigationController?.setNavigationBarHidden(false, animated: true)
         title = "文件"
-        navigationItem.backButtonTitle = "返回"
+        navigationItem.backButtonTitle = "back"
         view.addSubview(tableView)
         view.backgroundColor = .white
         reload()

@@ -46,14 +46,14 @@ class DataInfo {
 enum DataName: String {
     case currentDataIndex
     case wiFiSignalStrength
-    case currentDataFrequency = "Current Data Frequency"
+    case currentDataFrequency = "Data FPS"
     case batteryVoltage
-    case differentialPressure0 = "Differential Pressure 0"
-    case differentialPressure1 = "Differential Pressure 1"
-    case differentialPressure2 = "Differential Pressure 2"
-    case differentialPressure3 = "Differential Pressure 3"
-    case differentialPressure4 = "Differential Pressure 4"
-    case averageDPTemperature = "average DP Temperature"
+    case differentialPressure0 = "DP0"
+    case differentialPressure1 = "DP1"
+    case differentialPressure2 = "DP2"
+    case differentialPressure3 = "DP3"
+    case differentialPressure4 = "DP4"
+    case averageDPTemperature = "AVE DP TEMP"
     case bmpTemperature = "dpTemp"
     case bmpPressure = "ATM"
     case pitchAngle = "Pitch Angle"
