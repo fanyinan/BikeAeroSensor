@@ -53,7 +53,7 @@ class GridView<T: GridCell>: UIView, UICollectionViewDataSource, UICollectionVie
         collectionView.frame = CGRect(x: edgeInsets.left, y: edgeInsets.top, width: width - edgeInsets.left - edgeInsets.right, height: height - edgeInsets.top - edgeInsets.bottom)
         let itemWidth = (collectionView.width - hSpace * CGFloat(col - 1)) / CGFloat(col)
         let itemHeight = (collectionView.height - vSpace * CGFloat(row - 1)) / CGFloat(row)
-        flowLayout.itemSize = CGSize(width: itemWidth, height: itemHeight)
+        flowLayout.itemSize = CGSize(width: itemWidth.rounded(.down), height: itemHeight)
 //        collectionView.contentInset = UIEdgeInsets(top: 0, left: popButton.maxX + 12, bottom: 0, right: 20)
     }
    
