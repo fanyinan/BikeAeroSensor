@@ -20,15 +20,15 @@ class ProbeFileViewController: TitleViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.setNavigationBarHidden(false, animated: true)
-        title = "文件"
+        title = "Files"
         navigationItem.backButtonTitle = "back"
         view.addSubview(tableView)
         view.backgroundColor = .white
         reload()
         
         titleView.addSubview(editButton)
-        editButton.setTitle("编辑", for: .normal)
-        editButton.setTitle("取消", for: .selected)
+        editButton.setTitle("Edit", for: .normal)
+        editButton.setTitle("Cancel", for: .selected)
         editButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         editButton.setTitleColor(.theme, for: .normal)
         editButton.addTarget(self, action: #selector(onEdit), for: .touchUpInside)
@@ -39,7 +39,7 @@ class ProbeFileViewController: TitleViewController {
         
         titleView.addSubview(shareButton)
         shareButton.isHidden = true
-        shareButton.setTitle("共享", for: .normal)
+        shareButton.setTitle("Share", for: .normal)
         shareButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         shareButton.setTitleColor(.theme, for: .normal)
         shareButton.addTarget(self, action: #selector(onShare), for: .touchUpInside)
@@ -50,7 +50,7 @@ class ProbeFileViewController: TitleViewController {
         
         titleView.addSubview(deleteButton)
         deleteButton.isHidden = true
-        deleteButton.setTitle("删除", for: .normal)
+        deleteButton.setTitle("Delete", for: .normal)
         deleteButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         deleteButton.setTitleColor(.theme, for: .normal)
         deleteButton.addTarget(self, action: #selector(onDelete(_:)), for: .touchUpInside)
@@ -61,7 +61,7 @@ class ProbeFileViewController: TitleViewController {
         
         titleView.addSubview(selectAllButton)
         selectAllButton.isHidden = true
-        selectAllButton.setTitle("全选", for: .normal)
+        selectAllButton.setTitle("Select all", for: .normal)
         selectAllButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         selectAllButton.setTitleColor(.theme, for: .normal)
         selectAllButton.addTarget(self, action: #selector(onSelectAll(_:)), for: .touchUpInside)
@@ -92,7 +92,7 @@ class ProbeFileViewController: TitleViewController {
     
     @objc private func onDelete(_ button: UIButton) {
         guard let indexPaths = tableView.indexPathsForSelectedRows, !indexPaths.isEmpty else { return }
-        let alertView = AlertView(title: nil, message: "确定要删除吗", markButtonTitle: "确定", otherButtonTitles: "取消")
+        let alertView = AlertView(title: nil, message: "Confirm delete?", markButtonTitle: "Yes", otherButtonTitles: "Cancel")
         alertView.show().onSucceed {
             ProbeFileManager.shared.delete(indexPaths.map({ self.fileList[$0.row] })) {
                 DispatchQueue.main.async {
@@ -120,7 +120,7 @@ class ProbeFileViewController: TitleViewController {
         for indexPath in indexPaths {
             let file = fileList[indexPath.row]
             if !file.filePath.exists {
-                Toast.showRightNow("文件不存在: \(file.displayName)")
+                Toast.showRightNow("No data was selected.: \(file.displayName)")
                 return
             }
             files.append(file)

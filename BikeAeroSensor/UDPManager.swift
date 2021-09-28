@@ -41,11 +41,11 @@ class UDPManager: NSObject {
         do {
             try udp.bind(port: port)
             self.port = port
-            Toast.showRightNow("绑定端口成功")
+            Toast.showRightNow("Bind the port successfully.")
             UserDefaults.standard.setValue(port, forKey: "port")
         } catch let error {
             print(error)
-            Toast.showRightNow("绑定端口失败：\(error.localizedDescription)")
+            Toast.showRightNow("Failed to bind the port.：\(error.localizedDescription)")
         }
     }
     

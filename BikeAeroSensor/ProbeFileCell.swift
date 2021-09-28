@@ -45,7 +45,7 @@ class ProbeFileCell: UITableViewCell, Reusable {
             make.width.equalTo(40)
             make.height.equalTo(16)
         }
-        sentLabel.text = "已发送"
+        sentLabel.text = "Sent"
     }
     
     required init?(coder: NSCoder) {

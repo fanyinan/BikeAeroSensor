@@ -30,6 +30,7 @@ class SendCell: GridCell {
         titleLabel.font = UIFont.systemFont(ofSize: 14)
         titleLabel.textAlignment = .center
         titleLabel.textColor = .text
+        titleLabel.numberOfLines = 0
         titleLabel.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
@@ -48,9 +49,9 @@ class SendCell: GridCell {
         guard let data = sendContent?.data(using: .utf8) else { return }
         let success = UDPManager.default.send(data)
         if success {
-            Toast.showRightNow("发送成功")
+            Toast.showRightNow("Sent successfully.")
         } else {
-            Toast.showRightNow("发送失败，ip或端口号为空")
+            Toast.showRightNow("Failed.")
         }
     }
 }

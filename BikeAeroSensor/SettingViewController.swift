@@ -15,7 +15,11 @@ class SettingViewController: UIViewController {
     @IBOutlet weak var sendPortTextField: UITextField!
     @IBOutlet weak var sendHostTextField: UITextField!
 
+    @IBOutlet weak var sendTitleLabel: UILabel!
     @IBOutlet weak var sendTextField: UITextField!
+    @IBOutlet weak var sendButton: UIButton!
+    @IBOutlet weak var autoSendButton: UIButton!
+
 //    @IBOutlet weak var receiveTextView: UITextView!
     @IBOutlet weak var candidateColorView: UIView!
     @IBOutlet weak var colorField: UITextField!
@@ -24,7 +28,7 @@ class SettingViewController: UIViewController {
     private var currentDataIndex = 0
     
     private let sendView = GridView(cellType: SendCell.self)
-    private let sendInfos: [(String, String)] = [("重启", "R"), ("加速器校准", "A"), ("磁力计校准", "M"),]
+    private let sendInfos: [(String, String)] = [("Restart the sensor", "R"), ("Calibrate the accelerometer", "A"), ("Calibrate the magnetometer", "M"),]
     private let candidateColors: [UInt] = [0x018BD5, 0xCE0755, 0x77C344, 0xF8AF17, 0xECFF00, 0x1EFF00, 0x00FFC3, 0x7F00FF, 0xFF00F5]
     private var colorButtons: [UIButton] = []
     
@@ -78,11 +82,18 @@ class SettingViewController: UIViewController {
             candidateColorView.addSubview(colorView)
             colorButtons.append(colorView)
         }
+        
+        #if RELEASE
+        sendTitleLabel.isHidden = true
+        sendTextField.isHidden = true
+        sendButton.isHidden = true
+        autoSendButton.isHidden = true
+        #endif
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        sendView.size = CGSize(width: view.width, height: 40)
+        sendView.size = CGSize(width: view.width, height: 60)
         sendView.bottomMargin = view.safeAreaInsets.bottom + 50
         for (i, button) in colorButtons.enumerated() {
             button.frame = CGRect(x: (candidateColorView.height + 6) * CGFloat(i), y: 0, width: candidateColorView.height, height: candidateColorView.height)
@@ -103,7 +114,7 @@ class SettingViewController: UIViewController {
     @IBAction func onBind(_ sender: Any) {
         
         guard let port = UInt16(portTextField.text!) else {
-            Toast.showRightNow("创建socket失败：我的端口号错误")
+            Toast.showRightNow("Socket creation failed: wrong port number.")
             return
         }
         
@@ -113,22 +124,22 @@ class SettingViewController: UIViewController {
     @IBAction func sendData(_ sender: Any) {
         print(#function)
         guard let text = sendTextField.text, !text.isEmpty, let data = text.data(using: .utf8) else {
-            appendText("发送数据失败：内容不得未空")
+            appendText("Failed: cannot send empty.")
             return
         }
         
         guard let host = sendHostTextField.text, !host.isEmpty else {
-            appendText("发送数据失败：host不得为空")
+            appendText("Failed: host is empty.")
             return
         }
         
         guard let portStr = sendPortTextField.text, !portStr.isEmpty else {
-            appendText("发送数据失败：port不得为空")
+            appendText("Failed: port is empty.")
             return
         }
         
         guard let port = UInt16(portStr) else {
-            appendText("发送数据失败：port必须为数字")
+            appendText("Failed: port must be a number.")
             return
         }
         
@@ -156,11 +167,11 @@ class SettingViewController: UIViewController {
         let colorStr = colorField.text ?? ""
         let isColor = isColorStrAvaliable(colorStr)
         guard isColor else {
-            Toast.showRightNow("不是合法的颜色")
+            Toast.showRightNow("Wrong color code.")
             return
         }
         UserDefaults.standard.setValue(colorStr, forKey: "theme_color")
-        AlertView(title: "成功", message: "颜色设置成功，重启后生效", markButtonTitle: "确定", otherButtonTitles: nil).show()
+        AlertView(title: "Color set successfully.", message: "Color set successfully, take effect after restarting the app.", markButtonTitle: "Yes", otherButtonTitles: nil).show()
     }
     
     private func appendText(_ str: String) {

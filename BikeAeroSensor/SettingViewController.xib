@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -11,13 +11,16 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SettingViewController" customModule="BikeAeroSensor" customModuleProvider="target">
             <connections>
+                <outlet property="autoSendButton" destination="9f6-6v-8h7" id="IXk-An-6WT"/>
                 <outlet property="candidateColorView" destination="Z2k-tK-Pl1" id="F9c-eQ-UcF"/>
                 <outlet property="colorField" destination="gjQ-4X-rH9" id="aCk-aM-ILL"/>
                 <outlet property="myIPLabel" destination="NEz-uo-4IO" id="xr5-Mu-Y5S"/>
                 <outlet property="portTextField" destination="8it-sv-5KJ" id="oFL-wE-p4X"/>
+                <outlet property="sendButton" destination="CeN-V1-4Ow" id="2t9-Ig-SPR"/>
                 <outlet property="sendHostTextField" destination="KMI-Dm-hhh" id="4tE-bn-RXL"/>
                 <outlet property="sendPortTextField" destination="alx-yH-wdS" id="xXX-Bo-yVq"/>
                 <outlet property="sendTextField" destination="YDo-P2-PpM" id="GPY-56-cp6"/>
+                <outlet property="sendTitleLabel" destination="3SF-VB-gZP" id="cVl-y5-D46"/>
                 <outlet property="view" destination="SCJ-Ej-GWu" id="A9A-i3-OnJ"/>
             </connections>
         </placeholder>
@@ -174,8 +177,8 @@
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aDP-t5-sgf">
-                    <rect key="frame" x="271" y="419.5" width="38" height="30"/>
-                    <state key="normal" title="apply"/>
+                    <rect key="frame" x="271" y="419.5" width="31" height="30"/>
+                    <state key="normal" title="应用"/>
                     <connections>
                         <action selector="onColorApply:" destination="-1" eventType="touchUpInside" id="vod-iR-jlx"/>
                     </connections>

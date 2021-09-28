@@ -58,7 +58,7 @@ class DataSelectViewController: TitleViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "数据选择"
+        title = "Select data"
         view.addSubview(tableView)
         view.backgroundColor = .white
     }

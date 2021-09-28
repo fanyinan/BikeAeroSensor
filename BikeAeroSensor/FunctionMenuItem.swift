@@ -87,7 +87,7 @@ extension FunctionMenuItem: UICollectionViewDelegateFlowLayout{
         let data = visualInfos[indexPath.row]
 
         guard visualInfos.filter({ $0.needShow }).count < 6 || data.needShow else {
-            Toast.showRightNow("最多选择6项")
+            Toast.showRightNow("Up to 6 items.")
             return
         }
         

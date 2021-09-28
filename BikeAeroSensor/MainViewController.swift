@@ -114,15 +114,15 @@ class MainViewController: UIViewController {
             case .function:
                 break
             case .startRecord:
-                Toast.showRightNow("开始写入数据")
+                Toast.showRightNow("Start logging.")
                 ProbeFileManager.shared.begin()
             case .endRecord:
                 ProbeFileManager.shared.finish { success in
                     DispatchQueue.main.async {
                         if success {
-                            Toast.showRightNow("文件保存成功")
+                            Toast.showRightNow("File saved.")
                         } else {
-                            Toast.showRightNow("未写入数据，文件未保存")
+                            Toast.showRightNow("No data was received.")
                         }
                     }
                 }
