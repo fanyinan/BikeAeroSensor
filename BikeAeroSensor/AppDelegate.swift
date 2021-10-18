@@ -29,6 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window.rootViewController = MainViewController()
         
+        Thread.sleep(forTimeInterval: 2.5)
         self.window = window
         
     }
