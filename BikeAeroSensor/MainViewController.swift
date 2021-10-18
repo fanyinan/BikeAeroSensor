@@ -246,7 +246,7 @@ extension MainViewController: UDPListener {
             if index < values.count {
                 value = Double(values[index])!
             } else {
-                value = 100
+                value = 0
             }
             
             if dataInfo.isVisual {
