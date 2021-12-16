@@ -246,7 +246,11 @@ extension MainViewController: UDPListener {
             if index < values.count {
                 value = Double(values[index])!
             } else {
-                value = 0
+                if dataInfo.label == .windSpeed {
+                    value = sqrt(max(visualData[.differentialPressure0]! * 2 / 1.125, 0))
+                } else {
+                    value = 0
+                }
             }
             
             if dataInfo.isVisual {
