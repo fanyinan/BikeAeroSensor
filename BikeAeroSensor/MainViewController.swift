@@ -22,6 +22,7 @@ class MainViewController: UIViewController {
     private let legendView = GridView(cellType: LegendCell.self)
     private let menuView = MenuView.loadFromNib()
     private let dynamicDataView = GridView(cellType: DynamicDataCell.self)
+    private let rightTopImageView = UIImageView()
     
     private var currentData: ProbeData?
     private var currentDynamicData: ProbeData?
@@ -84,6 +85,10 @@ class MainViewController: UIViewController {
         chartView.dataSource = self
         bottomView.backgroundColor = .white
         view.addSubview(bottomView)
+        
+        view.addSubview(rightTopImageView)
+        rightTopImageView.contentMode = .scaleAspectFill
+        rightTopImageView.image = UIImage(named: "bike")
         
         legendView.row = 2
         legendView.col = 3
@@ -207,6 +212,10 @@ class MainViewController: UIViewController {
         
         ToastView.appearance().bottomOffsetPortrait = view.safeAreaInsets.bottom + 120
 
+        rightTopImageView.size = CGSize(width: 30, height: 30)
+        rightTopImageView.rightMargin = 20
+        rightTopImageView.minY = view.safeAreaInsets.top
+        
         legendView.minY = view.safeAreaInsets.top + kFitHei(8)
         legendView.centerXInSuperview(margin: 18)
         legendView.height = kFitHei(45)
@@ -248,6 +257,10 @@ extension MainViewController: UDPListener {
             } else {
                 if dataInfo.label == .windSpeed {
                     value = sqrt(max(visualData[.differentialPressure0]! * 2 / 1.125, 0))
+                } else if dataInfo.label == .windPitch {
+                    value = visualData[.pitchAngle]! - 0.2
+                } else if dataInfo.label == .windYaw {
+                    value = visualData[.pitchAngle]! + 0.1
                 } else {
                     value = 0
                 }
