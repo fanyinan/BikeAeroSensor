@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0F8BA220285EEB3A00C677BB /* BLEManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F8BA21B285EEB3A00C677BB /* BLEManager.swift */; };
+		0F8BA221285EEB3A00C677BB /* BLEDevicesScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F8BA21C285EEB3A00C677BB /* BLEDevicesScanViewController.swift */; };
+		0F8BA222285EEB3A00C677BB /* CommonUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F8BA21D285EEB3A00C677BB /* CommonUtils.swift */; };
+		0F8BA223285EEB3A00C677BB /* BLEDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F8BA21E285EEB3A00C677BB /* BLEDevice.swift */; };
+		0F8BA224285EEB3A00C677BB /* BLECommonParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F8BA21F285EEB3A00C677BB /* BLECommonParams.swift */; };
 		CC4DC40126CCC61B00031340 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC4DC40026CCC61B00031340 /* MainViewController.swift */; };
 		CC4DC40526CCCAD200031340 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC4DC40426CCCAD200031340 /* ChartView.swift */; };
 		CC4DC41026CCDE0800031340 /* CGPoint+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC4DC40A26CCDE0800031340 /* CGPoint+Extension.swift */; };
@@ -78,6 +83,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0F8BA21B285EEB3A00C677BB /* BLEManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEManager.swift; sourceTree = "<group>"; };
+		0F8BA21C285EEB3A00C677BB /* BLEDevicesScanViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEDevicesScanViewController.swift; sourceTree = "<group>"; };
+		0F8BA21D285EEB3A00C677BB /* CommonUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonUtils.swift; sourceTree = "<group>"; };
+		0F8BA21E285EEB3A00C677BB /* BLEDevice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEDevice.swift; sourceTree = "<group>"; };
+		0F8BA21F285EEB3A00C677BB /* BLECommonParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLECommonParams.swift; sourceTree = "<group>"; };
 		CC4DC40026CCC61B00031340 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		CC4DC40426CCCAD200031340 /* ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
 		CC4DC40A26CCDE0800031340 /* CGPoint+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+Extension.swift"; sourceTree = "<group>"; };
@@ -162,6 +172,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0F8BA21A285EEB3A00C677BB /* BLE */ = {
+			isa = PBXGroup;
+			children = (
+				0F8BA21B285EEB3A00C677BB /* BLEManager.swift */,
+				0F8BA21C285EEB3A00C677BB /* BLEDevicesScanViewController.swift */,
+				0F8BA21D285EEB3A00C677BB /* CommonUtils.swift */,
+				0F8BA21E285EEB3A00C677BB /* BLEDevice.swift */,
+				0F8BA21F285EEB3A00C677BB /* BLECommonParams.swift */,
+			);
+			path = BLE;
+			sourceTree = "<group>";
+		};
 		CC4DC40926CCDDF700031340 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
@@ -200,6 +222,7 @@
 		CF100D8326CAB54C00C7672A /* BikeAeroSensor */ = {
 			isa = PBXGroup;
 			children = (
+				0F8BA21A285EEB3A00C677BB /* BLE */,
 				CF46DE7626D0E015005A7CB0 /* Utilty */,
 				CC4DC40926CCDDF700031340 /* Extension */,
 				CF100D8426CAB54C00C7672A /* AppDelegate.swift */,
@@ -392,7 +415,9 @@
 				CF46DE9E26D1EEAB005A7CB0 /* VMathTool.swift in Sources */,
 				CF46DEBC26D53CA6005A7CB0 /* UIView+IBInspectable.swift in Sources */,
 				CC4DC41326CCDE0800031340 /* UIView+Common.swift in Sources */,
+				0F8BA220285EEB3A00C677BB /* BLEManager.swift in Sources */,
 				CF31B78B26D939A0001B9990 /* TitleViewController.swift in Sources */,
+				0F8BA221285EEB3A00C677BB /* BLEDevicesScanViewController.swift in Sources */,
 				CC4DC41126CCDE0800031340 /* CGRect+Extension.swift in Sources */,
 				CF31B78426D7E04F001B9990 /* FunctionMenuItem.swift in Sources */,
 				CF31B79D26D93F6C001B9990 /* PoppingAbstractView.swift in Sources */,
@@ -416,11 +441,14 @@
 				CF46DE7826D0E026005A7CB0 /* Reusable.swift in Sources */,
 				CF46DE8C26D0FF93005A7CB0 /* ToastCenter.swift in Sources */,
 				CF46DE8B26D0FF93005A7CB0 /* Toast.swift in Sources */,
+				0F8BA223285EEB3A00C677BB /* BLEDevice.swift in Sources */,
 				CF46DF3626D697D4005A7CB0 /* UIImage+Extension.swift in Sources */,
 				CF31B7A026D93F6C001B9990 /* ContainerView.swift in Sources */,
+				0F8BA224285EEB3A00C677BB /* BLECommonParams.swift in Sources */,
 				CF31B7AB26D9F5FA001B9990 /* SendCell.swift in Sources */,
 				CF46DEA426D52C11005A7CB0 /* LegendCell.swift in Sources */,
 				CC4DC41026CCDE0800031340 /* CGPoint+Extension.swift in Sources */,
+				0F8BA222285EEB3A00C677BB /* CommonUtils.swift in Sources */,
 				CC4DC40526CCCAD200031340 /* ChartView.swift in Sources */,
 				CF100DCB26CEA7C900C7672A /* ChartSeries.swift in Sources */,
 				CF46DEA126D52726005A7CB0 /* GridView.swift in Sources */,

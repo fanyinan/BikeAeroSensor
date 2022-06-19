@@ -35,17 +35,18 @@ class UDPManager: NSObject {
     func addListener(_ listener: UDPListener) {
         subscribers.add(listener)
     }
-
-    func bind(_ port: UInt16) {
-        
+    
+    func bind(_ port: UInt16, completion: ((Bool) -> Void)? = nil) {
         do {
             try udp.bind(port: port)
             self.port = port
             Toast.showRightNow("Bind the port successfully.")
+            completion?(true)
             UserDefaults.standard.setValue(port, forKey: "port")
         } catch let error {
             print(error)
             Toast.showRightNow("Failed to bind the port.：\(error.localizedDescription)")
+            completion?(false)
         }
     }
     

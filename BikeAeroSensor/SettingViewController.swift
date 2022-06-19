@@ -23,6 +23,9 @@ class SettingViewController: UIViewController {
 //    @IBOutlet weak var receiveTextView: UITextView!
     @IBOutlet weak var candidateColorView: UIView!
     @IBOutlet weak var colorField: UITextField!
+    
+    /// 端口绑定成功/失败回调
+    var bindAction: ((Bool) -> Void)?
 
     private var isSimulateOpen = false
     private var currentDataIndex = 0
@@ -117,8 +120,7 @@ class SettingViewController: UIViewController {
             Toast.showRightNow("Socket creation failed: wrong port number.")
             return
         }
-        
-        UDPManager.default.bind(port)
+        UDPManager.default.bind(port) { self.bindAction?($0) }
     }
     
     @IBAction func sendData(_ sender: Any) {
