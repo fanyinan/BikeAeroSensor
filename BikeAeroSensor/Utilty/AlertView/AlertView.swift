@@ -57,13 +57,13 @@ class AlertView: PoppingAbstractView {
     
     var autoClose: Bool = true
     
-    init(title: String?, message: String, markButtonTitle: String?, otherButtonTitles: String?) {
-        
+    init(title: String?, message: String, markButtonTitle: String?, otherButtonTitles: String?...) {
+
         self.title = title
         self.message = message
         self.markButtonTitle = markButtonTitle
-        self.normalButtonTitles = [otherButtonTitles].compactMap({ $0 })
-        
+        self.normalButtonTitles =  otherButtonTitles.compactMap { $0 }
+
         super.init(size: CGSize.zero, viewPopDirection: .fade, maskStatus: .clickDisable)
         
         frame = CGRect(origin: CGPoint.zero, size: CGSize(width: UIScreen.main.bounds.size.width - margin * 2, height: 0))
@@ -75,13 +75,13 @@ class AlertView: PoppingAbstractView {
         
     }
     
-    init(title: String?, customView: UIView, markButtonTitle: String?, otherButtonTitles: String?) {
+    init(title: String?, customView: UIView, markButtonTitle: String?, otherButtonTitles: String?...) {
         
         self.title = title
         self.customView = customView
         self.markButtonTitle = markButtonTitle
-        self.normalButtonTitles = [otherButtonTitles].compactMap({ $0 })
-        
+        self.normalButtonTitles =  otherButtonTitles.compactMap { $0 }
+
         super.init(size: CGSize.zero, viewPopDirection: .fade, maskStatus: .clickDisable)
         
         frame.size.width = customView.frame.width

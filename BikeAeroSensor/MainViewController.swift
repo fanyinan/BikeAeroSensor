@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreBluetooth
 
 class MainViewController: UIViewController {
 
@@ -37,7 +38,17 @@ class MainViewController: UIViewController {
     private var tareData: [DataName: Double]?
     
     private var extraDataName: DataName?
-        
+    
+    private lazy var lastBLEReceiveBLEValues: [DataName: Double] = [:] // 缓存蓝牙设备接收的数据
+    private var lastBLERefreshTime: CFTimeInterval = 0 // 蓝牙接收数据上一次刷新界面的时间
+    private let refreshInterval = 0.05 // 蓝牙接收数据的刷新时间
+    /// 图表显示的接收类型，互斥，默认显示UDP类型
+    private lazy var displayType: DisplayReceiveType = .UDP  {
+        didSet {
+            guard displayType != oldValue else { return }
+        }
+    }
+
     #if DEBUG
     private var delayFrame = 0
     private var delayFrameList = [Int](repeating: 0, count: 20)
@@ -107,8 +118,7 @@ class MainViewController: UIViewController {
         menuView.onClickBlock = { [unowned self] action in
             switch action {
             case .setting:
-                let vc = SettingViewController()
-                self.present(vc, animated: true, completion: nil)
+                self.clickSetting()
             case .file:
                 self.present(ProbeFileViewController(), animated: true, completion: nil)
             case .tareOn:
@@ -172,6 +182,7 @@ class MainViewController: UIViewController {
         appearance.font = UIFont.systemFont(ofSize: 14)
         
         UDPManager.default.addListener(self)
+        BLEManager.sharedInstanced.register(delegate: self)
         
         DispatchQueue.global().async {
             ProbeFileManager.shared.load()
@@ -242,6 +253,7 @@ class MainViewController: UIViewController {
 extension MainViewController: UDPListener {
 
     func didReceive(_ data: Data, fromHost host: String, port: UInt16) {
+        guard displayType == .UDP else { return }
         ProbeFileManager.shared.write(data)
         let str = String(data: data, encoding: .utf8)!
         let values = str.split(separator: ",").map({ String($0) })
@@ -305,6 +317,75 @@ extension MainViewController: UDPListener {
     }
 }
 
+extension MainViewController: BLEManagerProtocol, BLEDeviceDelegte {
+    func didConnected(_ device: BLEDevice) {
+        /// 连接到蓝牙设备，则注册设备监听，重设显示数据来源
+        device.register(delegate: self)
+        displayType = .BLE
+    }
+    
+    func didDisconnected(_ device: BLEDevice) {
+        device.unRegister(delegate: self)
+        lastBLEReceiveBLEValues = [:]
+    }
+    
+    func deviceValueDidChanged(characteristicUUIDString: String, value: Data?) {
+        guard displayType == .BLE else { return }
+        guard let data = value, let dataName = DataName.convert(characteristicUUIDString) else { return }
+        /// TODO: 数据处理逻辑需确认
+        let str = String(data: data, encoding: .utf8) ?? ""
+        lastBLEReceiveBLEValues[dataName] = Double(str) ?? 0   // 保存到最新数据字典
+        let curTime = CACurrentMediaTime()
+        guard curTime - lastBLERefreshTime > refreshInterval else { return }  // 控制视图刷新频率
+        lastBLERefreshTime = curTime
+            
+        // TODO: 需确认该处逻辑是否必要
+        ProbeFileManager.shared.write(data)
+        
+        var visualData: [DataName: Double] = [:]
+        var displayData: [DynamicData] = []
+        self.datas.forEach { dataInfo in
+            var value = self.lastBLEReceiveBLEValues[dataInfo.label] ?? 0
+            if dataInfo.label == .windSpeed {
+                value = sqrt(max(self.lastBLEReceiveBLEValues[.differentialPressure0] ?? 0 * 2 / 1.125, 0))
+            } else if dataInfo.label == .windPitch {
+                value = self.lastBLEReceiveBLEValues[.pitchAngle] ?? 0 - 0.2
+            } else if dataInfo.label == .windYaw {
+                value = self.lastBLEReceiveBLEValues[.pitchAngle] ?? 0 + 0.1
+            }
+            if dataInfo.isVisual {
+                visualData[dataInfo.label] = value
+            }
+            if dataInfo.isDisplay {
+                displayData.append(DynamicData(name: dataInfo.label, value: value, unit: dataInfo.unit))
+            }
+        }
+        
+        displayData.sort(by: { self.displayDataOrder.firstIndex(of: $0.name)! < self.displayDataOrder.firstIndex(of: $1.name)! })
+        
+        if let name = self.extraDataName {
+            displayData.append(DynamicData(name: name, value: visualData[name]!, unit: self.datas.filter({ $0.label == name }).first!.unit))
+        }
+
+        let probeData = ProbeData(visualData: visualData, displayData: displayData)
+        
+        if let tarePreData = self.tarePreData, (tarePreData.first?.value.count ?? 0) < self.tarePreDataCount {
+            for (key, value) in visualData {
+                self.tarePreData![key, default: []].append(value)
+            }
+            if (self.tarePreData!.first?.value.count ?? 0) == self.tarePreDataCount {
+                self.tareData = Dictionary(uniqueKeysWithValues: self.tarePreData!.map({ ($0, $1.reduce(0, +) / Double(self.tarePreDataCount)) }))
+            }
+        }
+        DispatchQueue.main.async {
+            self.currentData = probeData
+            self.currentDynamicData = probeData
+            self.menuView.update(battery: self.lastBLEReceiveBLEValues[.batteryVoltage] ?? 0, wifi: 0)
+        }
+    }
+}
+
+
 extension MainViewController: ChartViewDataSource {
     
     func chartData(_ chartView: ChartView) -> [DataName: Double] {
@@ -363,3 +444,44 @@ extension MainViewController: ChartViewDataSource {
     }
 }
 
+extension MainViewController {
+    private func clickSetting() {
+        let alertView = AlertView(title: "设置数据来源", message: "当前数据来源：\(displayType.typeString)\n请选择新的数据来源", markButtonTitle: "取消", otherButtonTitles: "网络", "蓝牙")
+        alertView.onSucceed { [unowned alertView] in
+            alertView.hide()
+        }
+        alertView.onResult { [unowned self] index in
+            if index == 0 {
+                let vc = SettingViewController()
+                vc.bindAction = { [weak self] in
+                    guard let self = self else { return }
+                    if $0 {
+                        /// 绑定udp端口成功，重设显示数据来源为udp
+                        self.displayType = .UDP
+                    }
+                }
+                self.present(vc, animated: true)
+            } else if index == 1 {
+                self.present(BLEDevicesScanViewController(), animated: true)
+            }
+        }
+        alertView.show()
+    }
+}
+
+/// 图表显示的接收类型
+private enum DisplayReceiveType: Int {
+    case BLE = 1               // 显示蓝牙接收的数据
+    case UDP = 2               // 显示UDP接收的数据
+}
+
+private extension DisplayReceiveType {
+    var typeString: String {
+        switch self {
+        case .BLE:
+            return "蓝牙"
+        case .UDP:
+            return "网络"
+        }
+    }
+}
