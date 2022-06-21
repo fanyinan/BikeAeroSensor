@@ -22,7 +22,7 @@ class BLEDevice: NSObject {
     
     private let peripheral: CBPeripheral
     private let centeralManager: CBCentralManager
-    private var delegateSet = NSHashTable<AnyObject>(options: .weakMemory)
+    private let delegateSet = NSHashTable<AnyObject>(options: .weakMemory)
     
     /// 设备名
     var name: String {

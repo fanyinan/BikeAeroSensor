@@ -256,62 +256,7 @@ extension MainViewController: UDPListener {
         guard displayType == .UDP else { return }
         ProbeFileManager.shared.write(data)
         let str = String(data: data, encoding: .utf8)!
-        let values = str.split(separator: ",").map({ String($0) })
-        
-        var visualData: [DataName: Double] = [:]
-        var displayData: [DynamicData] = []
-
-        for (index, dataInfo) in datas.enumerated() {
-            
-            let value: Double
-            if index < values.count {
-                value = Double(values[index])!
-            } else {
-                if dataInfo.label == .windSpeed {
-                    value = sqrt(max(visualData[.differentialPressure0]! * 2 / 1.125, 0))
-                } else if dataInfo.label == .windPitch {
-                    value = visualData[.pitchAngle]! - 0.2
-                } else if dataInfo.label == .windYaw {
-                    value = visualData[.pitchAngle]! + 0.1
-                } else {
-                    value = 0
-                }
-            }
-            
-            if dataInfo.isVisual {
-                visualData[dataInfo.label] = value
-            }
-            
-            if dataInfo.isDisplay {
-                displayData.append(DynamicData(name: dataInfo.label, value: value, unit: dataInfo.unit))
-            }
-        }
-        
-        let wiFiSignalStrength = Int(Double(values[1])!)
-        let batteryVoltage = Double(values[3])!
-        
-        displayData.sort(by: { self.displayDataOrder.firstIndex(of: $0.name)! < self.displayDataOrder.firstIndex(of: $1.name)! })
-        
-        if let name = extraDataName {
-            displayData.append(DynamicData(name: name, value: visualData[name]!, unit: datas.filter({ $0.label == name }).first!.unit))
-        }
-
-        let probeData = ProbeData(visualData: visualData, displayData: displayData)
-        
-        if let tarePreData = tarePreData, (tarePreData.first?.value.count ?? 0) < tarePreDataCount {
-            for (key, value) in visualData {
-                self.tarePreData![key, default: []].append(value)
-            }
-            if (self.tarePreData!.first?.value.count ?? 0) == tarePreDataCount {
-                self.tareData = Dictionary(uniqueKeysWithValues: self.tarePreData!.map({ ($0, $1.reduce(0, +) / Double(tarePreDataCount)) }))
-            }
-        }
-        
-        DispatchQueue.main.async {
-            self.currentData = probeData
-            self.currentDynamicData = probeData
-            self.menuView.update(battery: batteryVoltage, wifi: wiFiSignalStrength)
-        }
+        handler(str)
 //        let chartDatas = visualDatas.filter({ !$0.values.isEmpty }).map({ ChartData(values: $0.values, color: $0.color) })
 //        print("receive", probeData.currentDataIndex)
     }
@@ -331,56 +276,16 @@ extension MainViewController: BLEManagerProtocol, BLEDeviceDelegte {
     
     func deviceValueDidChanged(characteristicUUIDString: String, value: Data?) {
         guard displayType == .BLE else { return }
-        guard let data = value, let dataName = DataName.convert(characteristicUUIDString) else { return }
-        /// TODO: 数据处理逻辑需确认
-        let str = String(data: data, encoding: .utf8) ?? ""
-        lastBLEReceiveBLEValues[dataName] = Double(str) ?? 0   // 保存到最新数据字典
-        let curTime = CACurrentMediaTime()
-        guard curTime - lastBLERefreshTime > refreshInterval else { return }  // 控制视图刷新频率
-        lastBLERefreshTime = curTime
-            
-        // TODO: 需确认该处逻辑是否必要
+        guard let data = value else { return }
         ProbeFileManager.shared.write(data)
-        
-        var visualData: [DataName: Double] = [:]
-        var displayData: [DynamicData] = []
-        self.datas.forEach { dataInfo in
-            var value = self.lastBLEReceiveBLEValues[dataInfo.label] ?? 0
-            if dataInfo.label == .windSpeed {
-                value = sqrt(max(self.lastBLEReceiveBLEValues[.differentialPressure0] ?? 0 * 2 / 1.125, 0))
-            } else if dataInfo.label == .windPitch {
-                value = self.lastBLEReceiveBLEValues[.pitchAngle] ?? 0 - 0.2
-            } else if dataInfo.label == .windYaw {
-                value = self.lastBLEReceiveBLEValues[.pitchAngle] ?? 0 + 0.1
+        let str = data.map { String($0) }.joined(separator: "")
+        debugLog("Device Delagate receive \(str) for \(characteristicUUIDString)")
+        if characteristicUUIDString == BLECommonParams.BatteryCharacteristicUUIDString {
+            DispatchQueue.main.async {
+                self.menuView.set(battery: (Double(str) ?? 0) / 100)
             }
-            if dataInfo.isVisual {
-                visualData[dataInfo.label] = value
-            }
-            if dataInfo.isDisplay {
-                displayData.append(DynamicData(name: dataInfo.label, value: value, unit: dataInfo.unit))
-            }
-        }
-        
-        displayData.sort(by: { self.displayDataOrder.firstIndex(of: $0.name)! < self.displayDataOrder.firstIndex(of: $1.name)! })
-        
-        if let name = self.extraDataName {
-            displayData.append(DynamicData(name: name, value: visualData[name]!, unit: self.datas.filter({ $0.label == name }).first!.unit))
-        }
-
-        let probeData = ProbeData(visualData: visualData, displayData: displayData)
-        
-        if let tarePreData = self.tarePreData, (tarePreData.first?.value.count ?? 0) < self.tarePreDataCount {
-            for (key, value) in visualData {
-                self.tarePreData![key, default: []].append(value)
-            }
-            if (self.tarePreData!.first?.value.count ?? 0) == self.tarePreDataCount {
-                self.tareData = Dictionary(uniqueKeysWithValues: self.tarePreData!.map({ ($0, $1.reduce(0, +) / Double(self.tarePreDataCount)) }))
-            }
-        }
-        DispatchQueue.main.async {
-            self.currentData = probeData
-            self.currentDynamicData = probeData
-            self.menuView.update(battery: self.lastBLEReceiveBLEValues[.batteryVoltage] ?? 0, wifi: 0)
+        } else if characteristicUUIDString == BLECommonParams.DeviceDataCharacteristicUUIDString {
+            handler(str)
         }
     }
 }
@@ -445,6 +350,67 @@ extension MainViewController: ChartViewDataSource {
 }
 
 extension MainViewController {
+    private func handler(_ receivedString: String) {
+        let values = receivedString.split(separator: ",").map { String($0) }
+        
+        var visualData: [DataName: Double] = [:]
+        var displayData: [DynamicData] = []
+
+        for (index, dataInfo) in datas.enumerated() {
+            
+            let value: Double
+            if index < values.count {
+                value = Double(values[index]) ?? 0
+            } else {
+                if dataInfo.label == .windSpeed {
+                    value = sqrt(max(visualData[.differentialPressure0] ?? 0 * 2 / 1.125, 0))
+                } else if dataInfo.label == .windPitch {
+                    value = visualData[.pitchAngle] ?? 0 - 0.2
+                } else if dataInfo.label == .windYaw {
+                    value = visualData[.pitchAngle] ?? 0 + 0.1
+                } else {
+                    value = 0
+                }
+            }
+
+            if dataInfo.isVisual {
+                visualData[dataInfo.label] = value
+            }
+            
+            if dataInfo.isDisplay {
+                displayData.append(DynamicData(name: dataInfo.label, value: value, unit: dataInfo.unit))
+            }
+        }
+        
+        let wiFiSignalStrength = Int(Double(values[1]) ?? 0)
+        let batteryVoltage = Double(values[3]) ?? 0
+        
+        displayData.sort(by: { self.displayDataOrder.firstIndex(of: $0.name)! < self.displayDataOrder.firstIndex(of: $1.name)! })
+        
+        if let name = extraDataName, let value = visualData[name] {
+            displayData.append(DynamicData(name: name, value: value, unit: datas.filter({ $0.label == name }).first!.unit))
+        }
+
+        let probeData = ProbeData(visualData: visualData, displayData: displayData)
+        
+        if let tarePreData = tarePreData, (tarePreData.first?.value.count ?? 0) < tarePreDataCount {
+            for (key, value) in visualData {
+                self.tarePreData![key, default: []].append(value)
+            }
+            if (self.tarePreData!.first?.value.count ?? 0) == tarePreDataCount {
+                self.tareData = Dictionary(uniqueKeysWithValues: self.tarePreData!.map({ ($0, $1.reduce(0, +) / Double(tarePreDataCount)) }))
+            }
+        }
+        
+        DispatchQueue.main.async {
+            self.currentData = probeData
+            self.currentDynamicData = probeData
+            if batteryVoltage > 0 && wiFiSignalStrength > 0 {
+                self.menuView.update(battery: batteryVoltage, wifi: wiFiSignalStrength)
+            }
+        }
+    }
+    
     private func clickSetting() {
         let alertView = AlertView(title: "设置数据来源", message: "当前数据来源：\(displayType.typeString)\n请选择新的数据来源", markButtonTitle: "取消", otherButtonTitles: "网络", "蓝牙")
         alertView.onSucceed { [unowned alertView] in
