@@ -38,7 +38,7 @@ class BLEManager: NSObject {
     
     private let manager: CBCentralManager
     private var scanedDevice: [UUID: BLEDevice] = [:]
-    private var delegateSet = NSHashTable<AnyObject>(options: .weakMemory)
+    private let delegateSet = NSHashTable<AnyObject>(options: .weakMemory)
     
     /// 扫描开关
     var scanning: Bool = false {

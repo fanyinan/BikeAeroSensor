@@ -72,6 +72,10 @@ class MenuView: UIView, NibLoadable {
         return super.point(inside: point, with: event)
     }
     
+    func set(battery: Double) {
+        batteryPercent = VMathTool.clamp(value: battery, minValue: 0, maxValue: 1)
+    }
+    
     func update(battery: Double, wifi: Int) {
         batteryPercent = VMathTool.percent(min: batteryMin, max: batteryMax, value: battery)
         batteryPercent = VMathTool.clamp(value: batteryPercent, minValue: 0, maxValue: 1)
