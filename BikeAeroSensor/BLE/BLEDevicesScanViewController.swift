@@ -123,7 +123,7 @@ extension BLEDevicesScanViewController: BLEManagerProtocol {
     }
     
     func didDisconnected(_ device: BLEDevice) {
-        // 断开到设备回调
+        // 断开设备回调
         if let index = devices.firstIndex(of: device),
            let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? discoverdDeviceCell {
             cell.refreshLoading()
