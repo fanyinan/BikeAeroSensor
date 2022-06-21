@@ -278,13 +278,15 @@ extension MainViewController: BLEManagerProtocol, BLEDeviceDelegte {
         guard displayType == .BLE else { return }
         guard let data = value else { return }
         ProbeFileManager.shared.write(data)
-        let str = data.map { String($0) }.joined(separator: "")
-        debugLog("Device Delagate receive \(str) for \(characteristicUUIDString)")
         if characteristicUUIDString == BLECommonParams.BatteryCharacteristicUUIDString {
+            let str = data.map { String($0) }.joined(separator: "") // 电池数据不用转ascii码
+            debugLog("Device Delagate receive \(str) for \(characteristicUUIDString)")
             DispatchQueue.main.async {
                 self.menuView.set(battery: (Double(str) ?? 0) / 100)
             }
         } else if characteristicUUIDString == BLECommonParams.DeviceDataCharacteristicUUIDString {
+            let str = data.map { String(format: "%c", $0) }.joined(separator: "") // 自定义数据转ascii码
+            debugLog("Device Delagate receive \(str) for \(characteristicUUIDString)")
             handler(str)
         }
     }
@@ -357,7 +359,6 @@ extension MainViewController {
         var displayData: [DynamicData] = []
 
         for (index, dataInfo) in datas.enumerated() {
-            
             let value: Double
             if index < values.count {
                 value = Double(values[index]) ?? 0
