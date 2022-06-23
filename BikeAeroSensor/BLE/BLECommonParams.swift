@@ -8,6 +8,15 @@
 import CoreBluetooth
 
 struct BLECommonParams {
+    /// 默认蓝牙设备信息
+    private static let BLEDefaultDeviceUUIDKey = "BLEDeviceUUIDKey"
+    static var defaultDeviceUUID: String = UserDefaults.standard.string(forKey: Self.BLEDefaultDeviceUUIDKey) ?? ""  { // 内存中缓存一份默认蓝牙设备的uuidStr
+        didSet {
+            guard oldValue != defaultDeviceUUID else { return }
+            UserDefaults.standard.setValue(defaultDeviceUUID, forKey: Self.BLEDefaultDeviceUUIDKey)
+        }
+    }
+    
     /// 电池uuid
     static let batteryServiceUUIDString = "180F"
     static let BatteryCharacteristicUUIDString = "2A19"

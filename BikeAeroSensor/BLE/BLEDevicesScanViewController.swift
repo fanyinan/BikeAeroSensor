@@ -79,11 +79,12 @@ extension BLEDevicesScanViewController: UITableViewDelegate, UITableViewDataSour
     func triggerDeviceConnectState(device: BLEDevice, cell: discoverdDeviceCell) {
         if device.state != .connected {
             device.connect()
-            cell.refreshLoading()
         } else {
+            BLECommonParams.defaultDeviceUUID = "" // 重设默认蓝牙设备
             device.disconnect()
-            cell.refreshLoading()
         }
+        cell.refreshLoading()
+        manager.disconnectedByUser = true
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -120,6 +121,7 @@ extension BLEDevicesScanViewController: BLEManagerProtocol {
            let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? discoverdDeviceCell {
             cell.refreshLoading()
         }
+        manager.disconnectedByUser = false
     }
     
     func didDisconnected(_ device: BLEDevice) {
