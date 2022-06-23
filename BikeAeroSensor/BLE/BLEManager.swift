@@ -40,6 +40,10 @@ class BLEManager: NSObject {
     private var scanedDevice: [UUID: BLEDevice] = [:]
     private let delegateSet = NSHashTable<AnyObject>(options: .weakMemory)
     
+    var disconnectedByUser: Bool = false
+    private static var reconnectCount = 0
+    private static let maxReconnectCount = 2
+
     /// 扫描开关
     var scanning: Bool = false {
         willSet {
@@ -92,6 +96,16 @@ extension BLEManager: CBCentralManagerDelegate {
         if manager.state != .poweredOn {
             scanning = false
             scanedDevice = [:]
+        } else { // 自动连接
+            if !BLECommonParams.defaultDeviceUUID.isEmpty,
+               let uuid = UUID(uuidString: BLECommonParams.defaultDeviceUUID),
+               let peripheral = central.retrievePeripherals(withIdentifiers: [uuid]).first {
+                if !scanedDevice.keys.contains(uuid) {
+                    let device = BLEDevice(peripheral: peripheral, centeralManager: manager)
+                    scanedDevice[peripheral.identifier] = device
+                }
+                scanedDevice[uuid]?.connect()
+            }
         }
         trigger { $0.didChangedState?(state: manager.state) }
     }
@@ -103,13 +117,38 @@ extension BLEManager: CBCentralManagerDelegate {
                 guard $0 != device, $0.state == .connected || $0.state == .connecting else { return }
                 $0.disconnect()
             }
+            /// 重设默认蓝牙设备
+            BLECommonParams.defaultDeviceUUID = peripheral.identifier.uuidString
+            Self.reconnectCount = 0
             device.discoverServices()
             trigger { $0.didConnected?(device) }
         }
     }
     
+    @objc private func tryReconnected() {
+        guard !disconnectedByUser,
+              scanedDevice.values.reduce(0, { $1.state == .connected || $1.state == .connecting ? $0 + 1 : $0 }) < 1 else { // 保证仅一个蓝牙连接
+            Self.reconnectCount = 0
+            return
+        }
+        Self.reconnectCount += 1
+        // 自动连接
+        if !BLECommonParams.defaultDeviceUUID.isEmpty,
+           let uuid = UUID(uuidString: BLECommonParams.defaultDeviceUUID),
+           let device = scanedDevice[uuid],
+           device.state != .connected && device.state != .connecting {
+            device.connect()
+        }
+        guard Self.reconnectCount < Self.maxReconnectCount else {
+            Self.reconnectCount = 0
+            return
+        }
+        perform(#selector(tryReconnected), with: nil, afterDelay: 2) // 两秒后再尝试重连
+    }
+    
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
         debugLog("Manager: failed connect \(peripheral), error \(error.debugDescription)")
+        tryReconnected() // 尝试重连
         if let device = scanedDevice[peripheral.identifier] {
             trigger { $0.didDisconnected?(device) }
         }
@@ -117,6 +156,7 @@ extension BLEManager: CBCentralManagerDelegate {
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         debugLog("Manager: disconnected \(peripheral), error \(error.debugDescription)")
+        tryReconnected() // 尝试重连
         if let device = scanedDevice[peripheral.identifier] {
             trigger { $0.didDisconnected?(device) }
         }
