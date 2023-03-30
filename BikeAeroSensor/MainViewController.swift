@@ -369,6 +369,8 @@ extension MainViewController {
                     value = visualData[.pitchAngle] ?? 0 - 0.2
                 } else if dataInfo.label == .windYaw {
                     value = visualData[.pitchAngle] ?? 0 + 0.1
+                } else if dataInfo.label == .bmpPressure {
+                    value = (visualData[.bmpPressure] ?? 0) / 1000
                 } else {
                     value = 0
                 }
