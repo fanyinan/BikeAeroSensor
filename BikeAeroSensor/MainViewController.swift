@@ -383,8 +383,8 @@ extension MainViewController {
             }
         }
         
-        let wiFiSignalStrength = Int(Double(values[1]) ?? 0)
-        let batteryVoltage = Double(values[3]) ?? 0
+        let wiFiSignalStrength = values.indices.contains(1) ? Int(Double(values[1]) ?? 0) : 0
+        let batteryVoltage = values.indices.contains(3) ? Double(values[3]) ?? 0 : 0
         
         displayData.sort(by: { self.displayDataOrder.firstIndex(of: $0.name)! < self.displayDataOrder.firstIndex(of: $1.name)! })
         
