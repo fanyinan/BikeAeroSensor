@@ -125,10 +125,10 @@ class ProbeFileViewController: TitleViewController {
             }
             files.append(file)
         }
-        
+        let archiveFiles = convertToCSVArchiveFiles(infos: files)
         let zipURL = Path.temporary + Path(files.first!.displayName + ".zip")
         do {
-            try Zip.zipFiles(paths: files.map({ $0.filePath.url }), zipFilePath: zipURL.url, password: nil, progress: nil)
+            try Zip.zipData(archiveFiles: archiveFiles, zipFilePath: zipURL.url, password: nil, progress: nil)
         } catch let error {
             Toast.showRightNow(error.localizedDescription)
             return
@@ -143,6 +143,27 @@ class ProbeFileViewController: TitleViewController {
         }
         
         present(activityVC, animated: true, completion: nil)
+    }
+    
+    private func convertToCSVArchiveFiles(infos: [ProbeFileInfo]) -> [ArchiveFile] {
+        let datas = infos.compactMap { info in
+            let fileURL = info.filePath.url
+            do {
+                let data = try Data(contentsOf: fileURL)
+                let dataString = String(data: data, encoding: .utf8)
+                let endOfHeaderRange = dataString?.range(of: "***End_of_Header***")
+                let suffixCSVString = dataString?.suffix(from: endOfHeaderRange!.upperBound).trimmingCharacters(in: .whitespacesAndNewlines)
+                let csvData = suffixCSVString?.data(using: .utf8)
+                if let csvData = csvData { return (info, csvData) }
+                return nil
+            } catch {
+                print(error.localizedDescription)
+                return nil
+            }
+        }
+        return datas.compactMap {
+            ArchiveFile(filename: $0.displayName.appending(".csv"), data: $1 as NSData, modifiedTime: nil)
+        }
     }
     
     private lazy var tableView: UITableView = {
