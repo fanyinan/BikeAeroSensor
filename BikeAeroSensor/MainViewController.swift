@@ -448,9 +448,9 @@ private extension DisplayReceiveType {
     var typeString: String {
         switch self {
         case .BLE:
-            return "蓝牙"
+            return "BLE"
         case .UDP:
-            return "网络"
+            return "Wi-Fi"
         }
     }
 }
