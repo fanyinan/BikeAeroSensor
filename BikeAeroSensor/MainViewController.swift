@@ -361,7 +361,11 @@ extension MainViewController {
         for (index, dataInfo) in datas.enumerated() {
             let value: Double
             if index < values.count {
-                value = Double(values[index]) ?? 0
+                if dataInfo.label == .bmpPressure {
+                    value = (Double(values[index]) ?? 0) / 1000
+                } else {
+                    value = Double(values[index]) ?? 0
+                }
             } else {
                 if dataInfo.label == .windSpeed {
                     value = sqrt(max(visualData[.differentialPressure0] ?? 0 * 2 / 1.125, 0))
@@ -369,8 +373,6 @@ extension MainViewController {
                     value = visualData[.pitchAngle] ?? 0 //应该为真实wind data
                 } else if dataInfo.label == .windYaw {
                     value = visualData[.pitchAngle] ?? 0 //应该为真实wind data
-                } else if dataInfo.label == .bmpPressure {
-                    value = (visualData[.bmpPressure] ?? 0) / 1000
                 } else {
                     value = 0
                 }
