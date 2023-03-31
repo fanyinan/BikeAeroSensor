@@ -282,7 +282,7 @@ extension MainViewController: BLEManagerProtocol, BLEDeviceDelegte {
             let str = data.map { String($0) }.joined(separator: "") // 电池数据不用转ascii码
             debugLog("Device Delagate receive \(str) for \(characteristicUUIDString)")
             DispatchQueue.main.async {
-                self.menuView.set(battery: (Double(str) ?? 0) / 100)
+                self.menuView.set(battery: (Double(str) ?? 0) / 1)
             }
         } else if characteristicUUIDString == BLECommonParams.DeviceDataCharacteristicUUIDString {
             let str = data.map { String(format: "%c", $0) }.joined(separator: "") // 自定义数据转ascii码
@@ -367,15 +367,15 @@ extension MainViewController {
                     value = Double(values[index]) ?? 0
                 }
             } else {
-                if dataInfo.label == .windSpeed {
-                    value = sqrt(max(visualData[.differentialPressure0] ?? 0 * 2 / 1.125, 0))
-                } else if dataInfo.label == .windPitch {
-                    value = visualData[.pitchAngle] ?? 0 //应该为真实wind data
-                } else if dataInfo.label == .windYaw {
-                    value = visualData[.pitchAngle] ?? 0 //应该为真实wind data
-                } else {
+//                if dataInfo.label == .windSpeed {
+//                    value = sqrt(max(visualData[.differentialPressure0] ?? 0 * 2 / 1.125, 0))
+//                } else if dataInfo.label == .windPitch {
+//                    value = visualData[.pitchAngle] ?? 0 //应该为真实wind data
+//                } else if dataInfo.label == .windYaw {
+//                    value = visualData[.pitchAngle] ?? 0 //应该为真实wind data
+//                } else {
                     value = 0
-                }
+//                }
             }
 
             if dataInfo.isVisual {
@@ -410,7 +410,7 @@ extension MainViewController {
         DispatchQueue.main.async {
             self.currentData = probeData
             self.currentDynamicData = probeData
-            if batteryVoltage > 0 && wiFiSignalStrength > 0 {
+            if batteryVoltage > 0 || wiFiSignalStrength > 0 {
                 self.menuView.update(battery: batteryVoltage, wifi: wiFiSignalStrength)
             }
         }

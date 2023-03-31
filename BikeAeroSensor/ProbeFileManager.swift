@@ -53,7 +53,7 @@ class ProbeDataFile {
         "# <aantc.ust.hk>\n" +
         "# All rights reserved.\n" +
         "***End_of_Header***\n" +
-        "currentDataIndex,wiFiSignalStrength,currentDataFrequency,batteryVoltage,differentialPressure0,differentialPressure1,differentialPressure2,differentialPressure3,differentialPressure4,averageDPTemperature,bmpTemperature,bmpPressure,pitchAngle,rollAngle,yawAngle,icmAccX,icmAccY,icmAccZ,icmGyrX,icmGyrY,icmGyrZ\n"
+        "currentDataIndex,wiFiSignalStrength,currentDataFrequency,batteryVoltage,differentialPressure0,differentialPressure1,differentialPressure2,differentialPressure3,differentialPressure4,averageDPTemperature,bmpTemperature,bmpPressure,pitchAngle,rollAngle,yawAngle,icmAccX,icmAccY,icmAccZ,icmGyrX,icmGyrY,icmGyrZ,windSpeed[m/s],windPitch[deg],windYaw[deg]\n"
         let headerData = headerStr.data(using: .utf8)!
         _write(headerData)
     }
