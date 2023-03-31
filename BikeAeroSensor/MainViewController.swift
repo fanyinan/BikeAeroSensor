@@ -366,9 +366,9 @@ extension MainViewController {
                 if dataInfo.label == .windSpeed {
                     value = sqrt(max(visualData[.differentialPressure0] ?? 0 * 2 / 1.125, 0))
                 } else if dataInfo.label == .windPitch {
-                    value = visualData[.pitchAngle] ?? 0 - 0.2
+                    value = visualData[.pitchAngle] ?? 0 //应该为真实wind data
                 } else if dataInfo.label == .windYaw {
-                    value = visualData[.pitchAngle] ?? 0 + 0.1
+                    value = visualData[.pitchAngle] ?? 0 //应该为真实wind data
                 } else if dataInfo.label == .bmpPressure {
                     value = (visualData[.bmpPressure] ?? 0) / 1000
                 } else {
@@ -415,7 +415,7 @@ extension MainViewController {
     }
     
     private func clickSetting() {
-        let alertView = AlertView(title: "设置数据来源", message: "当前数据来源：\(displayType.typeString)\n请选择新的数据来源", markButtonTitle: "取消", otherButtonTitles: "网络", "蓝牙")
+        let alertView = AlertView(title: "Set data entry", message: "Current：\(displayType.typeString)\nPlease select new:", markButtonTitle: "Cancel", otherButtonTitles: "Wi-Fi", "BLE")
         alertView.onSucceed { [unowned alertView] in
             alertView.hide()
         }
